@@ -1,0 +1,10 @@
+# Настройки функций. Для ai и delete-account платформа сама проверяет токен вошедшего пользователя.
+[functions.ai]
+verify_jwt = true
+
+[functions.delete-account]
+verify_jwt = true
+
+# update-rates вызывает по расписанию Cron, а не пользователь: защищена секретом CRON_SECRET внутри функции.
+[functions.update-rates]
+verify_jwt = false
