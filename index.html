@@ -2,19 +2,19 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="theme-color" content="#013E37">
+<meta name="theme-color" content="#1E3A8A">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HUSTLE — рабочий стол студенческого кино</title>
 <meta name="description" content="HUSTLE: сценарий, план съёмок, смета, светосхема, шот-лист и аренда техники для студенческого кино.">
 <meta property="og:type" content="website"><meta property="og:title" content="HUSTLE — рабочий стол студенческого кино"><meta property="og:description" content="Снимай красивое кино, вместе с HUSTLE. Сценарий, смета, свет и аренда техники в одном месте."><meta property="og:locale" content="ru_KZ">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='%23013E37'/><rect x='9' y='21' width='30' height='18' rx='3' fill='%23FFEFB3'/><rect x='9' y='11' width='30' height='8' rx='2' fill='%23FFEFB3'/><path d='M15 11h4l-5 8h-4zM25 11h4l-5 8h-4zM35 11h3l-5 8h-4z' fill='%23013E37'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='%231E3A8A'/><rect x='9' y='21' width='30' height='18' rx='3' fill='%23FFEFB3'/><rect x='9' y='11' width='30' height='8' rx='2' fill='%23FFEFB3'/><path d='M15 11h4l-5 8h-4zM25 11h4l-5 8h-4zM35 11h3l-5 8h-4z' fill='%231E3A8A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --side:#013E37; --side-ink:#FFEFB3; --side-muted:#CFC9A0;
-  --accent:#FFEFB3; --accent-ink:#013E37; --ok:#2E7D5B; --warn:#B5482F;
+  --side:#1E3A8A; --side-ink:#FFFFFF; --side-muted:#C7D2F0;
+  --accent:#FFD23F; --accent-ink:#1E3A8A; --ok:#2E7D5B; --warn:#B5482F;
   --side-bg:var(--side);
   --bg:color-mix(in srgb,var(--side) 5%,#fff);
   --surface:#FFFFFF;
@@ -783,7 +783,7 @@ body.homebg::before{display:block;content:"";position:fixed;inset:0;z-index:-1;p
 .homebg .chip{border-color:var(--brand-light);color:var(--brand-light);background:color-mix(in srgb,var(--brand-dark) 55%,transparent)}
 .homebg .chip[aria-pressed="true"]{background:var(--brand-light);color:var(--brand-dark)}
 .homebg .posters{scrollbar-color:var(--brand-light) transparent}
-body.homebg{background:#04201C}
+body.homebg{background:color-mix(in srgb,var(--brand-dark) 55%,#000)}
 .fsfab{position:fixed;top:14px;right:14px;z-index:35;display:flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:999px;background:var(--brand-light);color:var(--brand-dark);font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.3)}
 .fsfab:focus-visible{outline:3px solid var(--brand-dark);outline-offset:2px}
 .railbtn{all:unset;box-sizing:border-box;cursor:pointer;width:34px;height:34px;display:none;place-items:center;border-radius:10px;color:var(--brand-light);position:absolute;top:26px;right:14px}
@@ -837,7 +837,7 @@ body.fs .panel:has(#lt-svg)>.pb>.row select{margin-left:0!important;max-width:10
 }
 body.fs #toast{left:50%}
 body.fs textarea.script,body.fs textarea.doc{min-height:70vh}
-body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,.55),rgba(2,26,22,0) 70%),linear-gradient(180deg,#024A40,#04201C 75%),var(--hb-img) center/cover no-repeat #04201C}
+body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,color-mix(in srgb,color-mix(in srgb,var(--brand-dark) 75%,#fff) 55%,transparent),transparent 70%),linear-gradient(180deg,color-mix(in srgb,var(--brand-dark) 88%,#fff),color-mix(in srgb,var(--brand-dark) 55%,#000) 75%)}
 .homebg .slogan{background:color-mix(in srgb,var(--brand-dark) 80%,transparent);border:1px solid color-mix(in srgb,var(--brand-light) 25%,transparent)}
 .homebg .hero.projcard,.homebg .note,.homebg .art{box-shadow:0 10px 30px rgba(0,0,0,.25)}
 
@@ -848,7 +848,7 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,
 .auth .wm b{background:var(--logo) left center/contain no-repeat;width:237px;height:96px;font-size:0;color:transparent;-webkit-text-fill-color:transparent;text-transform:none}
 
 /* ===== v13: палитры по настроению ===== */
-:root,:root[data-palette="hustle"]{--brand-light:#FFEFB3;--brand-dark:#013E37}
+:root,:root[data-palette="hustle"]{--brand-light:#FFFFFF;--brand-dark:#1E3A8A}
 :root[data-palette="icy"]{--brand-light:#D7F2EF;--brand-dark:#03062F}
 :root[data-palette="petal"]{--brand-light:#F6CAF2;--brand-dark:#6E184E}
 :root[data-palette="aqua"]{--brand-light:#D2F4D4;--brand-dark:#2D198A}
@@ -889,7 +889,7 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,
 .auth button.link{font-size:14px}
 
 /* ===== открытая главная ===== */
-.auth{display:block;padding:0;min-height:100vh;color:var(--brand-light);background:radial-gradient(90% 60% at 30% 0%,rgba(10,96,82,.55),rgba(2,26,22,0) 70%),linear-gradient(180deg,#024A40,#04201C 60%)}
+.auth{display:block;padding:0;min-height:100vh;color:var(--brand-light);background:radial-gradient(90% 60% at 30% 0%,color-mix(in srgb,color-mix(in srgb,var(--brand-dark) 75%,#fff) 55%,transparent),transparent 70%),linear-gradient(180deg,color-mix(in srgb,var(--brand-dark) 88%,#fff),color-mix(in srgb,var(--brand-dark) 55%,#000) 60%)}
 .land{max-width:1180px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(16px,4vw,40px) 32px}
 .land-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,440px);gap:clamp(24px,5vw,64px);align-items:center;min-height:min(78vh,720px)}
 .land-copy{display:flex;flex-direction:column;gap:18px}
@@ -921,12 +921,16 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,
 @media (max-width:860px){.land-hero{grid-template-columns:1fr;min-height:0}.land-cta .btn{flex:1 1 100%}}
 
 /* ===== кнопки: жёлтая, белая, синяя ===== */
-:root{--btn-y:#FFD23F;--btn-y-ink:#013E37;--btn-w:#FFFFFF;--btn-w-ink:#013E37;--btn-b:#2563EB;--btn-b-ink:#FFFFFF}
+:root{--btn-y:#FFD23F;--btn-y-ink:#1E3A8A;--btn-w:#FFFFFF;--btn-w-ink:#1E3A8A;--btn-b:#2563EB;--btn-b-ink:#FFFFFF}
 .btn,.poster.p1 .btn,.yf .yf-b1{background:var(--btn-y)!important;color:var(--btn-y-ink)!important;border:0!important}
 .btn.sec,.poster.p1 .btn.sec,.hero .btn.sec,.land-cta .btn.sec,.auth-card.cloud .btn.big{background:var(--btn-w)!important;color:var(--btn-w-ink)!important;border:0!important}
 .land-cta [data-c=landReg],#authForm button[type=submit],.pc-next .btn,#onb .btn:not(.sec){background:var(--btn-b)!important;color:var(--btn-b-ink)!important;border:0!important}
 .btn:hover{filter:brightness(1.06)}
 .btn:focus-visible{outline:3px solid var(--btn-w);outline-offset:2px}
+
+/* синий, белый, жёлтый: логотип жёлтый */
+.yf-big,.auth .wm b{background-color:var(--btn-y)!important}
+.btn.sec{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--brand-dark) 20%,transparent)!important}
 </style>
 </head>
 <body>
@@ -1086,7 +1090,7 @@ function clap(btn){btn.classList.remove('clap');void btn.offsetWidth;btn.classLi
 /* ---------- настройки оформления (общие для всех проектов) ---------- */
 const PREF_KEY='zp.prefs';
 const PALETTES=['hustle'];
-const PAL_DARK={hustle:'#013E37',icy:'#03062F',petal:'#6E184E',aqua:'#2D198A'};
+const PAL_DARK={hustle:'#1E3A8A',icy:'#03062F',petal:'#6E184E',aqua:'#2D198A'};
 let PREF={palette:'hustle',mode:'dark',rail:false};
 try{Object.assign(PREF,JSON.parse(localStorage.getItem(PREF_KEY))||{})}catch(e){}
 if(PALETTES.indexOf(PREF.palette)<0)PREF.palette='hustle';
@@ -1098,7 +1102,7 @@ function applyTheme(){
   const mb=$('#modeBtn');if(mb)mb.textContent='Тема: '+({auto:'как в системе',light:'светлая',dark:'тёмная'}[PREF.mode]);
   $$('.sw').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===PREF.palette)));
   $$('.palopt').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===PREF.palette)));
-  {const mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute('content',PAL_DARK[PREF.palette]||'#013E37')}
+  {const mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute('content',PAL_DARK[PREF.palette]||'#1E3A8A')}
   const lb=$('#langBtn');if(lb)lb.textContent='Язык: '+(PREF.lang==='kk'?'Қазақша (частично)':'Русский');
   document.documentElement.lang='ru';
   {const ap=document.getElementById('app');if(ap)ap.classList.toggle('rail',!!PREF.rail);document.body.classList.toggle('railed',!!PREF.rail);const rb=document.getElementById('railBtn');if(rb){const tx=PREF.rail?'Развернуть панель':'Свернуть панель';rb.title=tx;rb.setAttribute('aria-label',tx)}}
