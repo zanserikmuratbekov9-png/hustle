@@ -1516,7 +1516,7 @@ function vDock(){
     '<div class="line"><span class="pct">Налог (НДС) <input type="number" min="0" step="any" data-a="pct" data-f="taxPct" value="'+esc(S.taxPct)+'" aria-label="Налог, %">%</span><span id="t-tax"></span></div>'+
     '<div class="total"><span>Бюджет проекта</span><b id="t-total"></b></div>'+
     '<div class="line"><span>Потрачено (факт)</span><b id="t-fact"></b></div><div class="line"><span>Остаток бюджета</span><b id="t-left"></b></div>'+
-    '<div class="row noprint"><button class="btn" type="button" data-c="copyBudget">'+icon('copy')+'Копировать для таблицы</button>'+'<button class="btn sec" type="button" data-c="csvBudget">'+icon('download')+'Скачать CSV</button>'+'<button class="btn sec" type="button" data-c="budXlsx">'+icon('download')+'Скачать .xlsx</button>'+'<button class="btn sec" type="button" data-c="print" data-dock="1">'+icon('print')+'Печать / PDF</button>'+'</div>'+
+    '<div class="row noprint"><button class="btn" type="button" data-c="copyBudget">'+icon('copy')+'Копировать для таблицы</button>'+'<button class="btn sec" type="button" data-c="budgetPdf">'+icon('download')+'Скачать PDF</button><button class="btn sec" type="button" data-c="csvBudget">'+icon('download')+'Скачать CSV</button>'+'<button class="btn sec" type="button" data-c="budXlsx">'+icon('download')+'Скачать .xlsx</button>'+'<button class="btn sec" type="button" data-c="print" data-dock="1">'+icon('print')+'Печать / PDF</button>'+'</div>'+
   '</div><div><h2 style="margin-bottom:10px">Структура расходов</h2><div id="bars"></div></div></div>':'')+'</div>';
 }
 function vBudget(){
@@ -1651,7 +1651,7 @@ function vCall(){
     '<label>Телефон продюсера<input type="tel" data-a="cs" data-f="phone" value="'+esc(S.cs.phone)+'"></label>'+
     cityFieldHtml()+'<label class="wide">Адрес съёмочной площадки<input data-a="csinfo" data-f="addr" value="'+esc(inf.addr)+'" placeholder="Город, улица, дом, ориентиры для парковки"></label>'+
     '<label class="wide">Примечания для группы<textarea rows="3" data-a="csinfo" data-f="notes" placeholder="Погода, транспорт, питание, требования по безопасности">'+esc(inf.notes)+'</textarea></label>'+
-    '<div class="wide row"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn sec" type="button" data-c="csDocx">'+icon('download')+'Скачать .docx</button></div></div>';
+    '<div class="wide row"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn" type="button" data-c="csPdf">'+icon('download')+'Скачать PDF</button><button class="btn sec" type="button" data-c="csDocx">'+icon('download')+'Скачать .docx</button></div></div>';
   return head+'<div class="col"><div class="noprint">'+panel('csform','callsheet','Данные дня',form)+'</div>'+
   '<section class="panel"><div class="sheet-title"><h1>Вызывной лист</h1></div>'+
     '<div class="ph"><h2>'+esc(S.name)+'</h2><b>День '+d+' из '+md+'</b></div>'+
@@ -3045,6 +3045,66 @@ function textBlocks(text){
   lines.forEach((l,i)=>{if(!l.trim()){out.push({t:'',after:40});return}out.push(i===0?{t:l,b:true,size:14,center:true,after:160}:l)});
   return out;
 }
+
+/* ---------- PDF (jsPDF, грузится только по нажатию) ---------- */
+const loadScript=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>no(new Error('load '+src));document.head.appendChild(s)});
+let PDF_READY=null;
+function pdfLib(){
+  if(!PDF_READY)PDF_READY=(async()=>{
+    if(!window.jspdf)await loadScript('vendor/jspdf.umd.min.js?v=1');
+    if(!(window.jspdf&&window.jspdf.jsPDF&&window.jspdf.jsPDF.API.autoTable))await loadScript('vendor/jspdf.plugin.autotable.min.js?v=1');
+    const f=async n=>{const r=await fetch('vendor/fonts/'+n);if(!r.ok)throw new Error('font');const b=new Uint8Array(await r.arrayBuffer());let s='';for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)};
+    const fs=await Promise.all([f('PT_Sans-Web-Regular.ttf'),f('PT_Sans-Web-Bold.ttf')]);
+    return {r:fs[0],b:fs[1]};
+  })().catch(e=>{PDF_READY=null;throw e});
+  return PDF_READY;
+}
+async function makePdf(blocks,title){
+  const fonts=await pdfLib(),doc=new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+  doc.addFileToVFS('pts.ttf',fonts.r);doc.addFont('pts.ttf','PTS','normal');doc.addFileToVFS('ptsb.ttf',fonts.b);doc.addFont('ptsb.ttf','PTS','bold');
+  const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=40,BLUE=[30,58,138],YEL=[255,210,63];
+  let y=64;
+  const fix=v=>String(v==null?'':v).replace(/₸/g,'тг');
+  const room=h=>{if(y+h>H-46){doc.addPage();y=56}};
+  blocks.forEach(b=>{
+    if(b&&b.table){
+      const rows=b.table.filter(r=>r&&r.length).map(r=>r.map(fix));if(!rows.length)return;
+      doc.autoTable({startY:y,head:b.head?[rows[0]]:undefined,body:b.head?rows.slice(1):rows,margin:{left:M,right:M,top:56,bottom:46},
+        styles:{font:'PTS',fontSize:9.5,cellPadding:5,textColor:[25,25,35],lineColor:[210,216,232],lineWidth:.5},
+        headStyles:{font:'PTS',fontStyle:'bold',fillColor:BLUE,textColor:[255,255,255]},alternateRowStyles:{fillColor:[244,246,252]},
+        didParseCell:d=>{if(b.boldLast&&d.section==='body'&&d.row.index===d.table.body.length-1)d.cell.styles.fontStyle='bold'}});
+      y=doc.lastAutoTable.finalY+16;return;
+    }
+    const o=typeof b==='string'?{t:b}:b,size=o.size||(o.b?12:10.5);
+    if(o.b&&!o.center&&y>80)y+=8;
+    doc.setFont('PTS',o.b?'bold':'normal');doc.setFontSize(size);doc.setTextColor(25,25,35);
+    const lines=doc.splitTextToSize(fix(o.t),W-2*M),lh=size*1.35;
+    lines.forEach(l=>{room(lh);doc.text(l,o.center?W/2:M,y,{align:o.center?'center':'left'});y+=lh});
+    y+=o.after?o.after/20:4;
+  });
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){
+    doc.setPage(i);doc.setFillColor(...BLUE);doc.rect(0,0,W,30,'F');
+    doc.setFont('PTS','bold');doc.setFontSize(12);doc.setTextColor(...YEL);doc.text('HUSTLE',M,20);
+    doc.setFont('PTS','normal');doc.setFontSize(9);doc.setTextColor(255,255,255);doc.text(fix(title),W-M,20,{align:'right'});
+    doc.setTextColor(120,125,140);doc.setFontSize(8.5);doc.text('Сделано в HUSTLE',M,H-22);doc.text('стр. '+i+' из '+n,W-M,H-22,{align:'right'});
+  }
+  return doc.output('blob');
+}
+async function savePdf(name,blocks,title,btn){
+  if(btn)btn.disabled=true;toast('Готовлю PDF…');
+  try{const blob=await makePdf(blocks,title);await saveFile(name,blob,'application/pdf')}
+  catch(e){console.warn(e);toast('Не удалось собрать PDF. Проверьте интернет и попробуйте ещё раз.')}
+  finally{if(btn)btn.disabled=false}
+}
+function budgetPdfBlocks(){
+  const nf=v=>(typeof v==='number'||(v!==''&&!isNaN(Number(v))))?Number(v).toLocaleString('ru-RU'):v;
+  const rows=budgetRows().map((r,k)=>k===0||!r.length?r:r.map((v,j)=>j>=2&&j!==3?nf(v):v)),i=rows.findIndex(r=>!r.length),items=rows.slice(0,i<0?rows.length:i).filter((r,k)=>k===0||String(r[1]||'').trim()||num(r[5])),tot=i<0?[]:rows.slice(i+1);
+  const b=[{t:'СМЕТА',b:true,size:16,center:true},{t:S.name,b:true,center:true,after:200}];
+  if(items.length>1)b.push({table:items,head:true});else b.push('Смета пока пустая.');
+  if(tot.length)b.push({t:'Итоги',b:true,after:60},{table:tot.map(r=>[r[1],r[4]||'',r[5]]),boldLast:true});
+  return b;
+}
 function callsheetBlocks(d){
   ensurePlan();const inf=dayInfo(d),sc=S.scenes.filter(s=>S.assign[s.id]===d),cast=[];
   sc.forEach(s=>s.chars.forEach(c=>{if(cast.indexOf(c)<0)cast.push(c)}));
@@ -3263,6 +3323,8 @@ document.addEventListener('click',e=>{
   else if(c==='exportAll'){exportAll()}
   else if(c==='budXlsx'){saveFile('smeta.xlsx',budgetXlsx())}
   else if(c==='dlScriptDocx'){saveFile('scenariy.docx',makeDocx(scriptBlocks()))}
+  else if(c==='csPdf'){ensurePlan();savePdf('vyzyvnoy-list-den-'+S.cs.day+'.pdf',callsheetBlocks(S.cs.day),'Вызывной лист · '+S.name,b)}
+  else if(c==='budgetPdf'){savePdf('smeta.pdf',budgetPdfBlocks(),'Смета · '+S.name,b)}
   else if(c==='csDocx'){ensurePlan();saveFile('vyzyvnoy-list-den-'+S.cs.day+'.docx',makeDocx(callsheetBlocks(S.cs.day)))}
   else if(c==='shotXlsx'){saveFile('shot-list.xlsx',shotsXlsx())}
   else if(c==='docDocx'){saveFile((DOC_NAMES[S.doc.type]||'document')+'.docx',makeDocx(textBlocks(docText())))}
