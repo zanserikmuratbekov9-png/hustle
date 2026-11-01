@@ -932,12 +932,6 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,color-mix(in s
 .yf-big,.auth .wm b{background-color:var(--btn-y)!important}
 .btn.sec{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--brand-dark) 20%,transparent)!important}
 
-/* ===== заставка: логотип растекается кляксой ===== */
-.splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:color-mix(in srgb,var(--brand-dark) 70%,#000);transition:opacity .4s ease;pointer-events:none}
-.splash.out{opacity:0}
-.sp-ink{width:min(70vw,620px);height:auto;overflow:visible;animation:spInkIn 1.3s cubic-bezier(.3,1.4,.4,1) both}
-@keyframes spInkIn{0%{transform:scale(.55) rotate(-6deg);opacity:0}15%{opacity:1}60%{transform:scale(1.06) rotate(1deg)}100%{transform:scale(1) rotate(-2deg);opacity:1}}
-.splash.calm .sp-ink{animation:none}
 </style>
 </head>
 <body>
@@ -1301,22 +1295,10 @@ function showAuth(keepMode){
   if(!keepMode)authMode='login';
   renderAuth();$$('.logo').forEach(b=>b.innerHTML=LOGO);$$('.lf-ic').forEach(s=>{if(!s.firstChild)s.innerHTML=icon(s.dataset.ic)});applyTheme();
 }
-/* ---------- заставка-клякса при входе ---------- */
-let SPLASHED=false;
-function playSplash(){
-  if(SPLASHED)return;SPLASHED=true;
-  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const el=document.createElement('div');el.className='splash'+(reduce?' calm':'');el.setAttribute('aria-hidden','true');
-  el.innerHTML='<svg class="sp-ink" viewBox="0 0 2466 1000"><defs><filter id="spInk" filterUnits="userSpaceOnUse" x="-600" y="-600" width="3666" height="2200"><feGaussianBlur in="SourceAlpha" stdDeviation="'+(reduce?0:60)+'" result="b"><animate attributeName="stdDeviation" values="60;22;8;0" keyTimes="0;.45;.8;1" dur="1.2s" begin="indefinite" fill="freeze"/></feGaussianBlur><feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 40 -16" result="t"/><feFlood flood-color="#FFD23F"/><feComposite in2="t" operator="in"/></filter></defs><image href="'+LOGO_IMG+'" width="2466" height="1000" filter="url(#spInk)"/></svg>';
-  document.body.appendChild(el);
-  if(!reduce){const an=el.querySelector('animate');try{an&&an.beginElement()}catch(e){}}
-  setTimeout(()=>el.classList.add('out'),reduce?900:1650);
-  setTimeout(()=>el.remove(),reduce?1300:2050);
-}
 function enter(user){
   CLOUD=null;USER=user;S=loadData();
   try{localStorage.setItem(SESS_KEY,user)}catch(e){}
-  $('#auth').hidden=true;$('#app').hidden=false;playSplash();
+  $('#auth').hidden=true;$('#app').hidden=false;
   closeMenus();
   render();showOnb();
   if(LOAD_WARN){toast(LOAD_WARN);LOAD_WARN=''}
@@ -1421,7 +1403,7 @@ function finishCloud(c,remote,offline){
   }
   S=chosen;
   LAST_SIG=fromRemote?syncSig():'';
-  $('#auth').hidden=true;const am=$('#authMsg');if(am)am.textContent='';$('#app').hidden=false;playSplash();
+  $('#auth').hidden=true;const am=$('#authMsg');if(am)am.textContent='';$('#app').hidden=false;
   closeMenus();render();showOnb();
   if(LOAD_WARN){toast(LOAD_WARN);LOAD_WARN=''}
   if(offline)setSaveState(false,{cloud:true});
