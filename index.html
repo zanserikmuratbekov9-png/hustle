@@ -932,6 +932,20 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,color-mix(in s
 .yf-big,.auth .wm b{background-color:var(--btn-y)!important}
 .btn.sec{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--brand-dark) 20%,transparent)!important}
 
+
+/* ===== команда ===== */
+.tprojs{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.tproj{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:180px;padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:var(--soft)}
+.tproj b{font-size:15px}.tproj small{font-size:12.5px;color:var(--muted)}
+.tproj.on{border-color:var(--btn-y);box-shadow:inset 0 0 0 1px var(--btn-y)}
+.tproj:focus-visible{outline:3px solid var(--btn-y);outline-offset:2px}
+.tmem{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.tmem li{display:flex;align-items:center;gap:10px}
+.tmem li>span:nth-child(2){display:flex;flex-direction:column;flex:1;min-width:0}
+.tmem small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis}
+.tmem .av{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--btn-y);color:var(--btn-y-ink);font-weight:700;flex:none}
+.join-note{margin:0;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--btn-y) 18%,transparent);border:1px solid color-mix(in srgb,var(--btn-y) 50%,transparent);font-size:14px}
+.tinv{background:var(--soft)!important;color:var(--ink)!important;border:1px solid var(--line)!important;border-radius:12px;padding:10px 12px;font-size:14px}
 </style>
 </head>
 <body>
@@ -945,6 +959,7 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,color-mix(in s
     <p class="land-lead">Сценарий, план съёмок, смета, вызывной лист и документы в одном месте. Загрузите сценарий, и HUSTLE подготовит основу для всей производственной работы.</p>
     <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button><button class="btn big sec" type="button" data-c="guest">Попробовать без регистрации</button></div>
     <p class="land-note">Сейчас все инструменты бесплатны: сайт в открытом тестировании.</p>
+    <p class="join-note" id="joinNote" hidden>Вас пригласили в проект команды. Войдите или создайте аккаунт, и проект откроется.</p>
    </div>
   <div class="auth-card" id="authCard">
     <button class="logo big" data-c="logo" type="button" aria-label="Логотип HUSTLE — нажмите, чтобы щёлкнуть хлопушкой"></button>
@@ -1144,7 +1159,7 @@ function normalize(d){
   if(ROLE_TABS[d.role].indexOf(d.tab)<0)d.tab='home';
   return d;
 }
-const dataKey=()=>'zp.data.'+USER;
+const dataKey=()=>'zp.data.'+USER+(CLOUD&&CLOUD.pid&&CLOUD.pid!==CLOUD.uid?'.p.'+CLOUD.pid:'');
 function loadData(){
   let raw=null;
   try{raw=localStorage.getItem(dataKey())}catch(e){}
@@ -1187,12 +1202,16 @@ async function cloudPush(){
     const rest=Object.assign({},S);delete rest.heroImg;
     const data=JSON.parse(JSON.stringify(rest));
     if(JSON.stringify(data).length>6e6){const er=new Error('too-big');er.big=true;throw er}
-    const r=await SB.from('projects').upsert({user_id:c.uid,data:data,updated_at:new Date().toISOString()});
+    const now=new Date().toISOString();let r;
+    if(c.pid===c.uid)r=await SB.from('projects').upsert({user_id:c.uid,data:data,updated_at:now});
+    else{r=await SB.from('projects').update({data:data,updated_at:now}).eq('user_id',c.pid).select('user_id');
+      if(!r.error&&(!r.data||!r.data.length)){const er=new Error('no-access');er.noAccess=true;throw er}}
     if(r.error)throw r.error;
-    ok=true;
+    ok=true;c.remoteAt=now;
     if(CLOUD===c&&S&&S.savedAt===stamp){c.dirty=false;setSaveState(true)}
   }catch(e){
     if(e&&e.big)retry=false;
+    if(e&&e.noAccess){retry=false;c.noPush=true;toast('Доступ к этому проекту закрыт. Изменения не сохраняются в облаке.')}
     setSaveState(false,{cloud:true,big:!!(e&&e.big)});
     if(retry){clearTimeout(cloudTimer);cloudTimer=setTimeout(cloudPush,30000)}
   }finally{cloudBusy=false}
@@ -1262,6 +1281,7 @@ async function hashPw(pw,salt){
 }
 let RECOVERY=false;
 function renderAuth(){
+  {const jn=$('#joinNote');if(jn)jn.hidden=!(SB&&pendingJoin())}
   const cloud=!!SB,mode=authMode,reg=mode==='register',rec=mode==='recover',forgot=mode==='forgot';
   const card=$('#authCard');if(card)card.classList.toggle('cloud',cloud);
   const sm=$('.auth-more summary');if(sm)sm.textContent=cloud?'Вход и регистрация':'Локальный аккаунт (демо)';
@@ -1359,26 +1379,33 @@ async function onAuthSubmitCloud(e){
 }
 function onAuthSubmit(e){return SB?onAuthSubmitCloud(e):onAuthSubmitLocal(e)}
 
-async function enterCloud(session){
+async function enterCloud(session,pid){
   const u=session.user;
-  if(CLOUD&&CLOUD.uid===u.id)return;
-  const c=CLOUD={uid:u.id,email:u.email||'',name:(u.user_metadata&&u.user_metadata.name)||'',dirty:false,noPush:false};
+  if(!pid){try{pid=localStorage.getItem('zp.lastpid.'+u.id)}catch(e){}}
+  pid=pid||u.id;
+  if(CLOUD&&CLOUD.uid===u.id&&CLOUD.pid===pid)return;
+  const c=CLOUD={uid:u.id,pid:pid,email:u.email||'',name:(u.user_metadata&&u.user_metadata.name)||'',dirty:false,noPush:false,remoteAt:null};
   USER='u:'+u.id;
   const am=$('#authMsg');if(am)am.textContent='Загружаем проект…';
   let cacheRaw=null;try{cacheRaw=localStorage.getItem(dataKey())}catch(e){}
   let remote=null,failed=false;
   try{
-    const r=await SB.from('projects').select('data,updated_at').eq('user_id',u.id).maybeSingle();
+    const r=await SB.from('projects').select('data,updated_at').eq('user_id',pid).maybeSingle();
     if(r.error)throw r.error;
     remote=r.data;
   }catch(e){failed=true}
   if(CLOUD!==c)return;
+  if(!failed&&pid!==u.id&&!remote){
+    try{localStorage.removeItem('zp.lastpid.'+u.id)}catch(e){}
+    toast('Проект команды недоступен: возможно, вас убрали из команды. Открываю ваш проект.');CLOUD=null;return enterCloud(session,u.id);
+  }
   if(failed){
     showDialog({title:'Нет связи с облаком',
       text:cacheRaw?'Не удалось загрузить проект с сервера. Можно повторить или открыть копию из этого браузера (до перезагрузки страницы изменения в облако отправляться не будут).':'Не удалось загрузить проект с сервера. Проверьте интернет и повторите.',
-      actions:[{label:'Повторить',run:()=>{CLOUD=null;enterCloud(session)}}].concat(cacheRaw?[{label:'Открыть копию из браузера',sec:true,run:()=>finishCloud(c,null,true)}]:[{label:'Выйти',sec:true,run:()=>showAuth()}])});
+      actions:[{label:'Повторить',run:()=>{CLOUD=null;enterCloud(session,pid)}}].concat(cacheRaw?[{label:'Открыть копию из браузера',sec:true,run:()=>finishCloud(c,null,true)}]:[{label:'Выйти',sec:true,run:()=>showAuth()}])});
     return;
   }
+  c.remoteAt=remote&&remote.updated_at||null;
   finishCloud(c,remote,false);
 }
 function finishCloud(c,remote,offline){
@@ -1396,6 +1423,7 @@ function finishCloud(c,remote,offline){
   if(offline)c.noPush=true;
   if(!chosen){
     chosen=fresh();
+    if(c.pid===c.uid)
     try{
       const raw=localStorage.getItem('zp.data.guest');
       if(raw){const g=normalize(JSON.parse(raw)),prev=S;S=g;const has=hasData();S=prev;if(has)offerGuest=g}
@@ -1407,6 +1435,7 @@ function finishCloud(c,remote,offline){
   closeMenus();render();showOnb();
   if(LOAD_WARN){toast(LOAD_WARN);LOAD_WARN=''}
   if(offline)setSaveState(false,{cloud:true});
+  TEAM.at=0;setTimeout(processJoin,300);
   if(offerGuest){
     showDialog({title:'Перенести проект из демо-режима?',text:'В этом браузере есть проект «'+String(offerGuest.name||'без названия')+'», созданный без аккаунта. Перенести его в ваш аккаунт?',
       actions:[{label:'Перенести',run:()=>applyImport(offerGuest)},{label:'Нет, начать с нуля',sec:true}]});
@@ -2418,7 +2447,7 @@ function vHome(){
     '<div class="pc-next"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
     '<div class="pc-next"><div><b>Все шаги выполнены</b><span>Проверьте задачи и вызывной лист.</span></div><button class="btn" type="button" data-c="tab" data-k="tasks">'+icon('check')+'Открыть задачи</button></div>';
   const demo=S.scenes.length?'':'<div class="row" style="margin-top:10px"><span class="muted">Нет сценария под рукой?</span><button class="btn sec" type="button" data-c="demo" data-k="1">Пример «Последний звонок»</button></div>';
-  const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+t('Мой проект')+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div>'+statsOrHint()+'</div>'+
+  const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+(isShared()?'Проект команды':t('Мой проект'))+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div>'+statsOrHint()+'</div>'+
     '<div class="prog">'+steps.map(x=>'<i class="'+(stepDone(x[0])?'on':'')+'"></i>').join('')+'</div>'+nextBlock+'<div class="row">'+quickActions()+'</div>'+demo+'</section>';
   const posters=posterList().map(posterHtml).join('');
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
@@ -2430,6 +2459,114 @@ function vHome(){
     '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
 
+
+/* ---------- командная работа ---------- */
+let TEAM={at:0,teams:[],members:[],invite:'',busy:false,err:''};
+try{const m=/[#&]join=([A-Za-z0-9_-]{20,64})/.exec(location.hash);if(m){localStorage.setItem('zp.join',m[1]);history.replaceState(null,'',location.pathname+location.search)}}catch(e){}
+const pendingJoin=()=>{try{return localStorage.getItem('zp.join')}catch(e){return null}};
+const isShared=()=>!!(CLOUD&&CLOUD.pid&&CLOUD.pid!==CLOUD.uid);
+async function processJoin(){
+  const tok=pendingJoin();if(!tok||!CLOUD||!SB)return;
+  try{localStorage.removeItem('zp.join')}catch(e){}
+  try{
+    const r=await SB.rpc('join_project',{p_token:tok});
+    if(r.error)throw r.error;
+    const owner=r.data;
+    if(!owner||owner===CLOUD.uid){toast('Это приглашение в ваш собственный проект');return}
+    TEAM.at=0;toast('Вы присоединились к проекту команды');switchProject(owner);
+  }catch(e){
+    const m=String(e&&(e.message||e.code)||'');
+    toast(/invite_invalid/.test(m)?'Ссылка-приглашение недействительна или устарела. Попросите новую.':/function|join_project|schema/i.test(m)?'Командная работа ещё не включена на сервере.':'Не удалось присоединиться к проекту. Попробуйте ещё раз.');
+  }
+}
+async function loadTeam(force){
+  if(!CLOUD||!SB||TEAM.busy)return;
+  if(!force&&Date.now()-TEAM.at<30000)return;
+  TEAM.busy=true;TEAM.err='';
+  try{
+    const a=await SB.rpc('my_teams');if(a.error)throw a.error;
+    TEAM.teams=a.data||[];
+    if(!isShared()){const b=await SB.from('project_members').select('member_id,member_name,member_email,joined_at').eq('owner_id',CLOUD.uid).order('joined_at');if(b.error)throw b.error;TEAM.members=b.data||[]}
+    else TEAM.members=[];
+  }catch(e){TEAM.err=/function|relation|schema|does not exist/i.test(String(e&&(e.message||e.code)||''))?'setup':'net'}
+  finally{TEAM.busy=false;TEAM.at=Date.now()}
+  if(S&&S.tab==='proj')render();
+}
+async function switchProject(pid){
+  if(!CLOUD||!SB||CLOUD.pid===pid)return;
+  const c=CLOUD;
+  if(c.dirty&&!c.noPush)await cloudPush();
+  const s=(await SB.auth.getSession()).data.session;if(!s){showAuth();return}
+  try{localStorage.setItem('zp.lastpid.'+c.uid,pid)}catch(e){}
+  CLOUD=null;TEAM.at=0;TEAM.invite='';
+  await enterCloud(s,pid);
+}
+async function teamInvite(btn){
+  if(!CLOUD||isShared())return;
+  if(btn)btn.disabled=true;
+  try{
+    if(CLOUD.dirty)await cloudPush();
+    const a=new Uint8Array(18);crypto.getRandomValues(a);
+    const tok=btoa(String.fromCharCode.apply(null,a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const r=await SB.from('project_invites').insert({token:tok,owner_id:CLOUD.uid});if(r.error)throw r.error;
+    TEAM.invite=location.origin+location.pathname+'#join='+tok;render();
+    copyText(TEAM.invite,'Ссылка скопирована: отправьте её команде');
+  }catch(e){toast(/relation|schema|does not exist/i.test(String(e&&(e.message||e.code)||''))?'Командная работа ещё не включена на сервере.':'Не удалось создать приглашение')}
+  finally{if(btn)btn.disabled=false}
+}
+async function teamKick(id){
+  if(!CLOUD)return;
+  const r=await SB.from('project_members').delete().eq('owner_id',CLOUD.uid).eq('member_id',id);
+  if(r.error){toast('Не удалось убрать участника');return}
+  toast('Участник убран из команды');loadTeam(true);
+}
+async function teamLeave(){
+  if(!isShared())return;
+  const pid=CLOUD.pid,uid=CLOUD.uid;
+  const r=await SB.from('project_members').delete().eq('owner_id',pid).eq('member_id',uid);
+  if(r.error){toast('Не удалось выйти из проекта');return}
+  CLOUD.noPush=true;try{localStorage.removeItem(dataKey());localStorage.removeItem('zp.lastpid.'+uid)}catch(e){}
+  toast('Вы вышли из проекта команды');switchProject(uid);
+}
+const KEEP_LOCAL=['tab','role','pc','dockOpen','hubAll','seen','onboarded','rtab','dealCat','artCat'];
+async function pullRemote(){
+  const c=CLOUD;if(!c||!SB||c.dirty||c.noPush||cloudBusy||!S)return;
+  const ae=document.activeElement;if(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))return;
+  try{
+    const r=await SB.from('projects').select('data,updated_at').eq('user_id',c.pid).maybeSingle();
+    if(CLOUD!==c||c.dirty||r.error||!r.data||!r.data.data)return;
+    if(c.remoteAt&&new Date(r.data.updated_at)<=new Date(c.remoteAt))return;
+    if(!c.remoteAt){c.remoteAt=r.data.updated_at;return}
+    const d=normalize(JSON.parse(JSON.stringify(r.data.data)));
+    KEEP_LOCAL.forEach(k=>{if(k in S)d[k]=S[k]});d.heroImg=S.heroImg||'';
+    S=d;LAST_SIG=syncSig();c.remoteAt=r.data.updated_at;
+    try{localStorage.setItem(dataKey(),JSON.stringify(S))}catch(e){}
+    render();toast(isShared()?'Проект обновлён: есть изменения от команды':'Проект обновлён с другого устройства');
+  }catch(e){}
+}
+setInterval(()=>{if(document.visibilityState==='visible')pullRemote()},20000);
+function teamHtml(){
+  if(!SB)return '';
+  if(!CLOUD)return panel('team','role','Команда','<p class="muted" style="margin:0">Чтобы работать над проектом вместе, войдите в аккаунт. В демо-режиме проект хранится только в этом браузере.</p>');
+  loadTeam();
+  if(TEAM.err==='setup')return panel('team','role','Команда','<p class="muted" style="margin:0">Командная работа ещё не включена на сервере: нужно выполнить <b>supabase/team.sql</b> в Supabase.</p>');
+  const own=!isShared();
+  const projBtn=(pid,label,sub)=>'<button class="tproj'+(CLOUD.pid===pid?' on':'')+'" type="button" data-c="switchProj" data-id="'+esc(pid)+'"'+(CLOUD.pid===pid?' aria-current="true"':'')+'><b>'+esc(label)+'</b><small>'+esc(sub)+'</small></button>';
+  const projs='<div class="tprojs">'+projBtn(CLOUD.uid,'Мой проект',own?S.name:'ваш личный проект')+TEAM.teams.map(x=>projBtn(x.owner_id,x.project_name||'Проект без названия','владелец: '+(x.owner_name||x.owner_email||'участник'))).join('')+'</div>';
+  let body='<span class="lbl">Проекты</span>'+projs;
+  if(own){
+    const mem=TEAM.members.length?'<ul class="tmem">'+TEAM.members.map(m=>'<li><span class="av" aria-hidden="true">'+esc(((m.member_name||m.member_email||'?')[0]||'?').toUpperCase())+'</span><span><b>'+esc(m.member_name||m.member_email||'Участник')+'</b>'+(m.member_name&&m.member_email?'<small>'+esc(m.member_email)+'</small>':'')+'</span><button class="link" type="button" data-c="teamKick" data-id="'+esc(m.member_id)+'">Убрать</button></li>').join('')+'</ul>':'<p class="muted" style="margin:6px 0 0">Пока в команде только вы.</p>';
+    body+='<span class="lbl" style="margin-top:16px;display:block">Команда этого проекта</span>'+mem+
+      '<div class="row" style="margin-top:12px"><button class="btn" type="button" data-c="teamInvite">'+icon('plus')+'Пригласить по ссылке</button></div>'+
+      (TEAM.invite?'<label style="margin-top:10px;display:flex;flex-direction:column;gap:6px">Ссылка-приглашение (действует 14 дней)<input class="tinv" readonly value="'+esc(TEAM.invite)+'" onclick="this.select()"></label>':'')+
+      '<p class="muted" style="margin:10px 0 0;font-size:13px">Кто откроет ссылку и войдёт в аккаунт, сможет смотреть и менять этот проект. Если двое правят одно и то же одновременно, сохранится последнее изменение.</p>';
+  }else{
+    const ow=TEAM.teams.find(x=>x.owner_id===CLOUD.pid);
+    body+='<p style="margin:14px 0 0">Вы участник проекта'+(ow?' <b>'+esc(ow.owner_name||ow.owner_email||'')+'</b>':'')+'. Изменения сохраняются для всей команды.</p>'+
+      '<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="teamLeave">Покинуть проект</button></div>';
+  }
+  return panel('team','role','Команда и проекты',body);
+}
 /* ---------- проект: хаб инструментов ---------- */
 function toolCard(x){
   return '<button class="tool'+(x.r.indexOf(S.role)>-1?' rel':'')+'" type="button" data-c="tab" data-k="'+x.id+'"><span class="ti">'+icon(x.ic)+'</span><span><b>'+t(x.n)+'</b><small>'+t(x.d)+'</small></span>'+(stepDone(x.id)?'<i class="ok" aria-label="готово">✓</i>':'')+'</button>';
@@ -2444,7 +2581,7 @@ function vProj(){
   const mine=x=>S.hubAll||x.r.indexOf(S.role)>-1;
   const main=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&mine(x)),more=TOOLS.filter(x=>CORE.indexOf(x.id)<0&&mine(x));
   const groups='<div class="tools" style="margin-top:16px">'+main.map(toolCard).join('')+'</div>'+(more.length?'<details class="addp"><summary>Ещё инструменты ('+more.length+')</summary><div class="tools" style="margin-top:10px">'+more.map(toolCard).join('')+'</div></details>':'');
-  return head+nextCard+backupBanner()+chips+groups;
+  return head+teamHtml()+nextCard+backupBanner()+chips+groups;
 }
 
 /* ---------- фестивали и гранты ---------- */
@@ -3349,6 +3486,10 @@ document.addEventListener('click',e=>{
   else if(c==='exportAll'){exportAll()}
   else if(c==='budXlsx'){saveFile('smeta.xlsx',budgetXlsx())}
   else if(c==='dlScriptDocx'){saveFile('scenariy.docx',makeDocx(scriptBlocks()))}
+  else if(c==='switchProj'){switchProject(b.dataset.id)}
+  else if(c==='teamInvite'){teamInvite(b)}
+  else if(c==='teamKick'){showDialog({title:'Убрать участника?',text:'Он больше не сможет открыть этот проект.',actions:[{label:'Убрать',run:()=>teamKick(b.dataset.id)},{label:'Отмена',sec:true}]})}
+  else if(c==='teamLeave'){showDialog({title:'Покинуть проект команды?',text:'Проект останется у владельца, но вы больше не сможете его открыть без нового приглашения.',actions:[{label:'Покинуть',run:teamLeave},{label:'Отмена',sec:true}]})}
   else if(c==='csPdf'){ensurePlan();savePdf('vyzyvnoy-list-den-'+S.cs.day+'.pdf',callsheetBlocks(S.cs.day),'Вызывной лист · '+S.name,b)}
   else if(c==='budgetPdf'){savePdf('smeta.pdf',budgetPdfBlocks(),'Смета · '+S.name,b)}
   else if(c==='csDocx'){ensurePlan();saveFile('vyzyvnoy-list-den-'+S.cs.day+'.docx',makeDocx(callsheetBlocks(S.cs.day)))}
