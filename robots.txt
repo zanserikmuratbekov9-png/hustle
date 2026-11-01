@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zanserikmuratbekov9-png.github.io/hustle/sitemap.xml
