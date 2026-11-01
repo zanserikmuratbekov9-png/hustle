@@ -2387,7 +2387,7 @@ function heroHtml(){
   const bg=S.heroImg||PHOTO_BG;
   const flt=(id,sc)=>'<filter id="'+id+'" x="-6%" y="-25%" width="112%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.016 0.03" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="'+sc+'" xChannelSelector="R" yChannelSelector="G" result="d"/><feDropShadow in="d" dx="0" dy="4" stdDeviation="0" style="flood-color:var(--brand-dark);flood-opacity:.35"/></filter>';
   const big='';
-  const sub='<p class="yf-slogan">«Снимай красивое кино, вместе с HUSTLE»</p>';
+  const sub='<p class="yf-slogan">Снимай красивое кино, вместе с HUSTLE</p>';
   return '<section class="yf" aria-label="HUSTLE"'+(bg?' style="--yf-img:url(\''+bg+'\')"':'')+'>'+
     '<div aria-hidden="true"></div>'+
     '<div class="yf-mid">'+big+sub+'<div class="yf-act"><button class="yw-btn yf-b1" type="button" data-c="tab" data-k="proj">Начать проект</button></div></div>'+
