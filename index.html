@@ -1006,6 +1006,14 @@ body.sbed-open{overflow:hidden}
 .lt3d-hint{margin:0;padding:120px 20px;text-align:center;color:var(--muted)}
 .lt3d-help{font-size:13px;margin:8px 0 0}
 .lt-nudge{display:flex;flex-direction:column;gap:6px}.lt-nudge>div{display:flex;gap:6px}.lt-nudge .btn{padding:8px 0!important;flex:1;justify-content:center;font-size:18px}
+
+/* ===== раскадровка из 3D ===== */
+.sbed-main{position:relative}
+.sb3d{border-radius:10px;overflow:hidden;background:#0d1226;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.sb3d canvas{display:block}
+.sbt-3d{background:rgba(255,210,63,.18)}
+.sbt-shot{background:var(--btn-y);color:var(--btn-y-ink);font-weight:700}
+.sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
 </style>
 </head>
 <body>
@@ -2104,8 +2112,8 @@ async function lt3Lib(){
   if(!LT3_LOADING)LT3_LOADING=Promise.all([import('./vendor/three.module.min.js'),import('./vendor/OrbitControls.js')]).catch(e=>{LT3_LOADING=null;throw e});
   return LT3_LOADING;
 }
-async function lt3Mount(){
-  const host=$('#lt3d');if(!host)return;
+async function lt3Mount(sel){
+  sel=sel||'#lt3d';const host=$(sel);if(!host)return;
   let mods;try{mods=await lt3Lib()}catch(e){host.innerHTML='<p class="lt3d-hint">Не удалось загрузить 3D. Проверьте интернет и обновите страницу.</p>';return}
   if(!host.isConnected)return;
   const T=mods[0],OrbitControls=mods[1].OrbitControls;
@@ -2118,20 +2126,28 @@ async function lt3Mount(){
     const scene=new T.Scene();scene.background=new T.Color(0x0d1226);scene.fog=new T.Fog(0x0d1226,22,45);
     const cam=new T.PerspectiveCamera(45,1.6,0.1,200);cam.position.set(4.5,5.5,8.5);
     const controls=new OrbitControls(cam,renderer.domElement);controls.target.set(0,0.8,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI/2-0.03;controls.minDistance=2;controls.maxDistance=35;
-    scene.add(new T.HemisphereLight(0xb8c6ff,0x2a3050,0.75));
+    const hemi=new T.HemisphereLight(0xb8c6ff,0x2a3050,0.75);scene.add(hemi);
+    const sun=new T.DirectionalLight(0xfff4e0,0);sun.position.set(4,8,6);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-8;sun.shadow.camera.right=8;sun.shadow.camera.top=8;sun.shadow.camera.bottom=-8;scene.add(sun);
     const floor=new T.Mesh(new T.PlaneGeometry(M3(800)+6,M3(520)+6),new T.MeshStandardMaterial({color:0x3a4266,roughness:.85}));
     floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
     const grid=new T.GridHelper(Math.max(M3(800),M3(520))+6,Math.round(Math.max(M3(800),M3(520))+6),0x5566aa,0x3a4466);grid.position.y=0.002;grid.material.opacity=.35;grid.material.transparent=true;scene.add(grid);
     const group=new T.Group();scene.add(group);
-    LT3={T:T,renderer:renderer,scene:scene,cam:cam,controls:controls,group:group,floor:floor,drag:null,ray:new T.Raycaster(),raf:0};
+    LT3={T:T,renderer:renderer,scene:scene,cam:cam,controls:controls,group:group,floor:floor,hemi:hemi,sun:sun,grid:grid,drag:null,ray:new T.Raycaster(),raf:0};
     lt3Events();
   }
   host.innerHTML='';host.appendChild(LT3.renderer.domElement);
+  LT3.mode=sel==='#sb3d'?'sb':'lt';
+  {const sb=LT3.mode==='sb',bg=sb?0x9aa4ba:0x0d1226;LT3.scene.background=new T.Color(bg);LT3.scene.fog.color=new T.Color(bg);
+   LT3.hemi.intensity=sb?1.3:0.75;LT3.sun.intensity=sb?1.6:0;LT3.floor.material.color=new T.Color(sb?0x6b7590:0x3a4266);LT3.grid.visible=!sb}
+  if(LT3.mode==='lt')LT3.controls.minDistance=2;
+  if(LT3.mode==='lt'&&LT3.cam.fov!==45){LT3.cam.fov=45;LT3.cam.position.set(4.5,5.5,8.5);LT3.controls.target.set(0,0.8,0)}
   lt3Size();lt3Sync();
   if(!LT3.raf)lt3Loop();
 }
 function lt3Size(){
   if(!LT3)return;const el=LT3.renderer.domElement,host=el.parentElement;if(!host)return;
+  if(LT3.mode==='sb'){const m=host.parentElement,W=m.clientWidth||800,H=m.clientHeight||450,w=Math.round(Math.min(W,H*16/9)),h=Math.round(w*9/16);
+    LT3.renderer.setSize(w,h,false);el.style.width=w+'px';el.style.height=h+'px';host.style.width=w+'px';host.style.height=h+'px';LT3.cam.aspect=16/9;LT3.cam.updateProjectionMatrix();return}
   const w=host.clientWidth||800,h=Math.max(280,Math.round(document.body.classList.contains('fs')?window.innerHeight-140:w*0.62));
   LT3.renderer.setSize(w,h,false);el.style.width='100%';el.style.height=h+'px';LT3.cam.aspect=w/h;LT3.cam.updateProjectionMatrix();
 }
@@ -2149,7 +2165,7 @@ function lt3Label(text,color){
   x.font='600 '+fs+'px Onest,system-ui,sans-serif';x.fillStyle='rgba(13,18,38,.78)';x.beginPath();if(x.roundRect)x.roundRect(0,0,w,c.height,18);else x.rect(0,0,w,c.height);x.fill();
   x.fillStyle=color||'#fff';x.textBaseline='middle';x.fillText(text,14,c.height/2+2);
   const tx=new T.CanvasTexture(c);tx.colorSpace=T.SRGBColorSpace;
-  const s=new T.Sprite(new T.SpriteMaterial({map:tx,depthTest:false,transparent:true}));s.scale.set(w/c.height*0.4,0.4,1);s.renderOrder=10;return s;
+  const s=new T.Sprite(new T.SpriteMaterial({map:tx,depthTest:false,transparent:true}));{const q=LT3.mode==='sb'?0.2:0.4;s.scale.set(w/c.height*q,q,1)};s.renderOrder=10;return s;
 }
 function lt3Dir(rot){const r=(num(rot)||0)*Math.PI/180;return {x:Math.sin(r),z:-Math.cos(r)}}
 function lt3Sync(){
@@ -2164,9 +2180,16 @@ function lt3Sync(){
     const sel=it.id===S.lightSel,selMat=std(0xffd23f,{emissive:0xffd23f,emissiveIntensity:.6});
     const add=(m,cast)=>{m.castShadow=cast!==false;m.receiveShadow=true;o.add(m);return m};
     if(it.type==='actor'){
-      const hg=num(it.h)||1.75,sit=it.pose==='sit',k=hg/1.75,eye=sit?hg*.72:hg-.25*k;
+      const hg=num(it.h)||1.75,sit=it.pose==='sit',k=hg/1.75,eye=sit?.47+.75*k:1.62*k;
       if(sit){const ch=add(new T.Mesh(new T.BoxGeometry(.5,.45,.5),std(0x6b5644)));ch.position.set(-d.x*.05,.225,-d.z*.05);const bk=add(new T.Mesh(new T.BoxGeometry(.5,.55,.06),std(0x6b5644)));bk.position.set(-d.x*.27,.72,-d.z*.27);bk.rotation.y=yaw}
-      const bh=sit?eye-.25*k-.45:hg-.45*k,body=add(new T.Mesh(new T.CylinderGeometry(.2*k,.24*k,bh,20),std(0xff8fb1)));body.position.y=(sit?.45:0)+bh/2;
+      const fig=new T.Group();fig.rotation.y=yaw;o.add(fig);const skin=std(0xffc2d4),cloth=std(0xff8fb1),pants=std(0x7a5a8f);
+      const limb=(r,len,mat,x,y,z,rx)=>{const m=new T.Mesh(new T.CapsuleGeometry(r,len,6,12),mat);m.castShadow=true;m.receiveShadow=true;m.position.set(x,y,z);if(rx)m.rotation.x=rx;fig.add(m);return m};
+      const hip=sit?.47:.92*k,sh=sit?hip+.55*k:1.42*k;
+      limb(.17*k,(sh-hip)-.2*k,cloth,0,(hip+sh)/2,0);
+      if(sit){limb(.075*k,.38*k,pants,-.1*k,hip,.22*k,Math.PI/2);limb(.075*k,.38*k,pants,.1*k,hip,.22*k,Math.PI/2);limb(.065*k,.32*k,pants,-.1*k,.24,.44*k);limb(.065*k,.32*k,pants,.1*k,.24,.44*k)}
+      else{limb(.08*k,.72*k,pants,-.1*k,hip/2,0);limb(.08*k,.72*k,pants,.1*k,hip/2,0)}
+      limb(.06*k,.5*k,cloth,-.25*k,sh-.3*k,0,sit?-.5:0);limb(.06*k,.5*k,cloth,.25*k,sh-.3*k,0,sit?-.5:0);
+      limb(.05*k,.08*k,skin,0,sh+.06*k,0);
       const head=add(new T.Mesh(new T.SphereGeometry(.15*k,20,16),std(0xffc2d4)));head.position.y=eye;
       const nose=add(new T.Mesh(new T.ConeGeometry(.05,.14,12),std(0xffffff)));nose.position.set(d.x*.17*k,eye,d.z*.17*k);nose.lookAt(o.position.x+d.x*2,eye,o.position.z+d.z*2);nose.rotateX(Math.PI/2);
       if(sel){const ring=new T.Mesh(new T.RingGeometry(.32,.4,32),selMat);ring.rotation.x=-Math.PI/2;ring.position.y=.01;o.add(ring)}
@@ -3967,6 +3990,61 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Delete'||e.key==='Backspace'){const L=curLight();L.items=L.items.filter(i=>i.id!==S.lightSel);S.lightSel='';paintLight();paintInspector();save();e.preventDefault()}
 });
 
+
+/* ---------- раскадровка: кадр из 3D-сцены ---------- */
+let SB3={on:false,mm:35};
+const sbFov=mm=>2*Math.atan(12/mm)*180/Math.PI;
+function sbSceneId(){return S.storyScene&&S.scenes.some(s=>s.id===S.storyScene)?S.storyScene:(S.scenes[0]&&S.scenes[0].id)}
+async function sb3dEnter(){
+  if(!ED||SB3.on)return;
+  const sid=sbSceneId();S.lightScene=sid||0;S.lightSel='';
+  const L=curLight();
+  if(!L.items.some(i=>i.type==='actor')){
+    const sc=S.scenes.find(s=>s.id===sid),names=(sc&&sc.chars.length?sc.chars:['Актёр']).slice(0,4);
+    names.forEach((n,i)=>L.items.push(ltMake('actor',400+Math.round((i-(names.length-1)/2)*60),260,{label:n,rot:180})));save();
+  }
+  SB3.on=true;
+  const main=$('#sbed .sbed-main'),tools=$('#sbed .sbed-tools');
+  main.insertAdjacentHTML('beforeend','<div id="sb3d" class="sb3d"><p class="lt3d-hint">Загружаю 3D…</p></div>');
+  $('#sbBig').hidden=true;tools.hidden=true;
+  tools.insertAdjacentHTML('afterend','<div class="sbed-tools sb3-tools" id="sb3tools">'+
+    '<label class="sbsize">Объектив <b id="sb3mm">'+SB3.mm+' мм</b><input type="range" min="14" max="135" step="1" value="'+SB3.mm+'" data-sb3mm="1"></label><span class="sbsep"></span>'+
+    '<button class="sbt" type="button" data-sb3="actor">'+sbIcon('person')+'<span>Актёр</span></button><button class="sbt" type="button" data-sb3="prop"><span>Предмет</span></button>'+
+    '<button class="sbt" type="button" data-sb3="pose"><span>Сидит / стоит</span></button><button class="sbt" type="button" data-sb3="turn"><span>Повернуть</span></button><button class="sbt" type="button" data-sb3="del"><span>Удалить</span></button><span class="sbsep"></span>'+
+    '<button class="sbt" type="button" data-sb3="back"><span>Назад к рисунку</span></button><button class="sbt sbt-shot" type="button" data-sb3="shot">'+sbIcon('camera')+'<span>Снять кадр</span></button>'+
+    '<span class="sb3-help">Крутите и приближайте сцену, чтобы найти ракурс. Персонажей можно перетаскивать по полу.</span></div>');
+  await lt3Mount('#sb3d');
+  if(!LT3||!SB3.on)return;
+  LT3.controls.minDistance=.6;LT3.cam.fov=sbFov(SB3.mm);LT3.cam.position.set(0,1.55,5.2);LT3.controls.target.set(0,1.3,0);LT3.cam.updateProjectionMatrix();lt3Size();
+}
+function sb3dExit(){
+  if(!SB3.on)return;SB3.on=false;
+  const h=$('#sb3d');if(h)h.remove();const tb=$('#sb3tools');if(tb)tb.remove();
+  const cv=$('#sbBig');if(cv)cv.hidden=false;const tools=$('#sbed .sbed-tools');if(tools)tools.hidden=false;
+}
+function sb3dShot(){
+  if(!LT3)return;const T=LT3.T,R=LT3.renderer,C=LT3.cam,items=curLight().items,hid=[];
+  LT3.group.traverse(o=>{if(o.visible&&(o.isSprite||o.type==='LineSegments'||(o.material&&o.material.blending===T.AdditiveBlending))){o.visible=false;hid.push(o)}});
+  LT3.group.children.forEach(g=>{const it=items.find(i=>i.id===g.userData.id);if(it&&it.type==='camera'&&g.visible){g.visible=false;hid.push(g)}});
+  const pr=R.getPixelRatio();R.setPixelRatio(1);R.setSize(SB_W,SB_H,false);C.aspect=16/9;C.updateProjectionMatrix();R.render(LT3.scene,C);
+  let url='';try{url=R.domElement.toDataURL('image/png')}catch(e){}
+  hid.forEach(o=>o.visible=true);R.setPixelRatio(pr);lt3Size();
+  if(!url){toast('Не удалось снять кадр');return}
+  const im=new Image();im.onload=()=>{sb3dExit();const cv=$('#sbBig');if(!cv)return;sbPush();cv.getContext('2d').drawImage(im,0,0,SB_W,SB_H);sbSave();toast('Кадр снят. Можно дорисовать поверх.')};im.src=url;
+}
+document.addEventListener('input',e=>{if(!SB3.on||!e.target.dataset||!e.target.dataset.sb3mm||!LT3)return;SB3.mm=parseInt(e.target.value,10)||35;setText('#sb3mm',SB3.mm+' мм');LT3.cam.fov=sbFov(SB3.mm);LT3.cam.updateProjectionMatrix()});
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('#sb3tools [data-sb3]');if(!b||!SB3.on)return;
+  const k=b.dataset.sb3,L=curLight(),it=selItem();
+  if(k==='shot')sb3dShot();
+  else if(k==='back')sb3dExit();
+  else if(k==='actor'||k==='prop'){const n=L.items.filter(i=>i.type===k).length,x=400+Math.round((Math.random()-.5)*120),y=260+Math.round((Math.random()-.5)*80);
+    const ni=ltMake(k,x,y,k==='actor'?{label:'Актёр '+(n+1),rot:180}:{label:'Предмет '+(n+1)});L.items.push(ni);S.lightSel=ni.id;lt3Sync();save()}
+  else if(!it)toast('Сначала выберите персонажа или предмет: нажмите на него в сцене');
+  else if(k==='pose'){if(it.type!=='actor'){toast('Сидеть может только актёр');return}it.pose=it.pose==='sit'?'stand':'sit';lt3Sync();save()}
+  else if(k==='turn'){it.rot=((num(it.rot)||0)+45)%360;lt3Sync();save()}
+  else if(k==='del'){L.items=L.items.filter(i=>i.id!==it.id);S.lightSel='';lt3Sync();save()}
+});
 /* ---------- раскадровка: редактор на весь экран ---------- */
 const SB_W=1280,SB_H=720;
 const SB_TOOLS=[['pen','Карандаш'],['marker','Маркер'],['erase','Ластик'],['person','Человек'],['top','Человек сверху'],['camera','Камера'],['light','Свет'],['arrow','Движение героя'],['carrow','Движение камеры'],['text','Текст']];
@@ -3987,7 +4065,7 @@ function sbOpen(id){
     '<span class="sbsep"></span>'+SB_COLORS.map(x=>'<button class="sbc" type="button" data-sbcol="'+x[0]+'" aria-label="'+x[1]+'" aria-pressed="'+(ED.color===x[0])+'" style="--c:'+x[0]+'"></button>').join('')+
     '<label class="sbsize">Толщина<input type="range" min="2" max="18" value="'+ED.size+'" data-sbsize="1"></label>'+
     '<input class="sbtext" data-sbtext="1" placeholder="Текст для штампа"'+(ED.tool==='text'?'':' hidden')+'>'+
-    '<span class="sbsep"></span><button class="sbt" type="button" data-sbe="frame"><span>Рамка 2.39</span></button><button class="sbt" type="button" data-sbe="grid"><span>Сетка третей</span></button>'+
+    '<span class="sbsep"></span><button class="sbt sbt-3d" type="button" data-sbe="s3d">'+sbIcon('camera')+'<span>3D-сцена</span></button><button class="sbt" type="button" data-sbe="frame"><span>Рамка 2.39</span></button><button class="sbt" type="button" data-sbe="grid"><span>Сетка третей</span></button>'+
     '<button class="sbt" type="button" data-sbe="undo"><span>Отменить</span></button><button class="sbt" type="button" data-sbe="clear"><span>Очистить</span></button></div>';
   document.body.appendChild(el);document.body.classList.add('sbed-open');
   const cv=$('#sbBig'),c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,SB_W,SB_H);
@@ -4003,6 +4081,7 @@ function sbSave(){
 }
 function sbClose(silent){
   const el=$('#sbed');if(!el)return;
+  if(SB3.on)sb3dExit();
   sbSave();ED0.tool=ED.tool;ED0.color=ED.color;ED0.size=ED.size;
   el.remove();document.body.classList.remove('sbed-open');ED=null;
   try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch(err){}
@@ -4081,6 +4160,7 @@ document.addEventListener('click',e=>{
   else if(a==='undo'){const im=ED.undo.pop();if(im&&c){c.putImageData(im,0,0);sbSave()}}
   else if(a==='clear'){sbPush();c.fillStyle='#fff';c.fillRect(0,0,SB_W,SB_H);sbSave()}
   else if(a==='frame'||a==='grid'){sbGuide(a);sbSave()}
+  else if(a==='s3d'){sb3dEnter()}
   else if(a==='prev'||a==='next'){const list=sbSceneFrames(),i=list.findIndex(x=>x.id===ED.id),n=list[i+(a==='next'?1:-1)];if(n){sbSave();const keep={tool:ED.tool,color:ED.color,size:ED.size};Object.assign(ED0,keep);sbOpen(n.id)}}
 });
 document.addEventListener('input',e=>{if(!ED)return;if(e.target.dataset&&e.target.dataset.sbsize)ED.size=parseInt(e.target.value,10)||4;if(e.target.dataset&&e.target.dataset.sbtext)ED.text=e.target.value.slice(0,80)});
