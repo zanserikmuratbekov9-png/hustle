@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='%23013E37'/><rect x='9' y='21' width='30' height='18' rx='3' fill='%23FFEFB3'/><rect x='9' y='11' width='30' height='8' rx='2' fill='%23FFEFB3'/><path d='M15 11h4l-5 8h-4zM25 11h4l-5 8h-4zM35 11h3l-5 8h-4z' fill='%23013E37'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --side:#013E37; --side-ink:#FFEFB3; --side-muted:#CFC9A0;
@@ -763,7 +763,7 @@ h1,.sec-h h2{font-family:'Onest',system-ui,sans-serif;font-weight:800;letter-spa
 .yf-mid{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vw,18px);width:100%}
 .yf-big{width:min(100%,1180px);height:auto;transform:rotate(-2deg);overflow:visible}
 .yf-sub{width:min(96%,940px);height:auto;overflow:visible}
-.yf-slogan{margin:0;max-width:min(96%,940px);text-align:center;font:600 clamp(20px,3vw,38px)/1.25 Montserrat,Onest,system-ui,sans-serif;color:var(--brand-light);text-shadow:0 2px 14px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.7);letter-spacing:.03em;text-wrap:balance}
+.yf-slogan{margin:0;max-width:min(96%,940px);text-align:center;font:600 clamp(20px,3vw,38px)/1.25 Onest,system-ui,sans-serif;color:var(--brand-light);text-shadow:0 2px 14px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.7);letter-spacing:.03em;text-wrap:balance}
 .yf-act{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:6px}
 .yf .yw-btn{padding:14px 26px;font-size:13px}
 .yf .yf-b1{background:var(--brand-light);color:var(--brand-dark)}
@@ -810,6 +810,15 @@ body.railed #toast{left:calc(50% + 42px)}
 body.fs .top,body.fs .bottom{display:none!important}
 body.fs .app{display:block!important;padding:10px}
 .app>main{width:100%;min-width:0;box-sizing:border-box}
+.pc-hint{display:flex;gap:10px;align-items:flex-start;max-width:340px;padding:12px 14px;border-radius:14px;border:1px dashed color-mix(in srgb,var(--brand-light) 40%,transparent);color:var(--muted);font-size:14px;line-height:1.45}
+.pc-hint .ic{flex:none;width:18px;height:18px;margin-top:1px;color:var(--brand-light)}
+.site-foot{margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted);letter-spacing:.02em}
+/* компактная заставка: проект сразу виден */
+.homebg .yf{min-height:0!important;padding:clamp(20px,4vw,44px) 12px clamp(18px,3vw,32px);gap:10px;justify-content:center}
+.homebg .yf>div[aria-hidden]{display:none}
+.homebg .yf-big{width:min(62%,520px,calc(22vh * 2.466))}
+.homebg .yf-slogan{font-size:clamp(17px,2.2vw,26px)}
+.homebg .yf-act{display:none}
 ::placeholder{color:var(--muted);opacity:.7}
 body.fs main{max-width:none;margin:0;padding:56px 12px 24px}
 @media (min-width:861px){
@@ -878,15 +887,56 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,
 .auth .chk input{width:20px;height:20px;padding:0;flex:none;margin-top:1px}
 .auth .chk a{color:var(--side-ink)}
 .auth button.link{font-size:14px}
+
+/* ===== открытая главная ===== */
+.auth{display:block;padding:0;min-height:100vh;color:var(--brand-light);background:radial-gradient(90% 60% at 30% 0%,rgba(10,96,82,.55),rgba(2,26,22,0) 70%),linear-gradient(180deg,#024A40,#04201C 60%)}
+.land{max-width:1180px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(16px,4vw,40px) 32px}
+.land-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,440px);gap:clamp(24px,5vw,64px);align-items:center;min-height:min(78vh,720px)}
+.land-copy{display:flex;flex-direction:column;gap:18px}
+.land-copy h1{margin:0;font:800 clamp(30px,4.6vw,56px)/1.05 Onest,system-ui,sans-serif;letter-spacing:-.02em;color:var(--brand-light)}
+.land-lead{margin:0;font-size:clamp(16px,1.6vw,19px);line-height:1.55;color:color-mix(in srgb,var(--brand-light) 85%,var(--brand-dark));max-width:560px}
+.land-cta{display:flex;gap:12px;flex-wrap:wrap}
+.land-cta .btn{width:auto!important}
+.land-cta .btn.sec{background:transparent;color:var(--brand-light);border:1px solid color-mix(in srgb,var(--brand-light) 50%,transparent)}
+.land-note{margin:0;font-size:14px;color:color-mix(in srgb,var(--brand-light) 75%,var(--brand-dark))}
+.land .auth-card{width:100%}
+.land .auth-card>.logo,.land .auth-card>.wm,.land .auth-card>.auth-legal,.land .auth-card>.btn.big[data-c=guest],.land .auth-card>.auth-hint{display:none!important}
+.land-sec{margin-top:clamp(48px,7vw,88px)}
+.land-sec h2{margin:0 0 20px;font:800 clamp(24px,3vw,34px)/1.1 Onest,system-ui,sans-serif;color:var(--brand-light)}
+.lf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.lf{background:color-mix(in srgb,var(--brand-light) 6%,transparent);border:1px solid color-mix(in srgb,var(--brand-light) 18%,transparent);border-radius:20px;padding:20px}
+.lf h3{margin:12px 0 6px;font-size:17px;color:var(--brand-light)}
+.lf p{margin:0;font-size:14px;line-height:1.5;color:color-mix(in srgb,var(--brand-light) 80%,var(--brand-dark))}
+.lf-ic{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--brand-light);color:var(--brand-dark)}
+.lf-ic .ic{width:22px;height:22px}
+.land-steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.land-steps li{counter-increment:s;display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:20px;border:1px dashed color-mix(in srgb,var(--brand-light) 30%,transparent)}
+.land-steps li::before{content:counter(s);font:800 28px/1 Onest,system-ui,sans-serif;color:var(--brand-light)}
+.land-steps b,.land-roles b{font-size:17px;color:var(--brand-light)}
+.land-steps span,.land-roles span{font-size:14px;line-height:1.5;color:color-mix(in srgb,var(--brand-light) 80%,var(--brand-dark))}
+.land-roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.land-roles div{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:20px;background:color-mix(in srgb,var(--brand-light) 6%,transparent)}
+.land-foot{margin-top:64px;padding-top:20px;border-top:1px solid color-mix(in srgb,var(--brand-light) 18%,transparent);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:color-mix(in srgb,var(--brand-light) 70%,var(--brand-dark))}
+.land-foot a{color:inherit}
+@media (max-width:860px){.land-hero{grid-template-columns:1fr;min-height:0}.land-cta .btn{flex:1 1 100%}}
 </style>
 </head>
 <body>
 <noscript><p style="padding:24px;font:16px sans-serif">HUSTLE работает только с включённым JavaScript. Включите его в настройках браузера.</p></noscript>
 <div class="auth" id="auth" hidden>
+ <div class="land">
+  <section class="land-hero">
+   <div class="land-copy">
+    <div class="wm"><b>HUSTLE</b></div>
+    <h1>Рабочий стол студенческого кино</h1>
+    <p class="land-lead">Сценарий, план съёмок, смета, вызывной лист и документы в одном месте. Загрузите сценарий, и HUSTLE подготовит основу для всей производственной работы.</p>
+    <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button><button class="btn big sec" type="button" data-c="guest">Попробовать без регистрации</button></div>
+    <p class="land-note">Сейчас все инструменты бесплатны: сайт в открытом тестировании.</p>
+   </div>
   <div class="auth-card" id="authCard">
     <button class="logo big" data-c="logo" type="button" aria-label="Логотип HUSTLE — нажмите, чтобы щёлкнуть хлопушкой"></button>
     <div class="wm"><b>HUSTLE</b></div>
-    <p class="auth-sub">Рабочий стол студенческого кино: сценарий, смета, свет, шот-лист и аренда техники по ценам из открытых прайсов.</p>
+    <p class="auth-sub">Войдите или создайте аккаунт, чтобы проект хранился в облаке.</p>
     <button class="btn big" type="button" data-c="guest">Попробовать демо</button>
     <p class="auth-hint">Без регистрации. Проект хранится только в этом браузере: сохраняйте копию в файл.</p>
     <details class="auth-more">
@@ -901,6 +951,29 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,
     </details>
     <p class="auth-legal"><a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a></p>
   </div>
+  </section>
+  <section class="land-sec">
+   <h2>Что умеет HUSTLE</h2>
+   <div class="lf-grid"><article class="lf"><span class="lf-ic" data-ic="script"></span><h3>Разбор сценария</h3><p>Загрузите текст (.txt, .docx, .fdx): HUSTLE сам найдёт сцены, локации и персонажей.</p></article><article class="lf"><span class="lf-ic" data-ic="schedule"></span><h3>План съёмок</h3><p>Сцены раскладываются по съёмочным дням с учётом локаций и объёма страниц.</p></article><article class="lf"><span class="lf-ic" data-ic="budget"></span><h3>Смета</h3><p>Шаблон под тип проекта, ставки и итоги со страховкой и налогом. Выгрузка в Excel.</p></article><article class="lf"><span class="lf-ic" data-ic="callsheet"></span><h3>Вызывной лист</h3><p>Дата, сбор, сцены дня и контакты команды в одном документе для печати.</p></article><article class="lf"><span class="lf-ic" data-ic="frame"></span><h3>Шот-лист и светосхема</h3><p>Список кадров с отметками «снято» и схема света для оператора.</p></article><article class="lf"><span class="lf-ic" data-ic="note"></span><h3>Документы</h3><p>Готовые договоры с актёром и разрешение на съёмку на локации.</p></article><article class="lf"><span class="lf-ic" data-ic="store"></span><h3>Рентал</h3><p>Цены Rental8 и готовое письмо, чтобы попросить студенческую скидку.</p></article><article class="lf"><span class="lf-ic" data-ic="megaphone"></span><h3>Фестивали и гранты</h3><p>Куда подать студенческий фильм и где искать поддержку, со сроками.</p></article></div>
+  </section>
+  <section class="land-sec">
+   <h2>Как это работает</h2>
+   <ol class="land-steps">
+    <li><b>Загрузите сценарий</b><span>Файл или просто вставьте текст.</span></li>
+    <li><b>Проверьте разбор</b><span>Сцены, локации и персонажи появятся сами.</span></li>
+    <li><b>Готовьте съёмки</b><span>План, смета и вызывной лист собираются из разобранного сценария.</span></li>
+   </ol>
+  </section>
+  <section class="land-sec">
+   <h2>Для кого</h2>
+   <div class="land-roles">
+    <div><b>Продюсер</b><span>Смета, план съёмок, вызывной лист, договоры.</span></div>
+    <div><b>Режиссёр</b><span>Сценарий, заметки по сценам, экспликация, кадры.</span></div>
+    <div><b>Оператор</b><span>Светосхемы, шот-лист, подбор техники и калькулятор.</span></div>
+   </div>
+  </section>
+  <footer class="land-foot"><a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a><span>HUSTLE · Сделано в Алматы, 2026</span></footer>
+ </div>
 </div>
 
 <div class="app" id="app" hidden>
@@ -1207,7 +1280,7 @@ function showAuth(keepMode){
   $('#onb').hidden=true;$('#app').hidden=true;$('#auth').hidden=false;
   document.body.classList.remove('homebg');
   if(!keepMode)authMode='login';
-  renderAuth();$$('.logo').forEach(b=>b.innerHTML=LOGO);applyTheme();
+  renderAuth();$$('.logo').forEach(b=>b.innerHTML=LOGO);$$('.lf-ic').forEach(s=>{if(!s.firstChild)s.innerHTML=icon(s.dataset.ic)});applyTheme();
 }
 function enter(user){
   CLOUD=null;USER=user;S=loadData();
@@ -1397,7 +1470,7 @@ function renderAcct(){
 
 /* ---------- панель (сворачиваемый раздел) ---------- */
 function panel(key,ic,title,body,opt){
-  opt=opt||{};const open=!S.pc[key];
+  opt=opt||{};const open=(key in S.pc)?!S.pc[key]:!opt.defClosed;
   return '<section class="panel'+(opt.cls?' '+opt.cls:'')+'"><div class="ph"><button class="cat" type="button" data-c="togglePanel" data-p="'+esc(key)+'" aria-expanded="'+open+'"><span class="chev" aria-hidden="true">'+(open?'▾':'▸')+'</span>'+(ic?icon(ic):'')+'<h2>'+title+'</h2></button>'+(opt.right||'')+'</div>'+(open?'<div class="pb">'+body+'</div>':'')+'</section>';
 }
 
@@ -1445,7 +1518,8 @@ function vBudget(){
       '<td data-l="Сумма" class="r" style="width:130px" data-row="'+r.id+'"></td>'+
       '<td class="del" style="width:44px"><button class="x" type="button" data-c="delRow" data-id="'+r.id+'" aria-label="Удалить строку">×</button></td></tr>').join('');
     const body='<div class="tw"><table class="grid budget"><thead><tr><th>Статья</th><th>Кол-во</th><th>Ед.</th><th>Ставка</th><th>Факт</th><th class="r">Сумма</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div><button class="link" type="button" data-c="addRow" data-cat="'+esc(c)+'">Добавить строку</button>';
-    return panel('cat:'+c,'',esc(c),body,{right:'<b data-sub="'+esc(c)+'"></b>'});
+    const empty=S.budget.filter(r=>r.cat===c).every(r=>!String(r.name||'').trim()&&!num(r.kzt)&&!num(r.fact));
+    return panel('cat:'+c,'',esc(c)+(empty?' <small class="muted" style="font-weight:500">· пусто</small>':''),body,{right:'<b data-sub="'+esc(c)+'"></b>',defClosed:empty});
   }).join('');
   return '<header class="head"><div class="slate"></div><h1>Смета</h1><p>Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.</p></header>'+
   '<div class="row noprint" style="margin-bottom:6px"><button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button><button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все</button></div>'+
@@ -2038,7 +2112,7 @@ function posterHtml(p,i){
   const link=p.url?'<a class="btn" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+icon('ext')+'Открыть</a>':'';
   const add=p.deal?'<button class="btn sec" type="button" data-c="gearAdd" data-id="'+p.id+'">'+icon('plus')+'В список</button>':'';
   const del=p.custom?'<button class="x" type="button" data-c="posterDel" data-id="'+p.id+'" aria-label="Удалить постер">×</button>':'';
-  return '<article class="poster p'+(i%3+1)+'">'+del+'<span class="pbadge">'+esc(p.badge)+'</span><div class="pr">'+esc(p.rental)+'</div><h3>'+esc(p.title)+'</h3><div class="pp">'+esc(p.price)+'</div><div class="pf">'+esc(p.note)+'</div><div class="row">'+link+add+'</div></article>';
+  return '<article class="poster p1">'+del+'<span class="pbadge">'+esc(p.badge)+'</span><div class="pr">'+esc(p.rental)+'</div><h3>'+esc(p.title)+'</h3><div class="pp">'+esc(p.price)+'</div><div class="pf">'+esc(p.note)+'</div><div class="row">'+link+add+'</div></article>';
 }
 function articleHtml(a){
   const cls={'Кино КЗ':'','Мир кино':' world','Школа':' school'}[a.cat];
@@ -2273,7 +2347,7 @@ const CORE=['script','schedule','budget','callsheet','shots','docs','lights'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
 Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
-const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект'],['rentals','store','Рентал','Рентал'],['events','trophy','Фестивали и гранты','Конкурсы'],['school','book','Школа','Школа']];
+const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект'],['rentals','store','Рентал','Рентал'],['events','trophy','Фестивали и гранты','Фестивали'],['school','book','Школа','Школа']];
 const secOf=tab=>TOOL_IDS.indexOf(tab)>-1?'proj':tab;
 function closeMenus(){$$('details.menu').forEach(d=>{d.open=false})}
 document.addEventListener('click',e=>{if(!e.target.closest('details.menu'))closeMenus()});
@@ -2304,11 +2378,16 @@ function heroHtml(){
   return '<section class="yf" aria-label="HUSTLE"'+(bg?' style="--yf-img:url(\''+bg+'\')"':'')+'>'+
     '<div aria-hidden="true"></div>'+
     '<div class="yf-mid">'+big+sub+'<div class="yf-act"><button class="yw-btn yf-b1" type="button" data-c="tab" data-k="proj">Начать проект</button></div></div>'+
-    '<div class="yf-foot" style="text-transform:none;font-size:clamp(15px,1.7vw,22px)">zhanserik muratbek.almaty.2026</div></section>'+heroCtl();
+    '<div aria-hidden="true"></div></section>'+heroCtl();
 }
 function heroCtl(){return ''}
 function sloganHtml(){return '';
   return '<footer class="slogan'+(S.tab==='home'?' big':'')+'" aria-label="Слоган"><span class="sl-t">Снимай кино…</span><span class="sl-b">HUSTLE — рабочий стол студенческого кино</span></footer>';
+}
+function statsOrHint(){
+  const hs=homeStats(),vals=(hs.match(/<b>[^<]*<\/b>/g)||[]);
+  if(vals.length&&vals.every(x=>x==='<b>—</b>'))return '<div class="pc-hint">'+icon('bulb')+'<span>'+({producer:'Загрузите сценарий и заполните смету: здесь появятся бюджет, съёмочные дни, сцены и локации.',director:'Загрузите сценарий: здесь появятся сцены, заметки и кадры.',operator:'Начните светосхему или шот-лист: здесь появится прогресс по кадрам и технике.'}[S.role]||'Заполните проект: здесь появятся цифры.')+'</span></div>';
+  return '<div class="stats">'+hs+'</div>';
 }
 function quickActions(){
   const m={
@@ -2326,15 +2405,16 @@ function vHome(){
     '<div class="pc-next"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
     '<div class="pc-next"><div><b>Все шаги выполнены</b><span>Проверьте задачи и вызывной лист.</span></div><button class="btn" type="button" data-c="tab" data-k="tasks">'+icon('check')+'Открыть задачи</button></div>';
   const demo=S.scenes.length?'':'<div class="row" style="margin-top:10px"><span class="muted">Нет сценария под рукой?</span><button class="btn sec" type="button" data-c="demo" data-k="1">Пример «Последний звонок»</button></div>';
-  const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+t('Мой проект')+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div><div class="stats">'+homeStats()+'</div></div>'+
+  const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+t('Мой проект')+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div>'+statsOrHint()+'</div>'+
     '<div class="prog">'+steps.map(x=>'<i class="'+(stepDone(x[0])?'on':'')+'"></i>').join('')+'</div>'+nextBlock+'<div class="row">'+quickActions()+'</div>'+demo+'</section>';
   const posters=posterList().map(posterHtml).join('');
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
   return heroHtml()+proj+backupBanner()+
-    '<div class="sec-h"><h2>'+t('Цены из открытых прайсов')+'</h2><p>Только Rental8 (пр. Гагарина, 124): цены за сутки по открытому прайсу на 12.10.2026. Узнали о скидке сами? Добавьте её постером.</p></div>'+
-    '<div class="posters" role="list">'+posters+'</div>'+addForm;
+    '<div class="sec-h"><h2>Цены на технику Rental8</h2><p>Только Rental8 (пр. Гагарина, 124): цены за сутки по открытому прайсу на 12.10.2026. Узнали о скидке сами? Добавьте её постером.</p></div>'+
+    '<div class="posters" role="list">'+posters+'</div>'+addForm+
+    '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
 
 /* ---------- проект: хаб инструментов ---------- */
@@ -3136,6 +3216,7 @@ document.addEventListener('click',e=>{
   if(c==='logo'){clap(b);return}
   if(c==='authTab'){authMode=b.dataset.k;renderAuth();return}
   if(c==='guest'){enter('guest');return}
+  if(c==='landReg'){const d=$('.auth-more');if(d){d.hidden=false;d.open=true}const tb=$('#tab-register');if(tb)tb.click();const cd=$('#authCard');if(cd)cd.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const f=$('#authForm input');if(f)f.focus({preventScroll:true})},350);return}
   if(!S)return;
   if(c==='logout'){doLogout();return}
   if(c==='tab'){let k=b.dataset.k;if(k==='deals'||k==='gear'){S.rtab=k==='gear'?'list':'deals';k='rentals'}if(b.dataset.sub)S.rtab=b.dataset.sub;S.tab=k;render();window.scrollTo(0,0)}
@@ -3196,10 +3277,10 @@ document.addEventListener('click',e=>{
   else if(c==='rail'){PREF.rail=!PREF.rail;savePref();applyTheme()}
   else if(c==='palette'){PREF.palette=b.dataset.k;savePref();applyTheme()}
   else if(c==='mode'){PREF.mode={auto:'light',light:'dark',dark:'auto'}[PREF.mode];savePref();applyTheme()}
-  else if(c==='togglePanel'){S.pc[b.dataset.p]=!S.pc[b.dataset.p];render()}
+  else if(c==='togglePanel'){S.pc[b.dataset.p]=b.getAttribute('aria-expanded')==='true';render()}
   else if(c==='collapseAll'){const pre=b.dataset.pre;
     if(pre==='cat:')S.budget.forEach(r=>{S.pc['cat:'+r.cat]=true});else{for(let d=1;d<=maxDay();d++)S.pc[pre+d]=true}render()}
-  else if(c==='expandAll'){const pre=b.dataset.pre;Object.keys(S.pc).forEach(k=>{if(k.indexOf(pre)===0)delete S.pc[k]});render()}
+  else if(c==='expandAll'){const pre=b.dataset.pre;Object.keys(S.pc).forEach(k=>{if(k.indexOf(pre)===0)delete S.pc[k]});if(pre==='cat:')S.budget.forEach(r=>{S.pc['cat:'+r.cat]=false});render()}
   else if(c==='dockToggle'){S.dockOpen=!S.dockOpen;render()}
   else if(c==='addRow'){
     S.budget.push({id:uid(),cat:b.dataset.cat,name:'',qty:1,unit:'смена',kzt:0,src:''});
