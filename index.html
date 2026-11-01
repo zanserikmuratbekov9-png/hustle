@@ -972,6 +972,32 @@ body.sbed-open{overflow:hidden}
 @media (max-width:700px){.sbt span{display:none}.sbt{padding:9px}#sbBig{width:100%}}
 @media (min-width:1000px){.sbed-tools{flex-wrap:wrap;overflow:visible}}
 @media (max-height:500px){.sbed{gap:6px;padding:6px}.sbed-top .btn{padding:6px 10px!important}.sbed-cap{padding:6px 10px}#sbBig{width:min(100%,calc((100vh - 110px) * 16 / 9))}.sbt span{display:none}.sbt{padding:8px}}
+
+/* ===== съёмочный день ===== */
+.td-top{margin:14px 0 16px;padding:20px;border-radius:22px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.td-top h2{margin:4px 0 8px;font-size:clamp(22px,3vw,30px)}
+.td-facts{display:flex;flex-wrap:wrap;gap:18px;font-size:14px;color:var(--muted)}
+.td-facts b{display:block;font-size:20px;color:var(--ink)}
+.td-addr{margin:12px 0 4px}
+.td-addr a{color:var(--btn-y)}
+.td-act .btn{text-decoration:none}
+.td-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.td-grid{grid-template-columns:1fr}}
+.td-scene{padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);margin-bottom:12px}
+.td-scene.done{opacity:.6}
+.td-sh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.td-sh span{flex:1;min-width:0;color:var(--muted)}
+.td-sh i{font-style:normal;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--btn-y);color:var(--btn-y-ink);font-size:13px}
+.td-chars{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.td-shots{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.td-shots label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--soft);cursor:pointer;font-size:15px;line-height:1.4}
+.td-shots input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--btn-y)}
+.td-shots input:checked+span{text-decoration:line-through;opacity:.6}
+.td-cast{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.td-cast li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;border-radius:12px;background:var(--soft)}
+.td-cast span{grid-column:1;font-size:13px;color:var(--muted)}
+.td-cast time{grid-column:2;grid-row:1/3;align-self:center;font-weight:700;font-size:18px}
+.td-banner{margin-bottom:14px;border:1px solid var(--btn-y)}
 </style>
 </head>
 <body>
@@ -1706,7 +1732,7 @@ function vCall(){
     '<label>Телефон продюсера<input type="tel" data-a="cs" data-f="phone" value="'+esc(S.cs.phone)+'"></label>'+
     cityFieldHtml()+'<label class="wide">Адрес съёмочной площадки<input data-a="csinfo" data-f="addr" value="'+esc(inf.addr)+'" placeholder="Город, улица, дом, ориентиры для парковки"></label>'+
     '<label class="wide">Примечания для группы<textarea rows="3" data-a="csinfo" data-f="notes" placeholder="Погода, транспорт, питание, требования по безопасности">'+esc(inf.notes)+'</textarea></label>'+
-    '<div class="wide row"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn" type="button" data-c="csPdf">'+icon('download')+'Скачать PDF</button><button class="btn sec" type="button" data-c="csDocx">'+icon('download')+'Скачать .docx</button></div></div>';
+    '<div class="wide row"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button><button class="btn sec" type="button" data-c="csPdf">'+icon('download')+'Скачать PDF</button><button class="btn sec" type="button" data-c="csDocx">'+icon('download')+'Скачать .docx</button></div></div>';
   return head+'<div class="col"><div class="noprint">'+panel('csform','callsheet','Данные дня',form)+'</div>'+
   '<section class="panel"><div class="sheet-title"><h1>Вызывной лист</h1></div>'+
     '<div class="ph"><h2>'+esc(S.name)+'</h2><b>День '+d+' из '+md+'</b></div>'+
@@ -2207,7 +2233,7 @@ function vRentalsPage(){
 const ROLES={producer:{t:'Продюсер',i:'briefcase'},director:{t:'Режиссёр',i:'megaphone'},operator:{t:'Оператор',i:'camera'}};
 const TAB_DEF={
   home:['Главная','Новости и акции','home'],proj:['Обзор проекта','Шаги и прогресс','briefcase'],script:['Сценарий','Текст, загрузка, разбор','script'],
-  schedule:['План съёмок','Сцены по дням','schedule'],budget:['Смета','Бюджет по статьям','budget'],callsheet:['Вызывной лист','Документ на день','callsheet'],
+  schedule:['План съёмок','Сцены по дням','schedule'],budget:['Смета','Бюджет по статьям','budget'],today:['Съёмочный день','Для площадки','camera'],callsheet:['Вызывной лист','Документ на день','callsheet'],
   rentals:['Ренталы','Техника и скидки','store'],deals:['Скидки и цены','Прайсы ренталов','tag'],gear:['Список техники','Что берём в аренду','camera'],
   tasks:['Задачи','Что сделать по роли','check'],
   notes:['Заметки по сценам','Что доработать','note'],explic:['Экспликация','Видение режиссёра','megaphone'],shots:['Шот-лист','Кадры по сценам','frame'],
@@ -2407,11 +2433,12 @@ const TOOLS=[
  {id:'story',g:'Съёмки',ic:'pencil',n:'Раскадровка',d:'Рисунки кадров с подписями',r:['director','operator']},
  {id:'lights',g:'Съёмки',ic:'bulb',n:'Светосхема',d:'План света, камеры и актёров',r:['operator']},
  {id:'calc',g:'Съёмки',ic:'calc',n:'Калькуляторы',d:'Выдержка, ND, память, свет',r:['operator']},
+ {id:'today',g:'Съёмки',ic:'camera',n:'Съёмочный день',d:'Экран для площадки: сцены, кадры, вызовы',r:['producer','director','operator']},
  {id:'callsheet',g:'Съёмки',ic:'callsheet',n:'Вызывной лист',d:'Документ на съёмочный день с рассветом и закатом',r:['producer']},
  {id:'tasks',g:'Команда',ic:'check',n:'Задачи',d:'Доска задач по ролям',r:['producer','director','operator']}
 ];
 const TOOL_IDS=TOOLS.map(x=>x.id);
-const CORE=['script','schedule','budget','callsheet','shots','docs','lights'];
+const CORE=['today','script','schedule','budget','callsheet','shots','docs','lights'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
 Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
@@ -2437,6 +2464,65 @@ function toolBar(){
   return '<div class="crumbs noprint"><button class="back" type="button" data-c="tab" data-k="proj">'+icon('left')+'<span>'+t('Проект')+'</span></button><div class="tstrip" role="group" aria-label="Инструменты">'+list.map(x=>'<button class="chip" type="button" data-c="tab" data-k="'+x.id+'" aria-pressed="'+(x.id===S.tab)+'">'+t(x.n)+'</button>').join('')+'</div><button class="fsfab noprint" type="button" data-c="fs" aria-label="Развернуть инструмент на весь экран"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>'+(document.body.classList.contains('fs')?'Свернуть':'На весь экран')+'</span></button></div>';
 }
 
+
+/* ---------- съёмочный день ---------- */
+const localISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function todayIndex(){if(!S.scenes.length)return 0;ensurePlan();const md=maxDay(),iso=localISO();for(let d=1;d<=md;d++){const i=S.cs.info[d];if(i&&i.date===iso)return d}return 0}
+let TODAY_PICKED=false;
+function callsheetText(d){
+  ensurePlan();const inf=dayInfo(d),sc=S.scenes.filter(s=>S.assign[s.id]===d),cast=[];sc.forEach(s=>s.chars.forEach(c=>{if(cast.indexOf(c)<0)cast.push(c)}));
+  let ds='';if(inf.date){try{ds=new Date(inf.date+'T00:00:00').toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'})}catch(e){}}
+  const L=['🎬 Вызывной лист: '+S.name,'День '+d+' из '+maxDay()+(ds?' · '+ds:''),'Общий сбор: '+(inf.call||'—')];
+  if(inf.addr)L.push('Адрес: '+inf.addr);
+  if(sc.length)L.push('','Сцены:',...sc.map(s=>'• '+s.id+'. '+s.type+'. '+s.loc+(s.time?' — '+s.time:'')));
+  if(cast.length)L.push('','Вызов актёров:',...cast.map(c=>{const cc=S.cs.castCalls[d+'|'+c]||{};return '• '+c+(cc.actor?' ('+cc.actor+')':'')+' — '+(cc.time||inf.call||'')}));
+  if(inf.notes)L.push('','Примечания: '+inf.notes);
+  if(S.cs.producer||S.cs.phone)L.push('','Продюсер: '+(S.cs.producer||'')+(S.cs.phone?', '+S.cs.phone:''));
+  return L.join('\n');
+}
+async function shareCallsheet(btn){
+  ensurePlan();const d=S.cs.day,text=callsheetText(d),name='vyzyvnoy-list-den-'+d+'.pdf';
+  if(navigator.share&&navigator.canShare){
+    if(btn)btn.disabled=true;
+    try{
+      const blob=await makePdf(callsheetBlocks(d),'Вызывной лист · '+S.name),file=new File([blob],name,{type:'application/pdf'});
+      if(navigator.canShare({files:[file]})){await navigator.share({files:[file],text:text});return}
+    }catch(e){if(e&&e.name==='AbortError')return}
+    finally{if(btn)btn.disabled=false}
+  }
+  window.open('https://t.me/share/url?url='+encodeURIComponent(location.origin+location.pathname)+'&text='+encodeURIComponent(text),'_blank','noopener');
+}
+function vToday(){
+  const head='<header class="head"><div class="slate"></div><h1>Съёмочный день</h1><p>Всё для площадки на одном экране: сцены, кадры с галочками, вызов актёров и контакты.</p></header>';
+  if(!S.scenes.length)return head+NEED_SCENES('Экран съёмочного дня строится по плану съёмок — сначала разберите сценарий.');
+  ensurePlan();pdfLib().catch(()=>{});
+  const md=maxDay(),ti=todayIndex();
+  if(!TODAY_PICKED&&ti){S.cs.day=ti;TODAY_PICKED=true}
+  if(S.cs.day>md||S.cs.day<1)S.cs.day=1;
+  const d=S.cs.day,inf=dayInfo(d),sc=S.scenes.filter(s=>S.assign[s.id]===d),cast=[];sc.forEach(s=>s.chars.forEach(c=>{if(cast.indexOf(c)<0)cast.push(c)}));
+  let ds='';if(inf.date){try{ds=new Date(inf.date+'T00:00:00').toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'})}catch(e){}}
+  const days='<div class="chips" role="group" aria-label="Съёмочный день">'+Array.from({length:md},(_,i)=>i+1).map(i=>'<button class="chip" type="button" data-c="todayDay" data-k="'+i+'" aria-pressed="'+(i===d)+'">День '+i+(i===ti?' · сегодня':'')+'</button>').join('')+'</div>';
+  const shotsAll=S.shots.filter(x=>sc.some(s=>String(s.id)===String(x.scene))),done=shotsAll.filter(x=>x.done).length;
+  const top='<section class="td-top"><div><span class="lbl">'+(d===ti?'Сегодня':'День '+d+' из '+md)+'</span><h2>'+(ds?esc(ds.charAt(0).toUpperCase()+ds.slice(1)):'Дата не указана')+'</h2>'+
+    '<div class="td-facts"><span><b>'+esc(inf.call||'—')+'</b> общий сбор</span><span><b>'+sc.length+'</b> '+(sc.length===1?'сцена':'сцен')+'</span><span><b>'+done+' из '+shotsAll.length+'</b> кадров снято</span></div>'+
+    (inf.addr?'<p class="td-addr">'+esc(inf.addr)+' · <a href="https://2gis.kz/almaty/search/'+encodeURIComponent(inf.addr)+'" target="_blank" rel="noopener noreferrer">открыть в 2ГИС</a></p>':'<p class="td-addr muted">Адрес не указан. Его можно добавить в вызывном листе.</p>')+
+    sunHtml(inf.date)+'</div>'+
+    '<div class="row td-act"><button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button><button class="btn sec" type="button" data-c="csPdf">'+icon('download')+'PDF</button>'+
+    (S.cs.phone?'<a class="btn sec" href="tel:'+esc(S.cs.phone.replace(/[^\d+]/g,''))+'">Позвонить продюсеру</a>':'')+'<button class="btn sec" type="button" data-c="tab" data-k="callsheet">Изменить данные дня</button></div></section>';
+  const scenes=sc.length?sc.map(s=>{
+    const sh=S.shots.filter(x=>String(x.scene)===String(s.id)),dn=sh.filter(x=>x.done).length;
+    const list=sh.length?'<ul class="td-shots">'+sh.map(x=>'<li><label><input type="checkbox" data-a="sh" data-id="'+x.id+'" data-f="done" data-r="1"'+(x.done?' checked':'')+'><span><b>'+esc(String(x.no||''))+'</b> '+esc([x.size,x.angle,x.move,x.mm?x.mm+' мм':''].filter(Boolean).join(' · '))+(x.desc?' — '+esc(x.desc):'')+'</span></label></li>').join('')+'</ul>':
+      '<p class="muted" style="margin:8px 0 0">Кадров пока нет. <button class="link" type="button" data-c="tab" data-k="shots">Добавить в шот-лист</button></p>';
+    return '<article class="td-scene'+(sh.length&&dn===sh.length?' done':'')+'"><div class="td-sh"><b>Сцена '+s.id+'</b><span>'+esc(s.type+'. '+s.loc+(s.time?' — '+s.time:''))+'</span>'+(sh.length?'<i>'+dn+'/'+sh.length+'</i>':'')+'</div>'+
+      (s.chars.length?'<p class="td-chars">'+esc(s.chars.join(', '))+'</p>':'')+list+'</article>';
+  }).join(''):'<div class="empty"><b>В этот день сцен нет</b>Распределите сцены в плане съёмок.</div>';
+  const castT=cast.length?'<ul class="td-cast">'+cast.map(c=>{const cc=S.cs.castCalls[d+'|'+c]||{};return '<li><b>'+esc(c)+'</b><span>'+esc(cc.actor||'актёр не указан')+'</span><time>'+esc(cc.time||inf.call||'—')+'</time></li>'}).join('')+'</ul>':'<p class="muted" style="margin:0">В сценах этого дня нет персонажей с репликами.</p>';
+  return head+days+top+'<div class="td-grid"><div class="col">'+scenes+'</div><div class="col">'+panel('tdcast','role','Вызов актёров',castT)+(inf.notes?panel('tdnotes','note','Примечания',esc(inf.notes)):'')+'</div></div>';
+}
+function todayBanner(){
+  const ti=todayIndex();if(!ti)return '';
+  return '<div class="pc-next td-banner"><div><b>Сегодня съёмочный день '+ti+'</b><span>Сцены, кадры и вызовы для площадки на одном экране.</span></div><button class="btn" type="button" data-c="tab" data-k="today">'+icon('camera')+'Открыть</button></div>';
+}
 /* ---------- главная ---------- */
 function heroHtml(){
   const bg=S.heroImg||PHOTO_BG;
@@ -2472,14 +2558,14 @@ function vHome(){
   const nextBlock=next>-1?
     '<div class="pc-next"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
     '<div class="pc-next"><div><b>Все шаги выполнены</b><span>Проверьте задачи и вызывной лист.</span></div><button class="btn" type="button" data-c="tab" data-k="tasks">'+icon('check')+'Открыть задачи</button></div>';
-  const demo=S.scenes.length?'':'<div class="row" style="margin-top:10px"><span class="muted">Нет сценария под рукой?</span><button class="btn sec" type="button" data-c="demo" data-k="1">Пример «Последний звонок»</button></div>';
+  const demo=S.scenes.length?'':'<div class="row" style="margin-top:10px"><span class="muted">Начать с готового примера:</span>'+[['1','Короткий метр'],['3','Клип'],['4','Реклама'],['2','Короткий метр «Ночной эфир»']].map(x=>'<button class="btn sec" type="button" data-c="demo" data-k="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
   const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+(isShared()?'Проект команды':t('Мой проект'))+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div>'+statsOrHint()+'</div>'+
     '<div class="prog">'+steps.map(x=>'<i class="'+(stepDone(x[0])?'on':'')+'"></i>').join('')+'</div>'+nextBlock+'<div class="row">'+quickActions()+'</div>'+demo+'</section>';
   const posters=posterList().map(posterHtml).join('');
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
-  return heroHtml()+proj+backupBanner()+
+  return heroHtml()+todayBanner()+proj+backupBanner()+
     '<div class="sec-h"><h2>Цены на технику Rental8</h2><p>Только Rental8 (пр. Гагарина, 124): цены за сутки по открытому прайсу на 12.10.2026. Узнали о скидке сами? Добавьте её постером.</p></div>'+
     '<div class="posters" role="list">'+posters+'</div>'+addForm+
     '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
@@ -2877,7 +2963,7 @@ function render(){
   {const pn=$('#pname');if(pn&&document.activeElement!==pn)pn.value=S.name}
   $('#cur').value=S.cur;
   ['USD','EUR','RUB'].forEach(k=>{const el=$('#r'+k);if(el&&document.activeElement!==el)el.value=S.rates[k]});
-  const views={home:vHome,proj:vProj,script:vScript,schedule:vSchedule,budget:vBudget,callsheet:vCall,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
+  const views={home:vHome,proj:vProj,script:vScript,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
   $('#main').innerHTML=toolBar()+views[S.tab]()+sloganHtml();$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
   if(S.tab==='budget')updateTotals();
@@ -2989,8 +3075,54 @@ var DEMO2_BUDGET=[
 var DEMO1={name:'Последний звонок (короткий метр)',script:DEMO_SCRIPT,budget:DEMO_BUDGET,director:'Алия Н.',perDay:0.25};
 var DEMO2={name:'Ночной эфир (короткий метр)',script:DEMO2_SCRIPT,budget:DEMO2_BUDGET,director:'Ваше имя',perDay:0.375};
 
+
+var DEMO3_SCRIPT=[
+'НАТ. КРЫША ДОМА — ЗАКАТ','','Город внизу. Ветер треплет волосы ДИНЫ (22). Она поёт, глядя на горы.','','ДИНА','(поёт)','Я знаю, этот город не спит, пока я здесь.','',
+'ИНТ. ПОДЪЕЗД — ВЕЧЕР','','Дина бежит вниз по лестнице. Свет мигает. На стенах граффити.','',
+'НАТ. УЛИЦА ВОЗЛЕ КОФЕЙНИ — НОЧЬ','','Неоновая вывеска. Дина танцует с ТАНЦОРАМИ. Проезжают машины, свет фар скользит по лицам.','','ДИНА','(поёт)','Ещё один круг, и мы снова дома.','',
+'ИНТ. СТУДИЯ — НОЧЬ','','Дина у микрофона. Крупно: глаза, губы, руки на наушниках. Финальный аккорд.'].join('\n');
+var DEMO3_BUDGET=[
+ ['Права и сценарий','Права на трек (согласие артиста)',1,'проект',0,'оценка'],
+ ['Режиссура и творческая группа','Режиссёр клипа',2,'смена',80000,'оценка'],
+ ['Режиссура и творческая группа','Оператор-постановщик',2,'смена',90000,'оценка'],
+ ['Актёры','Танцоры',4,'смена',20000,'оценка'],
+ ['Съёмочная группа','Гаффер',2,'смена',60000,'оценка'],
+ ['Съёмочная группа','Хореограф',1,'смена',50000,'оценка'],
+ ['Техника: камера, свет, звук','Камера с объективами (комплект)',2,'смена',30000,'оценка'],
+ ['Техника: камера, свет, звук','Свет RGB (комплект)',2,'смена',25000,'оценка'],
+ ['Техника: камера, свет, звук','Дым-машина',1,'смена',10000,'оценка'],
+ ['Локации и транспорт','Студия звукозаписи',1,'смена',40000,'оценка'],
+ ['Локации и транспорт','Такси для группы',2,'смена',15000,'оценка'],
+ ['Реквизит, костюмы, грим','Стилист и гримёр',2,'смена',25000,'оценка'],
+ ['Питание и быт','Питание группы (10 чел.)',2,'смена',35000,'оценка'],
+ ['Постпродакшн','Монтаж',1,'проект',100000,'оценка'],
+ ['Постпродакшн','Цветокоррекция',1,'проект',60000,'оценка']
+];
+var DEMO4_SCRIPT=[
+'ИНТ. КУХНЯ — УТРО','','Солнечный свет. АЙДАР (30) достаёт из холодильника бутылку сока «Сайран». Капли на стекле.','','АЙДАР','(в камеру)','Утро начинается с вкуса гор.','',
+'НАТ. ГОРНАЯ ТРОПА — ДЕНЬ','','Айдар бежит по тропе. Вид на озеро. Он делает глоток и улыбается.','',
+'ИНТ. СТУДИЯ. ПРЕДМЕТНЫЙ СТОЛ — ДЕНЬ','','Бутылка на белом фоне. Сок льётся в стакан, рапид. Надпись: «Сайран. Свежесть с гор».'].join('\n');
+var DEMO4_BUDGET=[
+ ['Права и сценарий','Сценарий и раскадровка',1,'проект',80000,'оценка'],
+ ['Режиссура и творческая группа','Режиссёр',2,'смена',100000,'оценка'],
+ ['Режиссура и творческая группа','Оператор-постановщик',2,'смена',100000,'оценка'],
+ ['Актёры','Актёр главной роли',2,'смена',60000,'оценка'],
+ ['Съёмочная группа','Фуд-стилист',1,'смена',50000,'оценка'],
+ ['Съёмочная группа','Гаффер',2,'смена',60000,'оценка'],
+ ['Техника: камера, свет, звук','Камера и высокоскоростная съёмка',2,'смена',45000,'оценка'],
+ ['Техника: камера, свет, звук','Свет для предметки (комплект)',1,'смена',30000,'оценка'],
+ ['Локации и транспорт','Аренда кухни',1,'смена',40000,'оценка'],
+ ['Локации и транспорт','Студия с белым фоном',1,'смена',60000,'оценка'],
+ ['Локации и транспорт','Транспорт в горы',1,'смена',40000,'оценка'],
+ ['Реквизит, костюмы, грим','Продукт, стаканы, реквизит',1,'проект',30000,'оценка'],
+ ['Питание и быт','Питание группы (8 чел.)',2,'смена',28000,'оценка'],
+ ['Постпродакшн','Монтаж и графика',1,'проект',150000,'оценка'],
+ ['Постпродакшн','Цветокоррекция и звук',1,'проект',90000,'оценка']
+];
+var DEMO3={name:'Неон (музыкальный клип)',script:DEMO3_SCRIPT,budget:DEMO3_BUDGET,director:'Ваше имя',perDay:0.5};
+var DEMO4={name:'Сайран (рекламный ролик)',script:DEMO4_SCRIPT,budget:DEMO4_BUDGET,director:'Ваше имя',perDay:0.5};
 function loadDemo(k){
-  const P=(k==='2')?DEMO2:DEMO1;
+  const P={'2':DEMO2,'3':DEMO3,'4':DEMO4}[k]||DEMO1;
   const kr=S.rates,kd=S.ratesDate,kc=S.cur,kr0=S.role;
   S=fresh();S.rates=kr;S.ratesDate=kd;S.cur=kc;S.name=P.name;S.onboarded=true;
   S.budget=CATS.map(c=>{
@@ -3515,6 +3647,8 @@ document.addEventListener('click',e=>{
   else if(c==='teamInvite'){teamInvite(b)}
   else if(c==='teamKick'){showDialog({title:'Убрать участника?',text:'Он больше не сможет открыть этот проект.',actions:[{label:'Убрать',run:()=>teamKick(b.dataset.id)},{label:'Отмена',sec:true}]})}
   else if(c==='teamLeave'){showDialog({title:'Покинуть проект команды?',text:'Проект останется у владельца, но вы больше не сможете его открыть без нового приглашения.',actions:[{label:'Покинуть',run:teamLeave},{label:'Отмена',sec:true}]})}
+  else if(c==='todayDay'){S.cs.day=parseInt(b.dataset.k,10)||1;TODAY_PICKED=true;save();render()}
+  else if(c==='csShare'){shareCallsheet(b)}
   else if(c==='csPdf'){ensurePlan();savePdf('vyzyvnoy-list-den-'+S.cs.day+'.pdf',callsheetBlocks(S.cs.day),'Вызывной лист · '+S.name,b)}
   else if(c==='budgetPdf'){savePdf('smeta.pdf',budgetPdfBlocks(),'Смета · '+S.name,b)}
   else if(c==='csDocx'){ensurePlan();saveFile('vyzyvnoy-list-den-'+S.cs.day+'.docx',makeDocx(callsheetBlocks(S.cs.day)))}
