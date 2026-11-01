@@ -1225,7 +1225,8 @@ function authError(e){
   if(m.indexOf('weak_password')>-1||(m.indexOf('password')>-1&&m.indexOf('should')>-1))return 'Пароль слишком простой: нужно не меньше 8 символов, лучше буквы и цифры.';
   if(m.indexOf('over_email_send_rate_limit')>-1||m.indexOf('over_request_rate_limit')>-1||(m.indexOf('rate')>-1&&m.indexOf('limit')>-1))return 'Слишком много попыток. Подождите немного и повторите.';
   if(m.indexOf('failed to fetch')>-1||m.indexOf('network')>-1)return 'Нет связи с сервером. Проверьте интернет.';
-  return 'Не удалось выполнить действие. Попробуйте ещё раз чуть позже.';
+  const raw=String((e&&(e.message||e.code))||'').slice(0,160);
+  return 'Не удалось выполнить действие. Попробуйте ещё раз чуть позже.'+(raw?' Причина: '+raw:'');
 }
 async function onAuthSubmitCloud(e){
   e.preventDefault();
