@@ -1000,6 +1000,11 @@ body.sbed-open{overflow:hidden}
 .td-banner{margin-bottom:14px;border:1px solid var(--btn-y)}
 .land-art{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:20px;background:color-mix(in srgb,var(--brand-light) 6%,transparent);text-decoration:none;color:inherit;border:1px solid color-mix(in srgb,var(--brand-light) 18%,transparent)}
 .land-art:hover{border-color:var(--btn-y)}
+
+/* ===== 3D-светосхема ===== */
+.lt3d{position:relative;min-height:280px;border-radius:16px;background:#0d1226;border:1px solid var(--line);overflow:hidden}
+.lt3d-hint{margin:0;padding:120px 20px;text-align:center;color:var(--muted)}
+.lt3d-help{font-size:13px;margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -2046,6 +2051,7 @@ function legendHtml(L){
   return '<div class="tw"><table class="grid" style="min-width:420px"><thead><tr><th>№</th><th>Название</th><th>Тип</th><th>Параметры</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="muted" style="margin:8px 0 0;font-size:14px">Суммарная мощность света: '+W+' Вт.</p>';
 }
 function paintLight(){
+  if(LT3&&PREF.lt3d)lt3Sync();
   const g=$('#lt-items');if(!g)return;
   const L=curLight();
   g.innerHTML=L.items.map(it=>ltItem(it,it.id===S.lightSel)).join('');
@@ -2074,13 +2080,163 @@ function vLights(){
   const info=sc?'<p class="muted" style="margin:0 0 10px">'+esc(sc.type)+'. '+esc(sc.loc)+(sc.time?', '+esc(sc.time):'')+(sc.chars.length?'. В кадре: '+esc(sc.chars.join(', ')):'')+'</p>':'';
   const canvas=info+'<div class="row noprint" style="margin-bottom:10px"><label>Сцена <select data-a="ltscene" data-r="1" style="margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px;max-width:60vw">'+opts+'</select></label></div>'+
     '<div class="row noprint" style="margin-bottom:10px">'+adds+'</div>'+
-    '<div class="lt"><div><svg id="lt-svg" viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
+    '<div class="chips noprint lt-mode" role="group" aria-label="Вид схемы" style="margin-bottom:10px"><button class="chip" type="button" data-c="ltView" data-k="2d" aria-pressed="'+!PREF.lt3d+'">План сверху</button><button class="chip" type="button" data-c="ltView" data-k="3d" aria-pressed="'+!!PREF.lt3d+'">3D-вид</button></div>'+
+    '<div class="lt'+(PREF.lt3d?' is3d':'')+'"><div>'+(PREF.lt3d?'<div id="lt3d" class="lt3d"><p class="lt3d-hint">Загружаю 3D…</p></div><p class="muted lt3d-help">Вращайте мышью или пальцем, колёсико или два пальца — приближение, правая кнопка или два пальца — сдвиг. Предметы можно перетаскивать по полу, выбранный предмет настраивается справа.</p>':'')+'<svg id="lt-svg"'+(PREF.lt3d?' hidden':'')+' viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
     '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>'+
     '<div class="row noprint" style="margin-top:12px"><span class="muted">Шаблоны:</span>'+pres+'</div>';
   const notes='<label class="fields" style="display:block"><span class="muted" style="font-size:14px">Настроение и заметки к свету</span><textarea rows="3" data-a="ltnote" style="width:100%;margin-top:4px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px" placeholder="Контраст, соотношение ключ/заполнение, откуда падает свет, что нужно для практиков">'+esc(L.note||'')+'</textarea></label>'+
     '<div class="row noprint" style="margin-top:12px"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать схему</button>'+'<button class="btn sec" type="button" data-c="ltSvg">'+icon('download')+'Скачать SVG</button>'+'<button class="btn sec" type="button" data-c="ltClear">Очистить схему</button></div>';
   return '<header class="head"><div class="slate"></div><h1>Светосхема</h1><p>План света сверху: камера показывает угол кадра по объективу, свет — направление и цвет луча. Перетаскивайте предметы, меняйте мощность и температуру. Схема сохраняется отдельно для каждой сцены.</p></header>'+
     '<div class="col">'+panel('ltcv','bulb','Схема',canvas)+panel('ltleg','list','Экспликация света','<div id="lt-legend"></div><div style="height:12px"></div>'+notes)+'</div>';
+}
+
+/* ---------- светосхема: 3D-вид (three.js, грузится по запросу) ---------- */
+let LT3=null,LT3_LOADING=null;
+const M3=v=>v/40;
+const LT_BEAM={'Софтбокс':48,'Фреснель':22,'Голый прибор':60,'LED-панель':42,'Отражатель':38};
+async function lt3Lib(){
+  if(!LT3_LOADING)LT3_LOADING=Promise.all([import('./vendor/three.module.min.js'),import('./vendor/OrbitControls.js')]).catch(e=>{LT3_LOADING=null;throw e});
+  return LT3_LOADING;
+}
+async function lt3Mount(){
+  const host=$('#lt3d');if(!host)return;
+  let mods;try{mods=await lt3Lib()}catch(e){host.innerHTML='<p class="lt3d-hint">Не удалось загрузить 3D. Проверьте интернет и обновите страницу.</p>';return}
+  if(!host.isConnected)return;
+  const T=mods[0],OrbitControls=mods[1].OrbitControls;
+  if(!LT3){
+    let renderer;
+    try{renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true})}catch(e){host.innerHTML='<p class="lt3d-hint">Этот браузер не поддерживает 3D (WebGL).</p>';return}
+    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+    renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+    renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;
+    const scene=new T.Scene();scene.background=new T.Color(0x0d1226);scene.fog=new T.Fog(0x0d1226,22,45);
+    const cam=new T.PerspectiveCamera(45,1.6,0.1,200);cam.position.set(4.5,5.5,8.5);
+    const controls=new OrbitControls(cam,renderer.domElement);controls.target.set(0,0.8,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI/2-0.03;controls.minDistance=2;controls.maxDistance=35;
+    scene.add(new T.HemisphereLight(0xb8c6ff,0x2a3050,0.75));
+    const floor=new T.Mesh(new T.PlaneGeometry(M3(800)+6,M3(520)+6),new T.MeshStandardMaterial({color:0x3a4266,roughness:.85}));
+    floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+    const grid=new T.GridHelper(Math.max(M3(800),M3(520))+6,Math.round(Math.max(M3(800),M3(520))+6),0x5566aa,0x3a4466);grid.position.y=0.002;grid.material.opacity=.35;grid.material.transparent=true;scene.add(grid);
+    const group=new T.Group();scene.add(group);
+    LT3={T:T,renderer:renderer,scene:scene,cam:cam,controls:controls,group:group,floor:floor,drag:null,ray:new T.Raycaster(),raf:0};
+    lt3Events();
+  }
+  host.innerHTML='';host.appendChild(LT3.renderer.domElement);
+  lt3Size();lt3Sync();
+  if(!LT3.raf)lt3Loop();
+}
+function lt3Size(){
+  if(!LT3)return;const el=LT3.renderer.domElement,host=el.parentElement;if(!host)return;
+  const w=host.clientWidth||800,h=Math.max(280,Math.round(document.body.classList.contains('fs')?window.innerHeight-140:w*0.62));
+  LT3.renderer.setSize(w,h,false);el.style.width='100%';el.style.height=h+'px';LT3.cam.aspect=w/h;LT3.cam.updateProjectionMatrix();
+}
+window.addEventListener('resize',()=>{if(LT3)lt3Size()});
+function lt3Loop(){
+  if(!LT3)return;
+  const el=LT3.renderer.domElement;
+  if(!el.isConnected){LT3.raf=0;return}
+  LT3.controls.update();LT3.renderer.render(LT3.scene,LT3.cam);
+  LT3.raf=requestAnimationFrame(lt3Loop);
+}
+function lt3Label(text,color){
+  const T=LT3.T,c=document.createElement('canvas'),x=c.getContext('2d'),fs=44;
+  x.font='600 '+fs+'px Onest,system-ui,sans-serif';const w=Math.ceil(x.measureText(text).width)+28;c.width=w;c.height=fs+24;
+  x.font='600 '+fs+'px Onest,system-ui,sans-serif';x.fillStyle='rgba(13,18,38,.78)';x.beginPath();if(x.roundRect)x.roundRect(0,0,w,c.height,18);else x.rect(0,0,w,c.height);x.fill();
+  x.fillStyle=color||'#fff';x.textBaseline='middle';x.fillText(text,14,c.height/2+2);
+  const tx=new T.CanvasTexture(c);tx.colorSpace=T.SRGBColorSpace;
+  const s=new T.Sprite(new T.SpriteMaterial({map:tx,depthTest:false,transparent:true}));s.scale.set(w/c.height*0.4,0.4,1);s.renderOrder=10;return s;
+}
+function lt3Dir(rot){const r=(num(rot)||0)*Math.PI/180;return {x:Math.sin(r),z:-Math.cos(r)}}
+function lt3Sync(){
+  if(!LT3)return;
+  const T=LT3.T,G=LT3.group;
+  G.children.slice().forEach(o=>{G.remove(o);o.traverse(m=>{if(m.geometry)m.geometry.dispose();if(m.material){(Array.isArray(m.material)?m.material:[m.material]).forEach(mt=>{if(mt.map)mt.map.dispose();mt.dispose()})}})});
+  const std=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.6,metalness:.1},o||{}));
+  const items=curLight().items;let lights=0;
+  items.forEach(it=>{
+    const o=new T.Group();o.userData.id=it.id;o.position.set(M3(it.x-400),0,M3(it.y-260));
+    const d=lt3Dir(it.rot),yaw=Math.atan2(d.x,d.z);
+    const sel=it.id===S.lightSel,selMat=std(0xffd23f,{emissive:0xffd23f,emissiveIntensity:.6});
+    const add=(m,cast)=>{m.castShadow=cast!==false;m.receiveShadow=true;o.add(m);return m};
+    if(it.type==='actor'){
+      const body=add(new T.Mesh(new T.CylinderGeometry(.2,.24,1.3,20),std(0xff8fb1)));body.position.y=.65;
+      const head=add(new T.Mesh(new T.SphereGeometry(.15,20,16),std(0xffc2d4)));head.position.y=1.5;
+      const nose=add(new T.Mesh(new T.ConeGeometry(.05,.14,12),std(0xffffff)));nose.position.set(d.x*.17,1.5,d.z*.17);nose.rotation.set(Math.PI/2,0,0);nose.lookAt(o.position.x+d.x*2,1.5,o.position.z+d.z*2);nose.rotateX(Math.PI/2);
+      if(sel){const ring=new T.Mesh(new T.RingGeometry(.32,.4,32),selMat);ring.rotation.x=-Math.PI/2;ring.position.y=.01;o.add(ring)}
+    }else if(it.type==='camera'){
+      const head=new T.Group();head.position.y=1.45;head.rotation.y=yaw+Math.PI;o.add(head);
+      const box=new T.Mesh(new T.BoxGeometry(.22,.2,.34),sel?selMat:std(0xcfd6e6));box.castShadow=true;head.add(box);
+      const lens=new T.Mesh(new T.CylinderGeometry(.07,.08,.18,20),std(0x222633));lens.rotation.x=Math.PI/2;lens.position.z=-.25;head.add(lens);
+      [0,1,2].forEach(i=>{const a=i*Math.PI*2/3,l=add(new T.Mesh(new T.CylinderGeometry(.015,.015,1.45),std(0x444a5e)));l.position.set(Math.sin(a)*.22,.7,Math.cos(a)*.22);l.rotation.set(Math.cos(a)*-.15,0,Math.sin(a)*.15)});
+      const half=Math.atan(18/(num(it.mm)||35)),L=4.2,hw=Math.tan(half)*L,hh=hw*9/16;
+      const pts=[[0,0,0],[-hw,-hh,-L],[0,0,0],[hw,-hh,-L],[0,0,0],[hw,hh,-L],[0,0,0],[-hw,hh,-L],[-hw,-hh,-L],[hw,-hh,-L],[hw,-hh,-L],[hw,hh,-L],[hw,hh,-L],[-hw,hh,-L],[-hw,hh,-L],[-hw,-hh,-L]].map(p=>new T.Vector3(p[0],p[1],p[2]));
+      const fr=new T.LineSegments(new T.BufferGeometry().setFromPoints(pts),new T.LineBasicMaterial({color:0x7fe3ff,transparent:true,opacity:.75}));fr.position.z=-.3;head.add(fr);
+    }else if(it.type==='light'){
+      const H=2.3,pos=new T.Vector3(0,H,0),aimDist=3.2;
+      const stand=add(new T.Mesh(new T.CylinderGeometry(.025,.03,H),std(0x3a3f52)));stand.position.y=H/2;
+      [0,1,2].forEach(i=>{const a=i*Math.PI*2/3,l=add(new T.Mesh(new T.CylinderGeometry(.015,.015,.6),std(0x3a3f52)));l.position.set(Math.sin(a)*.18,.22,Math.cos(a)*.18);l.rotation.set(Math.cos(a)*.7,0,-Math.sin(a)*.7)});
+      const col=new T.Color(kelvinColor(it.k));
+      const headG=new T.Group();headG.position.copy(pos);o.add(headG);
+      const tx=d.x*aimDist,tz=d.z*aimDist,ty=1.3;headG.lookAt(o.position.x+tx,ty,o.position.z+tz);
+      const isBox=it.mod==='Софтбокс'||it.mod==='LED-панель';
+      const hm=new T.Mesh(isBox?new T.BoxGeometry(it.mod==='Софтбокс'?.7:.45,it.mod==='Софтбокс'?.5:.3,.12):new T.CylinderGeometry(.13,.17,.28,20),sel?selMat:std(0x23283a));
+      if(!isBox)hm.rotation.x=Math.PI/2;hm.castShadow=true;headG.add(hm);
+      const face=new T.Mesh(isBox?new T.PlaneGeometry(it.mod==='Софтбокс'?.66:.42,it.mod==='Софтбокс'?.46:.27):new T.CircleGeometry(.12,24),new T.MeshBasicMaterial({color:col}));face.position.z=isBox?.07:.15;headG.add(face);
+      const ang=(LT_BEAM[it.mod]||40)*Math.PI/180/2;
+      if(lights<8){
+        const sp=new T.SpotLight(col,Math.max(40,num(it.w)*2.2),18,ang,isBox?.85:.4,1.6);
+        sp.position.copy(pos);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.shadow.bias=-.0004;
+        sp.target.position.set(tx,ty,tz);o.add(sp);o.add(sp.target);lights++;
+      }
+      const len=3.2,cone=new T.Mesh(new T.ConeGeometry(Math.tan(ang)*len,len,32,1,true),new T.MeshBasicMaterial({color:col,transparent:true,opacity:.08,depthWrite:false,side:T.DoubleSide,blending:T.AdditiveBlending}));
+      cone.position.z=len/2+.1;cone.rotation.x=-Math.PI/2;headG.add(cone);
+    }else if(it.type==='flag'||it.type==='diff'){
+      const w=M3(num(it.len)||100),pan=new T.Group();pan.position.y=1.3;pan.rotation.y=yaw+Math.PI/2;o.add(pan);
+      const p=new T.Mesh(new T.BoxGeometry(w,.9,.03),it.type==='flag'?(sel?selMat:std(0x111318)):new T.MeshStandardMaterial({color:sel?0xffd23f:0xffffff,transparent:true,opacity:.55,roughness:1}));p.castShadow=it.type==='flag';pan.add(p);
+      const stand=add(new T.Mesh(new T.CylinderGeometry(.02,.025,.85),std(0x3a3f52)));stand.position.y=.42;
+    }else if(it.type==='window'){
+      const w=M3(num(it.len)||180),win=new T.Group();win.position.y=1.5;win.rotation.y=yaw;o.add(win);
+      const p=new T.Mesh(new T.PlaneGeometry(w,1.5),new T.MeshBasicMaterial({color:sel?0xffe58a:0xcfe6ff,side:T.DoubleSide}));win.add(p);
+      const fr=new T.Mesh(new T.BoxGeometry(w+.12,1.62,.06),std(0x1b2033));fr.position.z=-.04;win.add(fr);
+      if(lights<8){const sp=new T.SpotLight(0xdbe9ff,420,22,Math.PI/3.2,.9,1.4);sp.position.set(0,1.6,0);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.target.position.set(d.x*4,.6,d.z*4);o.add(sp);o.add(sp.target);lights++}
+    }else{
+      const s=Math.max(.3,M3(num(it.len)||60)),b=add(new T.Mesh(new T.BoxGeometry(s,.6,s*.6),sel?selMat:std(0x8a6a4a)));b.position.y=.3;b.rotation.y=yaw;
+    }
+    if(it.label){const lb=lt3Label(it.label,sel?'#FFD23F':'#fff');lb.position.y=it.type==='light'?2.75:it.type==='camera'?2.0:it.type==='actor'?1.95:it.type==='window'?2.45:1.25;o.add(lb)}
+    G.add(o);
+  });
+}
+function lt3Pick(e){
+  const el=LT3.renderer.domElement,r=el.getBoundingClientRect(),T=LT3.T;
+  const v=new T.Vector2(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
+  LT3.ray.setFromCamera(v,LT3.cam);
+  const hits=LT3.ray.intersectObjects(LT3.group.children,true).filter(h=>!(h.object.isSprite)&&h.object.type!=='LineSegments'&&!(h.object.material&&h.object.material.blending===T.AdditiveBlending));
+  for(const h of hits){let o=h.object;while(o&&!o.userData.id)o=o.parent;if(o)return o}
+  return null;
+}
+function lt3Floor(e){
+  const el=LT3.renderer.domElement,r=el.getBoundingClientRect(),T=LT3.T;
+  LT3.ray.setFromCamera(new T.Vector2(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1),LT3.cam);
+  const p=new T.Vector3();return LT3.ray.ray.intersectPlane(new T.Plane(new T.Vector3(0,1,0),0),p)?p:null;
+}
+function lt3Events(){
+  const el=LT3.renderer.domElement;el.style.touchAction='none';el.style.display='block';el.style.borderRadius='16px';
+  el.addEventListener('pointerdown',e=>{
+    if(e.button!==0)return;
+    const o=lt3Pick(e);if(!o)return;
+    const it=curLight().items.find(i=>i.id===o.userData.id);if(!it)return;
+    const f=lt3Floor(e);LT3.controls.enabled=false;
+    LT3.drag={id:it.id,o:o,dx:f?o.position.x-f.x:0,dz:f?o.position.z-f.z:0,moved:false};
+    try{el.setPointerCapture(e.pointerId)}catch(err){}
+    if(S.lightSel!==it.id){S.lightSel=it.id;paintInspector();lt3Sync();LT3.drag.o=LT3.group.children.find(c=>c.userData.id===it.id)}
+  });
+  el.addEventListener('pointermove',e=>{
+    const D=LT3.drag;if(!D)return;const f=lt3Floor(e);if(!f)return;
+    const it=curLight().items.find(i=>i.id===D.id);if(!it)return;
+    const x=Math.max(10,Math.min(790,Math.round((f.x+D.dx)*40+400))),y=Math.max(10,Math.min(510,Math.round((f.z+D.dz)*40+260)));
+    it.x=x;it.y=y;D.moved=true;if(D.o)D.o.position.set(M3(x-400),0,M3(y-260));
+  });
+  const end=()=>{const D=LT3&&LT3.drag;if(!D)return;LT3.drag=null;LT3.controls.enabled=true;if(D.moved){lt3Sync();const lg=$('#lt-legend');if(lg)lg.innerHTML=legendHtml(curLight());save()}};
+  el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
 }
 function ltAim(x,y,tx,ty){return (Math.round(Math.atan2(tx-x,-(ty-y))*180/Math.PI)+360)%360}
 function ltMake(type,x,y,extra){return Object.assign({id:uid(),type:type,x:x,y:y},JSON.parse(JSON.stringify(LT_DEF[type])),extra||{})}
@@ -2970,7 +3126,7 @@ function render(){
   $('#main').innerHTML=toolBar()+views[S.tab]()+sloganHtml();$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
   if(S.tab==='budget')updateTotals();
-  if(S.tab==='lights'){paintLight();paintInspector()}
+  if(S.tab==='lights'){paintLight();paintInspector();if(PREF.lt3d)lt3Mount()}
   if(S.tab==='calc')calcUpdate();
   if(S.tab==='rentals'){S.seen.deals=true;if(S.rtab==='list')gearUpdate()}
   if(S.tab==='story')paintStory();
@@ -3738,6 +3894,7 @@ document.addEventListener('click',e=>{
     const it=ltMake(k,400+Math.round((Math.random()-.5)*120),260+Math.round((Math.random()-.5)*120));
     if(cnt)it.label=it.label+' '+(cnt+1);
     L.items.push(it);S.lightSel=it.id;paintLight();paintInspector();save()}
+  else if(c==='ltView'){PREF.lt3d=b.dataset.k==='3d';savePref();render()}
   else if(c==='ltPreset'){ltPreset(b.dataset.k);paintLight();paintInspector();save()}
   else if(c==='ltDup'){const it=selItem();if(it){const cp=Object.assign({},it,{id:uid(),x:Math.min(780,it.x+34),y:Math.min(500,it.y+34)});curLight().items.push(cp);S.lightSel=cp.id;paintLight();paintInspector();save()}}
   else if(c==='ltDel'){const L=curLight();L.items=L.items.filter(i=>i.id!==S.lightSel);S.lightSel='';paintLight();paintInspector();save()}
