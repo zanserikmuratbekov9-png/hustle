@@ -919,6 +919,14 @@ body.homebg::before{background:radial-gradient(90% 70% at 50% 30%,rgba(10,96,82,
 .land-foot{margin-top:64px;padding-top:20px;border-top:1px solid color-mix(in srgb,var(--brand-light) 18%,transparent);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:color-mix(in srgb,var(--brand-light) 70%,var(--brand-dark))}
 .land-foot a{color:inherit}
 @media (max-width:860px){.land-hero{grid-template-columns:1fr;min-height:0}.land-cta .btn{flex:1 1 100%}}
+
+/* ===== кнопки: жёлтая, белая, синяя ===== */
+:root{--btn-y:#FFD23F;--btn-y-ink:#013E37;--btn-w:#FFFFFF;--btn-w-ink:#013E37;--btn-b:#2563EB;--btn-b-ink:#FFFFFF}
+.btn,.poster.p1 .btn,.yf .yf-b1{background:var(--btn-y)!important;color:var(--btn-y-ink)!important;border:0!important}
+.btn.sec,.poster.p1 .btn.sec,.hero .btn.sec,.land-cta .btn.sec,.auth-card.cloud .btn.big{background:var(--btn-w)!important;color:var(--btn-w-ink)!important;border:0!important}
+.land-cta [data-c=landReg],#authForm button[type=submit],.pc-next .btn,#onb .btn:not(.sec){background:var(--btn-b)!important;color:var(--btn-b-ink)!important;border:0!important}
+.btn:hover{filter:brightness(1.06)}
+.btn:focus-visible{outline:3px solid var(--btn-w);outline-offset:2px}
 </style>
 </head>
 <body>
