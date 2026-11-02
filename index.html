@@ -1005,6 +1005,10 @@ body.sbed-open{overflow:hidden}
 .lt3d{position:relative;min-height:280px;border-radius:16px;background:#0d1226;border:1px solid var(--line);overflow:hidden}
 .lt3d-hint{margin:0;padding:120px 20px;text-align:center;color:var(--muted)}
 .lt3d-help{font-size:13px;margin:8px 0 0}
+.lt3-views{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap;z-index:2}
+.lt3-views button{display:inline-flex;align-items:center;gap:6px;font:600 13px/1 inherit;font-family:inherit;color:#fff;background:rgba(13,18,38,.72);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 12px;cursor:pointer;backdrop-filter:blur(6px)}
+.lt3-views button:hover{border-color:#FFD23F;color:#FFD23F}.lt3-views svg{width:15px;height:15px}
+.lt3-credit{position:absolute;right:10px;bottom:6px;margin:0;font-size:10px;color:rgba(255,255,255,.4);pointer-events:none}
 .lt-nudge{display:flex;flex-direction:column;gap:6px}.lt-nudge>div{display:flex;gap:6px}.lt-nudge .btn{padding:8px 0!important;flex:1;justify-content:center;font-size:18px}
 
 /* ===== раскадровка из 3D ===== */
@@ -2014,7 +2018,7 @@ function vShots(){
 }
 
 /* ---------- светосхема ---------- */
-const LT_DEF={camera:{label:'Камера',mm:35,rot:0},light:{label:'Свет',w:300,k:5600,mod:'Софтбокс',rot:0},actor:{label:'Актёр',rot:0},flag:{label:'Флаг',len:100,rot:0},diff:{label:'Рассеиватель',len:110,rot:0},window:{label:'Окно',len:180,rot:180},prop:{label:'Предмет',len:90,rot:0}};
+const LT_DEF={camera:{label:'Камера',mm:35,rot:0},light:{label:'Свет',w:300,k:5600,mod:'Софтбокс',rot:0},actor:{label:'Актёр',rot:180},flag:{label:'Флаг',len:100,rot:0},diff:{label:'Рассеиватель',len:110,rot:0},window:{label:'Окно',len:180,rot:180},prop:{label:'Предмет',len:90,rot:0}};
 const LT_NAMES={camera:'Камера',light:'Свет',actor:'Актёр',flag:'Флаг',diff:'Рассеиватель',window:'Окно',prop:'Предмет'};
 const LT_CSS='.lt-fov{fill:rgba(127,227,255,.18);stroke:rgba(127,227,255,.6);stroke-width:1.5}.lt-cam{fill:#cfd6e6;stroke:#fff;stroke-width:1.5}.lt-beam{opacity:.26}.lt-actor{fill:#ff8fb1;stroke:#fff;stroke-width:2}.lt-nose{fill:#fff}.lt-flag{fill:#2a2f3d;stroke:#fff;stroke-width:1.5}.lt-diff{fill:rgba(255,255,255,.35);stroke:#fff;stroke-width:1.5;stroke-dasharray:6 4}.lt-window{fill:#9fd3ff;stroke:#fff;stroke-width:1.5}.lt-wbeam{fill:#bfe3ff;opacity:.18}.lt-prop{fill:#3b4252;stroke:#a9b1c6;stroke-width:1.5}.lt-label{fill:#fff;font:600 13px sans-serif;text-anchor:middle;pointer-events:none}.lt-spec{fill:#b9c2d9;font:12px sans-serif;text-anchor:middle;pointer-events:none}.lt-sel{fill:none;stroke:#FFD23F;stroke-width:2.5;stroke-dasharray:5 4}';
 function kelvinColor(k){k=num(k);return k<=2800?'#ff9d4d':k<=3400?'#ffb66b':k<=4500?'#ffe2b8':k<=5800?'#f4f7ff':'#a9ccff'}
@@ -2112,6 +2116,27 @@ async function lt3Lib(){
   if(!LT3_LOADING)LT3_LOADING=Promise.all([import('./vendor/three.module.min.js'),import('./vendor/OrbitControls.js')]).catch(e=>{LT3_LOADING=null;throw e});
   return LT3_LOADING;
 }
+let LT3_HEAD=null,LT3_HEAD_P=null;
+function lt3Head(){
+  if(LT3_HEAD||LT3_HEAD_P)return;
+  LT3_HEAD_P=import('./vendor/GLTFLoader.js').then(m=>new Promise((ok,no)=>{
+    const T=LT3.T,tl=new T.TextureLoader(),map=tl.load('./vendor/head/skin.jpg'),nm=tl.load('./vendor/head/normal.jpg');
+    map.colorSpace=T.SRGBColorSpace;map.flipY=false;nm.flipY=false;map.anisotropy=4;
+    new m.GLTFLoader().load('./vendor/head/head.glb',g=>{
+      const src=g.scene.getObjectByName('LeePerrySmith')||g.scene.children.find(c=>c.isMesh);if(!src)return no(new Error('no mesh'));
+      const geo=src.geometry;geo.userData.keep=true;
+      const mat=new T.MeshPhysicalMaterial({map:map,normalMap:nm,normalScale:new T.Vector2(.8,-.8),roughness:.52,metalness:0,sheen:.25,sheenRoughness:.6,sheenColor:new T.Color(0xffd8c8),color:0xe6dcd6});
+      mat.userData.keep=true;map.userData.keep=true;
+      /* футболка: ниже шеи кожа переходит в ткань */
+      mat.onBeforeCompile=sh=>{
+        sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vHP;').replace('#include <begin_vertex>','#include <begin_vertex>\nvHP=position;');
+        sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vHP;').replace('#include <map_fragment>','#include <map_fragment>\nfloat yT=-1.12-0.1*smoothstep(0.3,2.4,vHP.z);float cl=1.0-smoothstep(yT-0.06,yT+0.06,vHP.y);diffuseColor.rgb=mix(diffuseColor.rgb,vec3(0.062,0.085,0.125),cl);');
+        sh.fragmentShader=sh.fragmentShader.replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\nnormal=normalize(mix(normal,nonPerturbedNormal,cl));');
+      };
+      LT3_HEAD={geo:geo,mat:mat};ok();if(LT3)lt3Sync();
+    },undefined,no);
+  })).catch(()=>{LT3_HEAD_P=null});
+}
 async function lt3Mount(sel){
   sel=sel||'#lt3d';const host=$(sel);if(!host)return;
   let mods;try{mods=await lt3Lib()}catch(e){host.innerHTML='<p class="lt3d-hint">Не удалось загрузить 3D. Проверьте интернет и обновите страницу.</p>';return}
@@ -2136,13 +2161,35 @@ async function lt3Mount(sel){
     lt3Events();
   }
   host.innerHTML='';host.appendChild(LT3.renderer.domElement);
-  LT3.mode=sel==='#sb3d'?'sb':'lt';
+  LT3.mode=sel==='#sb3d'?'sb':'lt';LT3.view='';LT3.anim=null;
+  if(LT3.mode==='lt')host.insertAdjacentHTML('beforeend','<div class="lt3-views noprint" role="group" aria-label="Точка обзора"><button type="button" data-c="lt3View" data-k="face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Лицо крупно</button><button type="button" data-c="lt3View" data-k="cam">'+icon('camera')+'Через камеру</button><button type="button" data-c="lt3View" data-k="all">Общий план</button></div><p class="lt3-credit">Модель головы: Lee Perry-Smith, Infinite-Realities, CC BY 3.0</p>');
   {const sb=LT3.mode==='sb',bg=sb?0x9aa4ba:0x0d1226;LT3.scene.background=new T.Color(bg);LT3.scene.fog.color=new T.Color(bg);
-   LT3.hemi.intensity=sb?1.3:0.75;LT3.sun.intensity=sb?1.6:0;LT3.floor.material.color=new T.Color(sb?0x6b7590:0x3a4266);LT3.grid.visible=!sb}
-  if(LT3.mode==='lt')LT3.controls.minDistance=2;
+   LT3.hemi.intensity=sb?1.3:0.75;LT3.renderer.toneMappingExposure=sb?1.45:1.25;LT3.sun.intensity=sb?1.6:0;LT3.floor.material.color=new T.Color(sb?0x6b7590:0x3a4266);LT3.grid.visible=!sb}
+  if(LT3.mode==='lt'){LT3.controls.minDistance=.25;if(LT3.cam.near!==.02){LT3.cam.near=.02;LT3.cam.updateProjectionMatrix()}}
   if(LT3.mode==='lt'&&LT3.cam.fov!==45){LT3.cam.fov=45;LT3.cam.position.set(4.5,5.5,8.5);LT3.controls.target.set(0,0.8,0)}
   lt3Size();lt3Sync();
   if(!LT3.raf)lt3Loop();
+}
+function lt3View(k){
+  if(!LT3||LT3.mode!=='lt')return;const T=LT3.T,L=curLight(),sel=selItem();
+  const go=(p,q,f)=>{LT3.anim={t0:performance.now(),p0:LT3.cam.position.clone(),p1:p,q0:LT3.controls.target.clone(),q1:q,f0:LT3.cam.fov,f1:f}};
+  const objOf=id=>LT3.group.children.find(c=>c.userData.id===id);
+  if(k==='face'){
+    const a=(sel&&sel.type==='actor')?sel:L.items.find(i=>i.type==='actor');
+    if(!a){toast('Добавьте актёра на схему');return}
+    const o=objOf(a.id);if(!o||!o.userData.face)return;
+    const c=o.position.clone().add(o.userData.face),d=o.userData.dir,an=.45;
+    const dx=d.x*Math.cos(an)-d.z*Math.sin(an),dz=d.x*Math.sin(an)+d.z*Math.cos(an);
+    LT3.view='face';go(new T.Vector3(c.x+dx*.75,c.y+.06,c.z+dz*.75),c,35);
+  }else if(k==='cam'){
+    const cm=(sel&&sel.type==='camera')?sel:L.items.find(i=>i.type==='camera');
+    if(!cm){toast('Добавьте камеру на схему');return}
+    const d=lt3Dir(cm.rot),tl=(num(cm.tilt)||0)*Math.PI/180,h=num(cm.h)||1.45,b=new T.Vector3(M3(cm.x-400),h,M3(cm.y-260));
+    const fw=new T.Vector3(d.x*Math.cos(tl),Math.sin(tl),d.z*Math.cos(tl));
+    const p=b.clone().addScaledVector(fw,.45),q=b.clone().addScaledVector(fw,3);
+    const vf=2*Math.atan(Math.tan(Math.atan(18/(num(cm.mm)||35)))*9/16)*180/Math.PI;
+    LT3.view='cam';LT3.camId=cm.id;go(p,q,vf);
+  }else{LT3.view='';go(new T.Vector3(4.5,5.5,8.5),new T.Vector3(0,.8,0),45)}
 }
 function lt3Size(){
   if(!LT3)return;const el=LT3.renderer.domElement,host=el.parentElement;if(!host)return;
@@ -2156,6 +2203,16 @@ function lt3Loop(){
   if(!LT3)return;
   const el=LT3.renderer.domElement;
   if(!el.isConnected){LT3.raf=0;return}
+  const A=LT3.anim;
+  if(A){const t=Math.min(1,(performance.now()-A.t0)/650),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+    LT3.cam.position.lerpVectors(A.p0,A.p1,e);LT3.controls.target.lerpVectors(A.q0,A.q1,e);
+    if(A.f0!==A.f1){LT3.cam.fov=A.f0+(A.f1-A.f0)*e;LT3.cam.updateProjectionMatrix()}
+    if(t>=1)LT3.anim=null}
+  if(LT3.mode==='lt'){
+    const near=LT3.cam.position.distanceTo(LT3.controls.target)<1.6||LT3.view==='cam';
+    (LT3.labels||[]).forEach(l=>l.visible=!near);(LT3.cones||[]).forEach(c=>c.visible=!near);
+    LT3.group.children.forEach(o=>{o.visible=!(LT3.view==='cam'&&o.userData.id===LT3.camId)});
+  }
   LT3.controls.update();LT3.renderer.render(LT3.scene,LT3.cam);
   LT3.raf=requestAnimationFrame(lt3Loop);
 }
@@ -2171,9 +2228,11 @@ function lt3Dir(rot){const r=(num(rot)||0)*Math.PI/180;return {x:Math.sin(r),z:-
 function lt3Sync(){
   if(!LT3)return;
   const T=LT3.T,G=LT3.group;
-  G.children.slice().forEach(o=>{G.remove(o);o.traverse(m=>{if(m.geometry)m.geometry.dispose();if(m.material){(Array.isArray(m.material)?m.material:[m.material]).forEach(mt=>{if(mt.map)mt.map.dispose();mt.dispose()})}})});
+  G.children.slice().forEach(o=>{G.remove(o);o.traverse(m=>{if(m.geometry&&!m.geometry.userData.keep)m.geometry.dispose();if(m.material){(Array.isArray(m.material)?m.material:[m.material]).forEach(mt=>{if(mt.userData.keep)return;if(mt.map)mt.map.dispose();mt.dispose()})}})});
   const std=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.6,metalness:.1},o||{}));
-  const items=curLight().items;let lights=0;
+  const items=curLight().items;let lights=0;LT3.labels=[];LT3.cones=[];
+  if(LT3.mode==='lt')LT3.hemi.intensity=LT3_HEAD?.3:.75;
+  if(!LT3_HEAD&&items.some(i=>i.type==='actor'))lt3Head();
   items.forEach(it=>{
     const o=new T.Group();o.userData.id=it.id;o.position.set(M3(it.x-400),0,M3(it.y-260));
     const d=lt3Dir(it.rot),yaw=Math.atan2(d.x,d.z);
@@ -2182,16 +2241,25 @@ function lt3Sync(){
     if(it.type==='actor'){
       const hg=num(it.h)||1.75,sit=it.pose==='sit',k=hg/1.75,eye=sit?.47+.75*k:1.62*k;
       if(sit){const ch=add(new T.Mesh(new T.BoxGeometry(.5,.45,.5),std(0x6b5644)));ch.position.set(-d.x*.05,.225,-d.z*.05);const bk=add(new T.Mesh(new T.BoxGeometry(.5,.55,.06),std(0x6b5644)));bk.position.set(-d.x*.27,.72,-d.z*.27);bk.rotation.y=yaw}
-      const fig=new T.Group();fig.rotation.y=yaw;o.add(fig);const skin=std(0xffc2d4),cloth=std(0xff8fb1),pants=std(0x7a5a8f);
+      const fig=new T.Group();fig.rotation.y=yaw;o.add(fig);const real=!!LT3_HEAD,skin=std(real?0xc99a82:0xffc2d4),cloth=std(real?0x4a5468:0xff8fb1,{roughness:.85}),pants=std(real?0x2c3242:0x7a5a8f,{roughness:.85});
       const limb=(r,len,mat,x,y,z,rx)=>{const m=new T.Mesh(new T.CapsuleGeometry(r,len,6,12),mat);m.castShadow=true;m.receiveShadow=true;m.position.set(x,y,z);if(rx)m.rotation.x=rx;fig.add(m);return m};
       const hip=sit?.47:.92*k,sh=sit?hip+.55*k:1.42*k;
-      limb(.17*k,(sh-hip)-.2*k,cloth,0,(hip+sh)/2,0);
+      const crown=sit?eye+.135*k:hg,bt=crown-.425*k;
+      if(real){const th=Math.max(.05,bt-hip+.06*k),tr=new T.Mesh(new T.CylinderGeometry(.165*k,.15*k,th,28),cloth);tr.scale.z=.62;tr.position.y=hip+th/2-.03*k;tr.castShadow=true;tr.receiveShadow=true;fig.add(tr);
+        const pl=new T.Mesh(new T.SphereGeometry(.15*k,24,12,0,Math.PI*2,Math.PI/2,Math.PI/2),pants);pl.scale.set(1.02,.55,.64);pl.position.y=hip-.02*k;pl.castShadow=true;fig.add(pl)}
+      else limb(.17*k,(sh-hip)-.2*k,cloth,0,(hip+sh)/2,0);
       if(sit){limb(.075*k,.38*k,pants,-.1*k,hip,.22*k,Math.PI/2);limb(.075*k,.38*k,pants,.1*k,hip,.22*k,Math.PI/2);limb(.065*k,.32*k,pants,-.1*k,.24,.44*k);limb(.065*k,.32*k,pants,.1*k,.24,.44*k)}
       else{limb(.08*k,.72*k,pants,-.1*k,hip/2,0);limb(.08*k,.72*k,pants,.1*k,hip/2,0)}
-      limb(.06*k,.5*k,cloth,-.25*k,sh-.3*k,0,sit?-.5:0);limb(.06*k,.5*k,cloth,.25*k,sh-.3*k,0,sit?-.5:0);
-      limb(.05*k,.08*k,skin,0,sh+.06*k,0);
-      const head=add(new T.Mesh(new T.SphereGeometry(.15*k,20,16),std(0xffc2d4)));head.position.y=eye;
-      const nose=add(new T.Mesh(new T.ConeGeometry(.05,.14,12),std(0xffffff)));nose.position.set(d.x*.17*k,eye,d.z*.17*k);nose.lookAt(o.position.x+d.x*2,eye,o.position.z+d.z*2);nose.rotateX(Math.PI/2);
+      {const ax=real?.2*k:.25*k,ay=real?bt+.02*k-.31*k:sh-.3*k;limb((real?.05:.06)*k,.5*k,cloth,-ax,ay,0,sit?-.5:0);limb((real?.05:.06)*k,.5*k,cloth,ax,ay,0,sit?-.5:0)}
+      if(real){
+        const sc=.0535*k,top=crown-3.97*sc,bust=new T.Mesh(LT3_HEAD.geo,LT3_HEAD.mat);bust.scale.setScalar(sc);bust.position.set(0,top,.005);bust.castShadow=true;bust.receiveShadow=true;bust.userData.face=true;fig.add(bust);
+        o.userData.face=new T.Vector3(0,top+1.1*sc,0);o.userData.dir=d;
+      }else{
+        limb(.05*k,.08*k,skin,0,sh+.06*k,0);
+        const head=add(new T.Mesh(new T.SphereGeometry(.15*k,20,16),std(0xffc2d4)));head.position.y=eye;
+        const nose=add(new T.Mesh(new T.ConeGeometry(.05,.14,12),std(0xffffff)));nose.position.set(d.x*.17*k,eye,d.z*.17*k);nose.lookAt(o.position.x+d.x*2,eye,o.position.z+d.z*2);nose.rotateX(Math.PI/2);
+        o.userData.face=new T.Vector3(0,eye,0);o.userData.dir=d;
+      }
       if(sel){const ring=new T.Mesh(new T.RingGeometry(.32,.4,32),selMat);ring.rotation.x=-Math.PI/2;ring.position.y=.01;o.add(ring)}
     }else if(it.type==='camera'){
       const ch=num(it.h)||1.45,head=new T.Group();head.position.y=ch;head.rotation.order='YXZ';head.rotation.y=yaw+Math.PI;head.rotation.x=(num(it.tilt)||0)*Math.PI/180;o.add(head);
@@ -2216,12 +2284,12 @@ function lt3Sync(){
       const face=new T.Mesh(isBox?new T.PlaneGeometry(it.mod==='Софтбокс'?.66:.42,it.mod==='Софтбокс'?.46:.27):new T.CircleGeometry(.12,24),new T.MeshBasicMaterial({color:col}));face.position.z=isBox?.07:.15;headG.add(face);
       const ang=(LT_BEAM[it.mod]||40)*Math.PI/180/2;
       if(lights<8){
-        const sp=new T.SpotLight(col,Math.max(40,num(it.w)*2.2),18,ang,isBox?.85:.4,1.6);
-        sp.position.copy(pos);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.shadow.bias=-.0004;
+        const sp=new T.SpotLight(col,LT3_HEAD&&LT3.mode==='lt'?Math.max(6,num(it.w)*.32):Math.max(40,num(it.w)*2.2),18,ang,isBox?.85:.4,1.6);
+        sp.position.copy(pos);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.shadow.bias=-.0002;sp.shadow.normalBias=.012;if(lights<2)sp.shadow.mapSize.set(2048,2048);
         sp.target.position.set(tx,ty,tz);o.add(sp);o.add(sp.target);lights++;
       }
       const len=3.2,cone=new T.Mesh(new T.ConeGeometry(Math.tan(ang)*len,len,32,1,true),new T.MeshBasicMaterial({color:col,transparent:true,opacity:.08,depthWrite:false,side:T.DoubleSide,blending:T.AdditiveBlending}));
-      cone.position.z=len/2+.1;cone.rotation.x=-Math.PI/2;headG.add(cone);
+      cone.position.z=len/2+.1;cone.rotation.x=-Math.PI/2;headG.add(cone);LT3.cones.push(cone);
     }else if(it.type==='flag'||it.type==='diff'){
       const w=M3(num(it.len)||100),pan=new T.Group();pan.position.y=1.3;pan.rotation.y=yaw+Math.PI/2;o.add(pan);
       const p=new T.Mesh(new T.BoxGeometry(w,.9,.03),it.type==='flag'?(sel?selMat:std(0x111318)):new T.MeshStandardMaterial({color:sel?0xffd23f:0xffffff,transparent:true,opacity:.55,roughness:1}));p.castShadow=it.type==='flag';pan.add(p);
@@ -2230,11 +2298,11 @@ function lt3Sync(){
       const w=M3(num(it.len)||180),win=new T.Group();win.position.y=1.5;win.rotation.y=yaw;o.add(win);
       const p=new T.Mesh(new T.PlaneGeometry(w,1.5),new T.MeshBasicMaterial({color:sel?0xffe58a:0xcfe6ff,side:T.DoubleSide}));win.add(p);
       const fr=new T.Mesh(new T.BoxGeometry(w+.12,1.62,.06),std(0x1b2033));fr.position.z=-.04;win.add(fr);
-      if(lights<8){const sp=new T.SpotLight(0xdbe9ff,420,22,Math.PI/3.2,.9,1.4);sp.position.set(0,1.6,0);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.target.position.set(d.x*4,.6,d.z*4);o.add(sp);o.add(sp.target);lights++}
+      if(lights<8){const sp=new T.SpotLight(0xdbe9ff,LT3_HEAD&&LT3.mode==='lt'?70:420,22,Math.PI/3.2,.9,1.4);sp.position.set(0,1.6,0);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.target.position.set(d.x*4,.6,d.z*4);o.add(sp);o.add(sp.target);lights++}
     }else{
       const s=Math.max(.3,M3(num(it.len)||60)),b=add(new T.Mesh(new T.BoxGeometry(s,.6,s*.6),sel?selMat:std(0x8a6a4a)));b.position.y=.3;b.rotation.y=yaw;
     }
-    if(it.label){const lb=lt3Label(it.label,sel?'#FFD23F':'#fff');lb.position.y=it.type==='light'?(num(it.h)||2.3)+.45:it.type==='camera'?(num(it.h)||1.45)+.55:it.type==='actor'?(it.pose==='sit'?(num(it.h)||1.75)*.72+.35:(num(it.h)||1.75)+.2):it.type==='window'?2.45:1.25;o.add(lb)}
+    if(it.label){const lb=lt3Label(it.label,sel?'#FFD23F':'#fff');LT3.labels.push(lb);lb.position.y=it.type==='light'?(num(it.h)||2.3)+.45:it.type==='camera'?(num(it.h)||1.45)+.55:it.type==='actor'?(it.pose==='sit'?(num(it.h)||1.75)*.72+.35:(num(it.h)||1.75)+.2):it.type==='window'?2.45:1.25;o.add(lb)}
     G.add(o);
   });
 }
@@ -2255,6 +2323,7 @@ function lt3Events(){
   const el=LT3.renderer.domElement;el.style.touchAction='none';el.style.display='block';el.style.borderRadius='16px';
   el.addEventListener('pointerdown',e=>{
     if(e.button!==0)return;
+    if(LT3.view==='cam'||(LT3.mode==='lt'&&LT3.cam.position.distanceTo(LT3.controls.target)<1.6))return;
     const o=lt3Pick(e);if(!o)return;
     const it=curLight().items.find(i=>i.id===o.userData.id);if(!it)return;
     const f=lt3Floor(e);LT3.controls.enabled=false;
@@ -2280,14 +2349,14 @@ function ltAim(x,y,tx,ty){return (Math.round(Math.atan2(tx-x,-(ty-y))*180/Math.P
 function ltMake(type,x,y,extra){return Object.assign({id:uid(),type:type,x:x,y:y},JSON.parse(JSON.stringify(LT_DEF[type])),extra||{})}
 function ltPreset(k){
   const L=curLight(),it=[];
-  const A=(x,y)=>ltMake('actor',x,y,{label:'Актёр',rot:0});
+  const A=(x,y)=>ltMake('actor',x,y,{label:'Актёр',rot:180});
   if(k==='three'){
     it.push(A(400,250),ltMake('camera',400,470,{label:'Камера A',mm:50,rot:0}),
       ltMake('light',250,400,{label:'Ключ',w:300,k:5600,mod:'Софтбокс',rot:ltAim(250,400,400,250)}),
       ltMake('light',560,420,{label:'Заполнение',w:120,k:5600,mod:'LED-панель',rot:ltAim(560,420,400,250)}),
       ltMake('light',500,90,{label:'Контровой',w:200,k:5600,mod:'Фреснель',rot:ltAim(500,90,400,250)}));
   }else if(k==='window'){
-    it.push(ltMake('window',400,40,{label:'Окно',len:240,rot:180}),A(400,230),ltMake('diff',470,330,{label:'Отражатель',len:120,rot:ltAim(470,330,400,230)}),ltMake('camera',230,430,{label:'Камера A',mm:35,rot:ltAim(230,430,400,230)}));
+    it.push(ltMake('window',400,40,{label:'Окно',len:240,rot:180}),Object.assign(A(400,230),{rot:ltAim(400,230,260,190)}),ltMake('diff',470,330,{label:'Отражатель',len:120,rot:ltAim(470,330,400,230)}),ltMake('camera',230,430,{label:'Камера A',mm:35,rot:ltAim(230,430,400,230)}));
   }else{
     it.push(A(400,260),ltMake('camera',400,470,{label:'Камера A',mm:35,rot:0}),
       ltMake('light',460,90,{label:'Контровой холодный',w:300,k:6500,mod:'Фреснель',rot:ltAim(460,90,400,260)}),
@@ -3937,6 +4006,7 @@ document.addEventListener('click',e=>{
   else if(c==='ltTop'){const L=curLight(),sel=selItem(),a=(sel&&sel.type==='actor')?sel:L.items.find(i=>i.type==='actor'),x=a?a.x:400,y=a?a.y:260,cnt=L.items.filter(i=>i.boom).length;
     const it=ltMake('light',x,y,{label:'Топлайт'+(cnt?' '+(cnt+1):''),w:200,k:5600,mod:'Софтбокс',h:3.6,tilt:-90,boom:true,rot:0});L.items.push(it);S.lightSel=it.id;paintLight();paintInspector();save()}
   else if(c==='ltNudge'){ltNudge(b.dataset.k,10)}
+  else if(c==='lt3View'){lt3View(b.dataset.k)}
   else if(c==='ltView'){PREF.lt3d=b.dataset.k==='3d';savePref();render()}
   else if(c==='ltPreset'){ltPreset(b.dataset.k);paintLight();paintInspector();save()}
   else if(c==='ltDup'){const it=selItem();if(it){const cp=Object.assign({},it,{id:uid(),x:Math.min(780,it.x+34),y:Math.min(500,it.y+34)});curLight().items.push(cp);S.lightSel=cp.id;paintLight();paintInspector();save()}}
