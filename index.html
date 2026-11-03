@@ -2137,12 +2137,17 @@ async function lt3Mount(sel){
   }
   host.innerHTML='';host.appendChild(LT3.renderer.domElement);
   LT3.mode=sel==='#sb3d'?'sb':'lt';
-  {const sb=LT3.mode==='sb',bg=sb?0x9aa4ba:0x0d1226;LT3.scene.background=new T.Color(bg);LT3.scene.fog.color=new T.Color(bg);
-   LT3.hemi.intensity=sb?1.3:0.75;LT3.sun.intensity=sb?1.6:0;LT3.floor.material.color=new T.Color(sb?0x6b7590:0x3a4266);LT3.grid.visible=!sb}
+  lt3Look();
   if(LT3.mode==='lt')LT3.controls.minDistance=2;
   if(LT3.mode==='lt'&&LT3.cam.fov!==45){LT3.cam.fov=45;LT3.cam.position.set(4.5,5.5,8.5);LT3.controls.target.set(0,0.8,0)}
   lt3Size();lt3Sync();
   if(!LT3.raf)lt3Loop();
+}
+function lt3Look(){
+  if(!LT3)return;const T=LT3.T,sb=LT3.mode==='sb',lit=sb&&SB3.lit,bg=lit?0x05070f:sb?0x9aa4ba:0x0d1226;
+  LT3.scene.background=new T.Color(bg);LT3.scene.fog.color=new T.Color(bg);
+  LT3.hemi.intensity=lit?0.12:sb?1.3:0.75;LT3.sun.intensity=sb&&!lit?1.6:0;LT3.floor.material.color=new T.Color(lit?0x262b3d:sb?0x6b7590:0x3a4266);LT3.grid.visible=!sb;
+  LT3.controls.maxPolarAngle=sb?Math.PI*0.62:Math.PI/2-0.03;
 }
 function lt3Size(){
   if(!LT3)return;const el=LT3.renderer.domElement,host=el.parentElement;if(!host)return;
@@ -3992,7 +3997,7 @@ document.addEventListener('keydown',e=>{
 
 
 /* ---------- раскадровка: кадр из 3D-сцены ---------- */
-let SB3={on:false,mm:35};
+let SB3={on:false,mm:35,lit:false};
 const sbFov=mm=>2*Math.atan(12/mm)*180/Math.PI;
 function sbSceneId(){return S.storyScene&&S.scenes.some(s=>s.id===S.storyScene)?S.storyScene:(S.scenes[0]&&S.scenes[0].id)}
 async function sb3dEnter(){
@@ -4011,6 +4016,7 @@ async function sb3dEnter(){
     '<label class="sbsize">Объектив <b id="sb3mm">'+SB3.mm+' мм</b><input type="range" min="14" max="135" step="1" value="'+SB3.mm+'" data-sb3mm="1"></label><span class="sbsep"></span>'+
     '<button class="sbt" type="button" data-sb3="actor">'+sbIcon('person')+'<span>Актёр</span></button><button class="sbt" type="button" data-sb3="prop"><span>Предмет</span></button>'+
     '<button class="sbt" type="button" data-sb3="pose"><span>Сидит / стоит</span></button><button class="sbt" type="button" data-sb3="turn"><span>Повернуть</span></button><button class="sbt" type="button" data-sb3="del"><span>Удалить</span></button><span class="sbsep"></span>'+
+    '<button class="sbt" type="button" data-sb3="lit" aria-pressed="'+SB3.lit+'" title="Показать сцену со светом из светосхемы">'+sbIcon('light')+'<span>Свет сцены</span></button><span class="sbsep"></span>'+
     '<button class="sbt" type="button" data-sb3="back"><span>Назад к рисунку</span></button><button class="sbt sbt-shot" type="button" data-sb3="shot">'+sbIcon('camera')+'<span>Снять кадр</span></button>'+
     '<span class="sb3-help">Крутите и приближайте сцену, чтобы найти ракурс. Персонажей можно перетаскивать по полу.</span></div>');
   await lt3Mount('#sb3d');
@@ -4037,6 +4043,7 @@ document.addEventListener('click',e=>{
   const b=e.target.closest&&e.target.closest('#sb3tools [data-sb3]');if(!b||!SB3.on)return;
   const k=b.dataset.sb3,L=curLight(),it=selItem();
   if(k==='shot')sb3dShot();
+  else if(k==='lit'){SB3.lit=!SB3.lit;b.setAttribute('aria-pressed',String(SB3.lit));lt3Look();if(SB3.lit&&!L.items.some(i=>i.type==='light'))toast('В светосхеме этой сцены пока нет приборов: добавьте свет во вкладке «Светосхема»')}
   else if(k==='back')sb3dExit();
   else if(k==='actor'||k==='prop'){const n=L.items.filter(i=>i.type===k).length,x=400+Math.round((Math.random()-.5)*120),y=260+Math.round((Math.random()-.5)*80);
     const ni=ltMake(k,x,y,k==='actor'?{label:'Актёр '+(n+1),rot:180}:{label:'Предмет '+(n+1)});L.items.push(ni);S.lightSel=ni.id;lt3Sync();save()}
@@ -4167,7 +4174,7 @@ document.addEventListener('input',e=>{if(!ED)return;if(e.target.dataset&&e.targe
 document.addEventListener('keydown',e=>{if(!ED)return;if(e.key==='Escape'){sbClose()}else if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'&&!/INPUT/.test(document.activeElement.tagName)){e.preventDefault();const b=$('#sbed [data-sbe=undo]');b&&b.click()}});
 
 if(window.__STUDENT_TEST__)window.__student={parseScript,calc,validateProject,exportEnvelope,sunTimes,applyBT,autoPlan,applyScript,evStatus,normalize,fresh,hasData,importFromInput,applyImport,exportProject,saveFile,backupBanner,render,save,
-  fdxText,csvParse,budgetFromRows,makeZip,makeDocx,makeXlsx,crc32,zipEntry,budgetXlsx,docText,getS:()=>S,setS:v=>{S=v;USER=USER||'test'},BT,DEALS,EVENTS,GLOSS};
+  fdxText,csvParse,budgetFromRows,makeZip,makeDocx,makeXlsx,crc32,zipEntry,budgetXlsx,docText,getS:()=>S,setS:v=>{S=v;USER=USER||'test'},lt3:()=>LT3,BT,DEALS,EVENTS,GLOSS};
 const CINE_BG='data:image/svg+xml;utf8,'+encodeURIComponent(['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs>',
 '<radialGradient id="bg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#22438a"/><stop offset=".55" stop-color="#0d1b3d"/><stop offset="1" stop-color="#04070f"/></radialGradient>',
 '<linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFEFB3" stop-opacity=".6"/><stop offset="1" stop-color="#FFEFB3" stop-opacity="0"/></linearGradient>',
