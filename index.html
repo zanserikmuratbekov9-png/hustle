@@ -1013,6 +1013,9 @@ body.sbed-open{overflow:hidden}
 .sb3d canvas{display:block}
 .sbt-3d{background:rgba(255,210,63,.18)}
 .sbt-shot{background:var(--btn-y);color:var(--btn-y-ink);font-weight:700}
+.trole{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}.trole button{all:unset;cursor:pointer;font-size:12.5px;padding:5px 10px}.trole button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+body.ro::before{content:'Только просмотр · изменения не сохраняются';position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9998;background:#FFD23F;color:#1E3A8A;font:600 13.5px/1 var(--f-ui);padding:10px 16px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none}
+body.ro #main :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea){pointer-events:none;opacity:.8}
 .sb3-kind{position:relative}.sb3-kind select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
 .sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
 </style>
@@ -1259,13 +1262,13 @@ function save(){
   return ok;
 }
 function scheduleCloud(delay){
-  if(!CLOUD||CLOUD.noPush)return;
+  if(!CLOUD||CLOUD.noPush||CLOUD.ro)return;
   if(!cloudBusy)setSaveState('pending');
-  clearTimeout(cloudTimer);cloudTimer=setTimeout(cloudPush,delay==null?1500:delay);
+  clearTimeout(cloudTimer);cloudTimer=setTimeout(cloudPush,delay==null?500:delay);
 }
 async function cloudPush(){
   const c=CLOUD;
-  if(!c||!SB||c.noPush||!c.dirty||!S)return true;
+  if(!c||!SB||c.noPush||c.ro||!c.dirty||!S)return true;
   if(cloudBusy)return false;
   cloudBusy=true;const stamp=S.savedAt;let ok=false,retry=true;
   try{
@@ -1379,7 +1382,7 @@ function renderAuth(){
   $('#authMsg').textContent='';
 }
 function showAuth(keepMode){
-  USER=null;S=null;CLOUD=null;LAST_SIG='';
+  USER=null;S=null;CLOUD=null;LAST_SIG='';document.body.classList.remove('ro');try{if(RT&&SB){SB.removeChannel(RT);RT=null}}catch(e){}
   $('#onb').hidden=true;$('#app').hidden=true;$('#auth').hidden=false;
   document.body.classList.remove('homebg');
   if(!keepMode)authMode='login';
@@ -1476,6 +1479,8 @@ async function enterCloud(session,pid){
     return;
   }
   c.remoteAt=remote&&remote.updated_at||null;
+  if(pid!==u.id){try{const m=await SB.from('project_members').select('role').eq('owner_id',pid).eq('member_id',u.id).maybeSingle();c.ro=!!(m.data&&m.data.role==='viewer')}catch(e){}}
+  if(CLOUD!==c)return;
   finishCloud(c,remote,false);
 }
 function finishCloud(c,remote,offline){
@@ -1485,7 +1490,7 @@ function finishCloud(c,remote,offline){
   let rem=null;
   if(remote&&remote.data&&typeof remote.data==='object'&&!Array.isArray(remote.data)){try{rem=normalize(JSON.parse(JSON.stringify(remote.data)))}catch(e){rem=null}}
   let chosen=null,fromRemote=false,offerGuest=null;
-  if(rem&&(!local||(rem.savedAt||0)>=(local.savedAt||0))){
+  if(rem&&(c.ro||!local||(rem.savedAt||0)>=(local.savedAt||0))){
     chosen=rem;chosen.heroImg=(local&&local.heroImg)||chosen.heroImg||'';fromRemote=true;
   }else if(local){
     chosen=local;if(!offline)c.dirty=true;
@@ -1505,7 +1510,8 @@ function finishCloud(c,remote,offline){
   closeMenus();render();showOnb();
   if(LOAD_WARN){toast(LOAD_WARN);LOAD_WARN=''}
   if(offline)setSaveState(false,{cloud:true});
-  TEAM.at=0;setTimeout(processJoin,300);
+  document.body.classList.toggle('ro',!!c.ro);if(c.ro)setTimeout(()=>toast('У вас доступ только для просмотра: изменения не сохраняются'),600);
+  liveSub();TEAM.at=0;setTimeout(processJoin,300);
   if(offerGuest){
     showDialog({title:'Перенести проект из демо-режима?',text:'В этом браузере есть проект «'+String(offerGuest.name||'без названия')+'», созданный без аккаунта. Перенести его в ваш аккаунт?',
       actions:[{label:'Перенести',run:()=>applyImport(offerGuest)},{label:'Нет, начать с нуля',sec:true}]});
@@ -2847,7 +2853,7 @@ async function loadTeam(force){
   try{
     const a=await SB.rpc('my_teams');if(a.error)throw a.error;
     TEAM.teams=a.data||[];
-    if(!isShared()){const b=await SB.from('project_members').select('member_id,member_name,member_email,joined_at').eq('owner_id',CLOUD.uid).order('joined_at');if(b.error)throw b.error;TEAM.members=b.data||[]}
+    if(!isShared()){const b=await SB.from('project_members').select('*').eq('owner_id',CLOUD.uid).order('joined_at');if(b.error)throw b.error;TEAM.members=b.data||[]}
     else TEAM.members=[];
   }catch(e){TEAM.err=/function|relation|schema|does not exist/i.test(String(e&&(e.message||e.code)||''))?'setup':'net'}
   finally{TEAM.busy=false;TEAM.at=Date.now()}
@@ -2862,18 +2868,27 @@ async function switchProject(pid){
   CLOUD=null;TEAM.at=0;TEAM.invite='';
   await enterCloud(s,pid);
 }
-async function teamInvite(btn){
+async function teamInvite(btn,role){
+  role=role==='viewer'?'viewer':'editor';
   if(!CLOUD||isShared())return;
   if(btn)btn.disabled=true;
   try{
     if(CLOUD.dirty)await cloudPush();
     const a=new Uint8Array(18);crypto.getRandomValues(a);
     const tok=btoa(String.fromCharCode.apply(null,a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    const r=await SB.from('project_invites').insert({token:tok,owner_id:CLOUD.uid});if(r.error)throw r.error;
-    TEAM.invite=location.origin+location.pathname+'#join='+tok;render();
-    copyText(TEAM.invite,'Ссылка скопирована: отправьте её команде');
+    let r=await SB.from('project_invites').insert({token:tok,owner_id:CLOUD.uid,role:role});
+    if(r.error&&/role/.test(String(r.error.message||''))){toast('Чтобы выбрать права, выполните supabase/team_roles.sql в Supabase');return}
+    if(r.error)throw r.error;
+    TEAM.invite=location.origin+location.pathname+'#join='+tok;TEAM.invRole=role;render();
+    copyText(TEAM.invite,role==='viewer'?'Ссылка для просмотра скопирована':'Ссылка для редактора скопирована');
   }catch(e){toast(/relation|schema|does not exist/i.test(String(e&&(e.message||e.code)||''))?'Командная работа ещё не включена на сервере.':'Не удалось создать приглашение')}
   finally{if(btn)btn.disabled=false}
+}
+async function teamRole(id,role){
+  if(!CLOUD||isShared())return;role=role==='viewer'?'viewer':'editor';
+  const r=await SB.from('project_members').update({role:role}).eq('owner_id',CLOUD.uid).eq('member_id',id).select('member_id');
+  if(r.error||!r.data||!r.data.length){toast('Не удалось изменить права. Проверьте, что выполнен supabase/team_roles.sql');return}
+  toast(role==='viewer'?'Теперь участник может только смотреть':'Теперь участник может редактировать');loadTeam(true);
 }
 async function teamKick(id){
   if(!CLOUD)return;
@@ -2890,22 +2905,37 @@ async function teamLeave(){
   toast('Вы вышли из проекта команды');switchProject(uid);
 }
 const KEEP_LOCAL=['tab','role','pc','dockOpen','hubAll','seen','onboarded','rtab','dealCat','artCat'];
+let PULL_WAIT=false,PULL_BUSY=false;
 async function pullRemote(){
-  const c=CLOUD;if(!c||!SB||c.dirty||c.noPush||cloudBusy||!S)return;
-  const ae=document.activeElement;if(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))return;
+  const c=CLOUD;if(!c||!SB||(c.dirty&&!c.ro)||(c.noPush&&!c.ro)||cloudBusy||!S||PULL_BUSY)return;
+  const ae=document.activeElement;if(!c.ro&&ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)){PULL_WAIT=true;return}
+  PULL_BUSY=true;PULL_WAIT=false;
   try{
+    const h=await SB.from('projects').select('updated_at').eq('user_id',c.pid).maybeSingle();
+    if(CLOUD!==c||h.error||!h.data)return;
+    if(c.remoteAt&&new Date(h.data.updated_at)<=new Date(c.remoteAt))return;
     const r=await SB.from('projects').select('data,updated_at').eq('user_id',c.pid).maybeSingle();
-    if(CLOUD!==c||c.dirty||r.error||!r.data||!r.data.data)return;
+    if(CLOUD!==c||(c.dirty&&!c.ro)||r.error||!r.data||!r.data.data)return;
     if(c.remoteAt&&new Date(r.data.updated_at)<=new Date(c.remoteAt))return;
     if(!c.remoteAt){c.remoteAt=r.data.updated_at;return}
     const d=normalize(JSON.parse(JSON.stringify(r.data.data)));
     KEEP_LOCAL.forEach(k=>{if(k in S)d[k]=S[k]});d.heroImg=S.heroImg||'';
     S=d;LAST_SIG=syncSig();c.remoteAt=r.data.updated_at;
     try{localStorage.setItem(dataKey(),JSON.stringify(S))}catch(e){}
-    render();toast(isShared()?'Проект обновлён: есть изменения от команды':'Проект обновлён с другого устройства');
+    c.dirty=false;render();toast(isShared()?'Проект обновлён: есть изменения от команды':'Проект обновлён с другого устройства');
+  }catch(e){}finally{PULL_BUSY=false}
+}
+setInterval(()=>{if(document.visibilityState==='visible')pullRemote()},4000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')pullRemote()});
+document.addEventListener('focusout',()=>{if(PULL_WAIT)setTimeout(pullRemote,300)});
+let RT=null;
+function liveSub(){
+  try{
+    if(RT&&SB){SB.removeChannel(RT);RT=null}
+    const c=CLOUD;if(!c||!SB||!SB.channel)return;
+    RT=SB.channel('proj-'+c.pid).on('postgres_changes',{event:'*',schema:'public',table:'projects',filter:'user_id=eq.'+c.pid},()=>{if(CLOUD===c)pullRemote()}).subscribe();
   }catch(e){}
 }
-setInterval(()=>{if(document.visibilityState==='visible')pullRemote()},20000);
 function teamHtml(){
   if(!SB)return '';
   if(!CLOUD)return panel('team','role','Команда','<p class="muted" style="margin:0">Чтобы работать над проектом вместе, войдите в аккаунт. В демо-режиме проект хранится только в этом браузере.</p>');
@@ -2916,14 +2946,14 @@ function teamHtml(){
   const projs='<div class="tprojs">'+projBtn(CLOUD.uid,'Мой проект',own?S.name:'ваш личный проект')+TEAM.teams.map(x=>projBtn(x.owner_id,x.project_name||'Проект без названия','владелец: '+(x.owner_name||x.owner_email||'участник'))).join('')+'</div>';
   let body='<span class="lbl">Проекты</span>'+projs;
   if(own){
-    const mem=TEAM.members.length?'<ul class="tmem">'+TEAM.members.map(m=>'<li><span class="av" aria-hidden="true">'+esc(((m.member_name||m.member_email||'?')[0]||'?').toUpperCase())+'</span><span><b>'+esc(m.member_name||m.member_email||'Участник')+'</b>'+(m.member_name&&m.member_email?'<small>'+esc(m.member_email)+'</small>':'')+'</span><button class="link" type="button" data-c="teamKick" data-id="'+esc(m.member_id)+'">Убрать</button></li>').join('')+'</ul>':'<p class="muted" style="margin:6px 0 0">Пока в команде только вы.</p>';
+    const mem=TEAM.members.length?'<ul class="tmem">'+TEAM.members.map(m=>'<li><span class="av" aria-hidden="true">'+esc(((m.member_name||m.member_email||'?')[0]||'?').toUpperCase())+'</span><span><b>'+esc(m.member_name||m.member_email||'Участник')+'</b>'+(m.member_name&&m.member_email?'<small>'+esc(m.member_email)+'</small>':'')+'</span><span class="trole" role="group" aria-label="Права"><button type="button" data-c="teamRole" data-k="viewer" data-id="'+esc(m.member_id)+'" aria-pressed="'+(m.role==='viewer')+'">Просмотр</button><button type="button" data-c="teamRole" data-k="editor" data-id="'+esc(m.member_id)+'" aria-pressed="'+(m.role!=='viewer')+'">Редактор</button></span><button class="link" type="button" data-c="teamKick" data-id="'+esc(m.member_id)+'">Убрать</button></li>').join('')+'</ul>':'<p class="muted" style="margin:6px 0 0">Пока в команде только вы.</p>';
     body+='<span class="lbl" style="margin-top:16px;display:block">Команда этого проекта</span>'+mem+
-      '<div class="row" style="margin-top:12px"><button class="btn" type="button" data-c="teamInvite">'+icon('plus')+'Пригласить по ссылке</button></div>'+
-      (TEAM.invite?'<label style="margin-top:10px;display:flex;flex-direction:column;gap:6px">Ссылка-приглашение (действует 14 дней)<input class="tinv" readonly value="'+esc(TEAM.invite)+'" onclick="this.select()"></label>':'')+
-      '<p class="muted" style="margin:10px 0 0;font-size:13px">Кто откроет ссылку и войдёт в аккаунт, сможет смотреть и менять этот проект. Если двое правят одно и то же одновременно, сохранится последнее изменение.</p>';
+      '<span class="lbl" style="margin-top:16px;display:block">Пригласить по ссылке</span><div class="row" style="margin-top:8px"><button class="btn" type="button" data-c="teamInvite" data-k="editor">'+icon('plus')+'Редактор</button><button class="btn sec" type="button" data-c="teamInvite" data-k="viewer">'+icon('plus')+'Только просмотр</button></div>'+
+      (TEAM.invite?'<label style="margin-top:10px;display:flex;flex-direction:column;gap:6px">Ссылка '+(TEAM.invRole==='viewer'?'для просмотра':'для редактора')+' (действует 14 дней)<input class="tinv" readonly value="'+esc(TEAM.invite)+'" onclick="this.select()"></label>':'')+
+      '<p class="muted" style="margin:10px 0 0;font-size:13px">Редактор может менять проект, участник с правом просмотра только смотрит. Права можно поменять в списке команды. Изменения появляются у всех почти сразу; если двое правят одно и то же одновременно, сохранится последнее изменение.</p>';
   }else{
     const ow=TEAM.teams.find(x=>x.owner_id===CLOUD.pid);
-    body+='<p style="margin:14px 0 0">Вы участник проекта'+(ow?' <b>'+esc(ow.owner_name||ow.owner_email||'')+'</b>':'')+'. Изменения сохраняются для всей команды.</p>'+
+    body+='<p style="margin:14px 0 0">Вы участник проекта'+(ow?' <b>'+esc(ow.owner_name||ow.owner_email||'')+'</b>':'')+'. '+(CLOUD.ro?'У вас доступ <b>только для просмотра</b>: ваши правки не сохраняются.':'Вы <b>редактор</b>: изменения сохраняются для всей команды.')+'</p>'+
       '<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="teamLeave">Покинуть проект</button></div>';
   }
   return panel('team','role','Команда и проекты',body);
@@ -3896,7 +3926,8 @@ document.addEventListener('click',e=>{
   else if(c==='budXlsx'){saveFile('smeta.xlsx',budgetXlsx())}
   else if(c==='dlScriptDocx'){saveFile('scenariy.docx',makeDocx(scriptBlocks()))}
   else if(c==='switchProj'){switchProject(b.dataset.id)}
-  else if(c==='teamInvite'){teamInvite(b)}
+  else if(c==='teamInvite'){teamInvite(b,b.dataset.k)}
+  else if(c==='teamRole'){teamRole(b.dataset.id,b.dataset.k)}
   else if(c==='teamKick'){showDialog({title:'Убрать участника?',text:'Он больше не сможет открыть этот проект.',actions:[{label:'Убрать',run:()=>teamKick(b.dataset.id)},{label:'Отмена',sec:true}]})}
   else if(c==='teamLeave'){showDialog({title:'Покинуть проект команды?',text:'Проект останется у владельца, но вы больше не сможете его открыть без нового приглашения.',actions:[{label:'Покинуть',run:teamLeave},{label:'Отмена',sec:true}]})}
   else if(c==='todayDay'){S.cs.day=parseInt(b.dataset.k,10)||1;TODAY_PICKED=true;save();render()}
