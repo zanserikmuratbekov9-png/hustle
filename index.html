@@ -2931,7 +2931,7 @@ async function pullRemote(){
     KEEP_LOCAL.forEach(k=>{if(k in S)d[k]=S[k]});d.heroImg=S.heroImg||'';
     S=d;LAST_SIG=syncSig();c.remoteAt=r.data.updated_at;
     try{localStorage.setItem(dataKey(),JSON.stringify(S))}catch(e){}
-    c.dirty=false;render();toast(isShared()?'Проект обновлён: есть изменения от команды':'Проект обновлён с другого устройства');
+    c.dirty=false;render();toast(isShared()||TEAM.members.length?'Проект обновлён: есть изменения от команды':'Проект обновлён с другого устройства');
   }catch(e){}finally{PULL_BUSY=false}
 }
 setInterval(()=>{if(document.visibilityState==='visible')pullRemote()},4000);
