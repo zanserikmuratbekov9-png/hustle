@@ -1013,6 +1013,7 @@ body.sbed-open{overflow:hidden}
 .sb3d canvas{display:block}
 .sbt-3d{background:rgba(255,210,63,.18)}
 .sbt-shot{background:var(--btn-y);color:var(--btn-y-ink);font-weight:700}
+.sb3-kind{position:relative}.sb3-kind select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
 .sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
 </style>
 </head>
@@ -2015,8 +2016,12 @@ function vShots(){
 
 /* ---------- светосхема ---------- */
 const LT_DEF={camera:{label:'Камера',mm:35,rot:0},light:{label:'Свет',w:300,k:5600,mod:'Софтбокс',rot:0},actor:{label:'Актёр',rot:0},flag:{label:'Флаг',len:100,rot:0},diff:{label:'Рассеиватель',len:110,rot:0},window:{label:'Окно',len:180,rot:180},prop:{label:'Предмет',len:90,rot:0}};
+/* предметы: kind → имя, ширина по умолчанию (1 м = 40), глубина как доля ширины, высота в метрах */
+const PROP_K={box:{n:'Предмет',len:36,d:.6,h:.6},chair:{n:'Стул',len:20,d:1,h:.95},table:{n:'Стол',len:52,d:.6,h:.76},sofa:{n:'Диван',len:84,d:.45,h:.85},
+  bed:{n:'Кровать',len:66,d:1.25,h:.9},wardrobe:{n:'Шкаф',len:48,d:.5,h:2.05},door:{n:'Дверь',len:36,d:.12,h:2.1},car:{n:'Машина',len:180,d:.4,h:1.45},tree:{n:'Дерево',len:60,d:1,h:3.4}};
+const propKind=it=>PROP_K[it.kind]?it.kind:'box';
 const LT_NAMES={camera:'Камера',light:'Свет',actor:'Актёр',flag:'Флаг',diff:'Рассеиватель',window:'Окно',prop:'Предмет'};
-const LT_CSS='.lt-fov{fill:rgba(127,227,255,.18);stroke:rgba(127,227,255,.6);stroke-width:1.5}.lt-cam{fill:#cfd6e6;stroke:#fff;stroke-width:1.5}.lt-beam{opacity:.26}.lt-actor{fill:#ff8fb1;stroke:#fff;stroke-width:2}.lt-nose{fill:#fff}.lt-flag{fill:#2a2f3d;stroke:#fff;stroke-width:1.5}.lt-diff{fill:rgba(255,255,255,.35);stroke:#fff;stroke-width:1.5;stroke-dasharray:6 4}.lt-window{fill:#9fd3ff;stroke:#fff;stroke-width:1.5}.lt-wbeam{fill:#bfe3ff;opacity:.18}.lt-prop{fill:#3b4252;stroke:#a9b1c6;stroke-width:1.5}.lt-label{fill:#fff;font:600 13px sans-serif;text-anchor:middle;pointer-events:none}.lt-spec{fill:#b9c2d9;font:12px sans-serif;text-anchor:middle;pointer-events:none}.lt-sel{fill:none;stroke:#FFD23F;stroke-width:2.5;stroke-dasharray:5 4}';
+const LT_CSS='.lt-fov{fill:rgba(127,227,255,.18);stroke:rgba(127,227,255,.6);stroke-width:1.5}.lt-cam{fill:#cfd6e6;stroke:#fff;stroke-width:1.5}.lt-beam{opacity:.26}.lt-actor{fill:#ff8fb1;stroke:#fff;stroke-width:2}.lt-nose{fill:#fff}.lt-flag{fill:#2a2f3d;stroke:#fff;stroke-width:1.5}.lt-diff{fill:rgba(255,255,255,.35);stroke:#fff;stroke-width:1.5;stroke-dasharray:6 4}.lt-window{fill:#9fd3ff;stroke:#fff;stroke-width:1.5}.lt-wbeam{fill:#bfe3ff;opacity:.18}.lt-prop{fill:#3b4252;stroke:#a9b1c6;stroke-width:1.5}.lt-prop2{fill:#565f75;stroke:#a9b1c6;stroke-width:1.2}.lt-pill{fill:#c9cfdc}.lt-pline{stroke:#a9b1c6;stroke-width:1.5;fill:none}.lt-car{fill:#4a5670;stroke:#cfd6e6;stroke-width:1.8}.lt-glass{fill:#9fb7d8;opacity:.8}.lt-tree{fill:rgba(76,140,90,.55);stroke:#8fcf9a;stroke-width:1.5}.lt-label{fill:#fff;font:600 13px sans-serif;text-anchor:middle;pointer-events:none}.lt-spec{fill:#b9c2d9;font:12px sans-serif;text-anchor:middle;pointer-events:none}.lt-sel{fill:none;stroke:#FFD23F;stroke-width:2.5;stroke-dasharray:5 4}';
 function kelvinColor(k){k=num(k);return k<=2800?'#ff9d4d':k<=3400?'#ffb66b':k<=4500?'#ffe2b8':k<=5800?'#f4f7ff':'#a9ccff'}
 function curLight(){const id=String(S.lightScene||0);S.light[id]=S.light[id]||{items:[],note:''};return S.light[id]}
 function selItem(){return curLight().items.find(i=>i.id===S.lightSel)}
@@ -2040,12 +2045,25 @@ function ltItem(it,sel){
   }else if(t==='window'){
     g='<path class="lt-wbeam" d="M'+(-l/2)+' 0L'+(l/2)+' 0L'+(l/2+30)+' -150L'+(-l/2-30)+' -150Z"/><rect class="lt-window" x="'+(-l/2)+'" y="-5" width="'+l+'" height="10" rx="2"/>';
   }else{
-    g='<rect class="lt-prop" x="'+(-l/2)+'" y="-18" width="'+l+'" height="36" rx="6"/>';
+    g=propSvg(propKind(it),l);
   }
-  const R=Math.max(30,t==='camera'||t==='light'||t==='actor'?30:l/2+14);
+  let R=Math.max(30,t==='camera'||t==='light'||t==='actor'?30:l/2+14);
+  if(t==='prop'){const k=propKind(it),P=PROP_K[k],hx=k==='car'?l*P.d/2:l/2,hy=k==='car'?l/2:k==='door'?l/2:Math.max(18,l*P.d/2),r=(num(it.rot)||0)*Math.PI/180;R=Math.max(26,Math.abs(Math.sin(r))*hx+Math.abs(Math.cos(r))*hy+12)}
   let txt='<text class="lt-label" y="'+(R+14)+'">'+esc(lines[0])+'</text>';
   if(lines[1])txt+='<text class="lt-spec" y="'+(R+29)+'">'+esc(lines[1])+'</text>';
   return '<g class="lt-item" data-id="'+it.id+'" transform="translate('+Math.round(it.x)+' '+Math.round(it.y)+')"><g transform="rotate('+Math.round(it.rot||0)+')">'+g+'</g>'+(sel?'<circle class="lt-sel" r="'+R+'"/>':'')+txt+'<circle r="'+Math.max(26,R-4)+'" fill="transparent"/></g>';
+}
+function propSvg(k,l){
+  const P=PROP_K[k],d=Math.max(8,l*P.d),hw=l/2,hd=d/2,R=(x,y,w,h,r,c)=>'<rect class="'+(c||'lt-prop')+'" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="'+(r||0)+'"/>';
+  if(k==='chair')return R(-hw,-hd,l,d,3)+R(-hw,hd-d*.22,l,d*.22,2,'lt-prop2');
+  if(k==='table')return R(-hw,-hd,l,d,4)+'<circle class="lt-prop2" cx="0" cy="0" r="'+Math.min(hw,hd)*.25+'"/>';
+  if(k==='sofa')return R(-hw,-hd,l,d,6)+R(-hw,hd-d*.3,l,d*.3,4,'lt-prop2')+R(-hw,-hd,l*.1,d,4,'lt-prop2')+R(hw-l*.1,-hd,l*.1,d,4,'lt-prop2');
+  if(k==='bed')return R(-hw,-hd,l,d,5)+R(-hw,hd-d*.1,l,d*.1,2,'lt-prop2')+R(-hw+l*.08,hd-d*.28,l*.38,d*.15,4,'lt-pill')+R(l*.04,hd-d*.28,l*.38,d*.15,4,'lt-pill');
+  if(k==='wardrobe')return R(-hw,-hd,l,d,2)+'<line class="lt-pline" x1="0" y1="'+(-hd)+'" x2="0" y2="'+hd+'"/>';
+  if(k==='door')return R(-hw,-3,l,6,1)+'<path class="lt-pline" fill="none" d="M'+(-hw)+' 0A'+l+' '+l+' 0 0 1 '+hw+' '+(-l)+'"/><line class="lt-pline" x1="'+(-hw)+'" y1="0" x2="'+(-hw)+'" y2="'+(-l)+'"/>';
+  if(k==='car'){const w=l*P.d,L=l;return '<rect class="lt-car" x="'+(-w/2).toFixed(1)+'" y="'+(-L/2).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+L.toFixed(1)+'" rx="'+(w*.3).toFixed(1)+'"/>'+R(-w*.38,-L*.22,w*.76,L*.14,4,'lt-glass')+R(-w*.36,L*.2,w*.72,L*.1,4,'lt-glass')}
+  if(k==='tree')return '<circle class="lt-tree" r="'+hw+'"/><circle class="lt-prop2" r="'+Math.max(4,hw*.15)+'"/>';
+  return R(-hw,-18,l,36,6);
 }
 function legendHtml(L){
   if(!L.items.length)return '<p class="muted" style="margin:0">Схема пуста: добавьте камеру, актёра и свет или выберите шаблон.</p>';
@@ -2053,7 +2071,8 @@ function legendHtml(L){
     let sp='';
     if(it.type==='light')sp=(num(it.w)||0)+' Вт, '+(num(it.k)||0)+' K, '+esc(it.mod||'');
     else if(it.type==='camera')sp=(num(it.mm)||35)+' мм';
-    else if(['flag','diff','window','prop'].indexOf(it.type)>-1)sp=Math.round(num(it.len)||0)+' см условно';
+    else if(it.type==='prop')sp=PROP_K[propKind(it)].n+', '+(num(it.len)/40).toFixed(1)+' м';
+    else if(['flag','diff','window'].indexOf(it.type)>-1)sp=Math.round(num(it.len)||0)+' см условно';
     return '<tr><td>'+(i+1)+'</td><td><b>'+esc(it.label||'')+'</b></td><td>'+LT_NAMES[it.type]+'</td><td>'+sp+'</td></tr>';
   }).join('');
   const W=L.items.filter(i=>i.type==='light').reduce((a,i)=>a+num(i.w),0);
@@ -2082,7 +2101,8 @@ function inspector(){
   if(it.type==='actor'){h+=rng('Рост','h','hv',1,2.1,0.01,(num(it.h)||1.75).toFixed(2),' м')+'<label>Поза<select data-a="lt" data-f="pose">'+[['stand','Стоит'],['sit','Сидит']].map(o=>'<option value="'+o[0]+'"'+((it.pose||'stand')===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></label>'}
   h+='<div class="lt-nudge"><span class="muted" style="font-size:13px">Сдвиг (стрелки на клавиатуре)</span><div><button class="btn sec" type="button" data-c="ltNudge" data-k="l" aria-label="Влево">←</button><button class="btn sec" type="button" data-c="ltNudge" data-k="u" aria-label="Вглубь">↑</button><button class="btn sec" type="button" data-c="ltNudge" data-k="d" aria-label="Ближе">↓</button><button class="btn sec" type="button" data-c="ltNudge" data-k="r" aria-label="Вправо">→</button></div></div>';
   if(it.type==='camera')h+='<label>Объектив, мм<input type="number" min="8" max="400" data-a="lt" data-f="mm" value="'+esc(it.mm)+'"></label>';
-  if(['flag','diff','window','prop'].indexOf(it.type)>-1)h+='<label>Размер: <b id="lenv">'+Math.round(num(it.len))+'</b><input type="range" min="30" max="320" data-a="lt" data-f="len" value="'+Math.round(num(it.len))+'"></label>';
+  if(it.type==='prop')h+='<label>Что это<select data-a="lt" data-f="kind">'+Object.keys(PROP_K).map(k=>'<option value="'+k+'"'+(propKind(it)===k?' selected':'')+'>'+PROP_K[k].n+'</option>').join('')+'</select></label><label>'+(propKind(it)==='car'?'Длина':'Ширина')+': <b id="lenv">'+(num(it.len)/40).toFixed(1)+' м</b><input type="range" min="8" max="240" data-a="lt" data-f="len" value="'+Math.round(num(it.len))+'"></label>';
+  else if(['flag','diff','window'].indexOf(it.type)>-1)h+='<label>Размер: <b id="lenv">'+Math.round(num(it.len))+'</b><input type="range" min="30" max="320" data-a="lt" data-f="len" value="'+Math.round(num(it.len))+'"></label>';
   return h+'</div><div class="row" style="margin-top:10px"><button class="btn sec" type="button" data-c="ltDup">Дублировать</button><button class="btn sec" type="button" data-c="ltDel">Удалить</button></div>';
 }
 function paintInspector(){const el=$('#lt-insp');if(el)el.innerHTML=inspector()}
@@ -2094,6 +2114,7 @@ function vLights(){
   const info=sc?'<p class="muted" style="margin:0 0 10px">'+esc(sc.type)+'. '+esc(sc.loc)+(sc.time?', '+esc(sc.time):'')+(sc.chars.length?'. В кадре: '+esc(sc.chars.join(', ')):'')+'</p>':'';
   const canvas=info+'<div class="row noprint" style="margin-bottom:10px"><label>Сцена <select data-a="ltscene" data-r="1" style="margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px;max-width:60vw">'+opts+'</select></label></div>'+
     '<div class="row noprint" style="margin-bottom:10px">'+adds+'</div>'+
+    '<div class="row noprint lt-props" style="margin-bottom:10px"><span class="muted" style="font-size:14px">Мебель и объекты:</span>'+Object.keys(PROP_K).filter(k=>k!=='box').map(k=>'<button class="chip" type="button" data-c="ltProp" data-k="'+k+'">'+PROP_K[k].n+'</button>').join('')+'</div>'+
     '<div class="chips noprint lt-mode" role="group" aria-label="Вид схемы" style="margin-bottom:10px"><button class="chip" type="button" data-c="ltView" data-k="2d" aria-pressed="'+!PREF.lt3d+'">План сверху</button><button class="chip" type="button" data-c="ltView" data-k="3d" aria-pressed="'+!!PREF.lt3d+'">3D-вид</button></div>'+
     '<div class="lt'+(PREF.lt3d?' is3d':'')+'"><div>'+(PREF.lt3d?'<div id="lt3d" class="lt3d"><p class="lt3d-hint">Загружаю 3D…</p></div><p class="muted lt3d-help">Вращайте мышью или пальцем, колёсико или два пальца — приближение, правая кнопка или два пальца — сдвиг. Предметы можно перетаскивать по полу, выбранный предмет настраивается справа.</p>':'')+'<svg id="lt-svg"'+(PREF.lt3d?' hidden':'')+' viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
     '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>'+
@@ -2172,6 +2193,25 @@ function lt3Label(text,color){
   const tx=new T.CanvasTexture(c);tx.colorSpace=T.SRGBColorSpace;
   const s=new T.Sprite(new T.SpriteMaterial({map:tx,depthTest:false,transparent:true}));{const q=LT3.mode==='sb'?0.2:0.4;s.scale.set(w/c.height*q,q,1)};s.renderOrder=10;return s;
 }
+function lt3Prop(T,G,k,W,selM,std){
+  const P=PROP_K[k],D=W*P.d,wood=selM||std(0x8a6a4a),fab=selM||std(0x5a6b8c,{roughness:.9}),dark=selM||std(0x2a2f3d),
+    box=(w,h,d,x,y,z,m)=>{const b=new T.Mesh(new T.BoxGeometry(w,h,d),m);b.position.set(x,y,z);b.castShadow=true;b.receiveShadow=true;G.add(b);return b},
+    cyl=(r,h,x,y,z,m,rx,rz)=>{const c=new T.Mesh(new T.CylinderGeometry(r,r,h,16),m);c.position.set(x,y,z);if(rx)c.rotation.x=rx;if(rz)c.rotation.z=rz;c.castShadow=true;G.add(c);return c},
+    legs=(w,d,h,r,m)=>[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(q=>cyl(r,h,q[0]*(w/2-r*1.5),h/2,q[1]*(d/2-r*1.5),m));
+  if(k==='chair'){legs(W,D,.45,.02,wood);box(W,.05,D,0,.47,0,wood);box(W,.48,.04,0,.73,-D/2+.02,wood)}
+  else if(k==='table'){legs(W,D,.72,.03,wood);box(W,.05,D,0,.74,0,wood)}
+  else if(k==='sofa'){box(W,.42,D,0,.21,0,fab);box(W,.45,D*.28,0,.62,-D/2+D*.14,fab);box(W*.08,.3,D,-W/2+W*.04,.55,0,fab);box(W*.08,.3,D,W/2-W*.04,.55,0,fab)}
+  else if(k==='bed'){box(W,.32,D,0,.16,0,wood);box(W*.97,.18,D*.97,0,.41,0,std(0xd9dde6,{roughness:.95}));box(W,.95,.06,0,.47,-D/2,wood);box(W*.36,.1,D*.13,-W*.22,.55,-D/2+D*.12,std(0xffffff,{roughness:1}));box(W*.36,.1,D*.13,W*.22,.55,-D/2+D*.12,std(0xffffff,{roughness:1}))}
+  else if(k==='wardrobe'){box(W,P.h,D,0,P.h/2,0,wood);box(.012,P.h*.92,.01,0,P.h/2,D/2+.005,dark);cyl(.012,.16,-.05,P.h*.55,D/2+.03,dark);cyl(.012,.16,.05,P.h*.55,D/2+.03,dark)}
+  else if(k==='door'){box(.06,P.h+.06,.12,-W/2-.03,(P.h+.06)/2,0,dark);box(.06,P.h+.06,.12,W/2+.03,(P.h+.06)/2,0,dark);box(W+.12,.06,.12,0,P.h+.03,0,dark);
+    const leaf=new T.Group();leaf.position.set(-W/2,0,0);leaf.rotation.y=-.6;G.add(leaf);const m=new T.Mesh(new T.BoxGeometry(W,P.h,.04),wood);m.position.set(W/2,P.h/2,0);m.castShadow=true;leaf.add(m)}
+  else if(k==='car'){const L=W,w=W*P.d,body=selM||std(0x9aa3b5,{metalness:.5,roughness:.35}),glass=std(0x1c2433,{metalness:.2,roughness:.15}),tire=std(0x15171d,{roughness:.9});
+    box(w,.55,L,0,.55,0,body);box(w*.9,.5,L*.48,0,1.05,-L*.04,glass);box(w*.86,.06,L*.44,0,1.32,-L*.04,body);
+    [[-1,1],[1,1],[-1,-1],[1,-1]].forEach(q=>cyl(.33,.22,q[0]*(w/2-.08),.33,q[1]*L*.32,tire,0,Math.PI/2));
+    box(w*.22,.08,.02,-w*.3,.62,L/2+.005,std(0xfff3c4,{emissive:0xfff3c4,emissiveIntensity:.6}));box(w*.22,.08,.02,w*.3,.62,L/2+.005,std(0xfff3c4,{emissive:0xfff3c4,emissiveIntensity:.6}))}
+  else if(k==='tree'){cyl(.12,P.h*.55,0,P.h*.275,0,selM||std(0x5b4330));const c=new T.Mesh(new T.SphereGeometry(W/2,20,14),selM||std(0x3f7a4c,{roughness:.95}));c.position.y=P.h*.62;c.scale.y=1.15;c.castShadow=true;G.add(c)}
+  else box(W,.6,W*.6,0,.3,0,selM||std(0x8a6a4a));
+}
 function lt3Dir(rot){const r=(num(rot)||0)*Math.PI/180;return {x:Math.sin(r),z:-Math.cos(r)}}
 function lt3Sync(){
   if(!LT3)return;
@@ -2237,9 +2277,9 @@ function lt3Sync(){
       const fr=new T.Mesh(new T.BoxGeometry(w+.12,1.62,.06),std(0x1b2033));fr.position.z=-.04;win.add(fr);
       if(lights<8){const sp=new T.SpotLight(0xdbe9ff,420,22,Math.PI/3.2,.9,1.4);sp.position.set(0,1.6,0);sp.castShadow=lights<4;sp.shadow.mapSize.set(1024,1024);sp.target.position.set(d.x*4,.6,d.z*4);o.add(sp);o.add(sp.target);lights++}
     }else{
-      const s=Math.max(.3,M3(num(it.len)||60)),b=add(new T.Mesh(new T.BoxGeometry(s,.6,s*.6),sel?selMat:std(0x8a6a4a)));b.position.y=.3;b.rotation.y=yaw;
+      const pg=new T.Group();pg.rotation.y=yaw;o.add(pg);lt3Prop(T,pg,propKind(it),Math.max(.15,M3(num(it.len)||36)),sel?selMat:null,std);
     }
-    if(it.label){const lb=lt3Label(it.label,sel?'#FFD23F':'#fff');lb.position.y=it.type==='light'?(num(it.h)||2.3)+.45:it.type==='camera'?(num(it.h)||1.45)+.55:it.type==='actor'?(it.pose==='sit'?(num(it.h)||1.75)*.72+.35:(num(it.h)||1.75)+.2):it.type==='window'?2.45:1.25;o.add(lb)}
+    if(it.label){const lb=lt3Label(it.label,sel?'#FFD23F':'#fff');lb.position.y=it.type==='light'?(num(it.h)||2.3)+.45:it.type==='camera'?(num(it.h)||1.45)+.55:it.type==='actor'?(it.pose==='sit'?(num(it.h)||1.75)*.72+.35:(num(it.h)||1.75)+.2):it.type==='window'?2.45:it.type==='prop'?PROP_K[propKind(it)].h+.35:1.25;o.add(lb)}
     G.add(o);
   });
 }
@@ -3737,7 +3777,8 @@ const A={
     if(f==='h')setText('#hv',(it.type==='light'?num(t.value).toFixed(1):num(t.value).toFixed(2))+' м');
     if(f==='tilt')setText('#tiltv',Math.round(it.tilt)+'°');
     if(f==='rot')setText('#rotv',Math.round(it.rot)+'°');
-    if(f==='len')setText('#lenv',Math.round(it.len));
+    if(f==='len')setText('#lenv',it.type==='prop'?(it.len/40).toFixed(1)+' м':Math.round(it.len));
+    if(f==='kind'){const P=PROP_K[propKind(it)],old=Object.keys(PROP_K).some(k=>(it.label||'').indexOf(PROP_K[k].n)===0)||/^Тумба|^Стол$/.test(it.label||'');it.len=P.len;if(old||!it.label)it.label=P.n;paintLight();paintInspector();save();return}
     paintLight();save()},
   ltscene:t=>{S.lightScene=parseInt(t.value,10)||0;S.lightSel='';save()},
   ltnote:t=>{curLight().note=t.value;save()},
@@ -3934,6 +3975,8 @@ document.addEventListener('click',e=>{
     S.shots.forEach(x=>rows.push([x.scene,x.no,x.size,x.angle,x.move,x.mm,x.desc,x.done?'да':'нет']));
     copyText(rows.map(r=>r.join('\t')).join('\n'),'Шот-лист скопирован')}
   else if(c==='explicCopy'){copyText(exText(),'Экспликация скопирована')}
+  else if(c==='ltProp'){const L=curLight(),k=b.dataset.k,P=PROP_K[k];if(!P)return;const n=L.items.filter(i=>i.type==='prop'&&propKind(i)===k).length;
+    const it=ltMake('prop',400+Math.round((Math.random()-.5)*160),260+Math.round((Math.random()-.5)*120),{kind:k,len:P.len,label:P.n+(n?' '+(n+1):''),rot:k==='car'?90:0});L.items.push(it);S.lightSel=it.id;paintLight();paintInspector();save()}
   else if(c==='ltAdd'){
     const L=curLight(),k=b.dataset.k,cnt=L.items.filter(i=>i.type===k).length;
     const it=ltMake(k,400+Math.round((Math.random()-.5)*120),260+Math.round((Math.random()-.5)*120));
@@ -4014,7 +4057,7 @@ async function sb3dEnter(){
   $('#sbBig').hidden=true;tools.hidden=true;
   tools.insertAdjacentHTML('afterend','<div class="sbed-tools sb3-tools" id="sb3tools">'+
     '<label class="sbsize">Объектив <b id="sb3mm">'+SB3.mm+' мм</b><input type="range" min="14" max="135" step="1" value="'+SB3.mm+'" data-sb3mm="1"></label><span class="sbsep"></span>'+
-    '<button class="sbt" type="button" data-sb3="actor">'+sbIcon('person')+'<span>Актёр</span></button><button class="sbt" type="button" data-sb3="prop"><span>Предмет</span></button>'+
+    '<button class="sbt" type="button" data-sb3="actor">'+sbIcon('person')+'<span>Актёр</span></button><label class="sbt sb3-kind"><span>＋ Предмет</span><select data-sb3kind="1" aria-label="Добавить предмет"><option value="">выбрать…</option>'+Object.keys(PROP_K).map(k=>'<option value="'+k+'">'+PROP_K[k].n+'</option>').join('')+'</select></label>'+
     '<button class="sbt" type="button" data-sb3="pose"><span>Сидит / стоит</span></button><button class="sbt" type="button" data-sb3="turn"><span>Повернуть</span></button><button class="sbt" type="button" data-sb3="del"><span>Удалить</span></button><span class="sbsep"></span>'+
     '<button class="sbt" type="button" data-sb3="lit" aria-pressed="'+SB3.lit+'" title="Показать сцену со светом из светосхемы">'+sbIcon('light')+'<span>Свет сцены</span></button><span class="sbsep"></span>'+
     '<button class="sbt" type="button" data-sb3="back"><span>Назад к рисунку</span></button><button class="sbt sbt-shot" type="button" data-sb3="shot">'+sbIcon('camera')+'<span>Снять кадр</span></button>'+
@@ -4038,6 +4081,9 @@ function sb3dShot(){
   if(!url){toast('Не удалось снять кадр');return}
   const im=new Image();im.onload=()=>{sb3dExit();const cv=$('#sbBig');if(!cv)return;sbPush();cv.getContext('2d').drawImage(im,0,0,SB_W,SB_H);sbSave();toast('Кадр снят. Можно дорисовать поверх.')};im.src=url;
 }
+document.addEventListener('change',e=>{if(!SB3.on||!e.target.dataset||!e.target.dataset.sb3kind||!LT3)return;const k=e.target.value;e.target.value='';const P=PROP_K[k];if(!P)return;
+  const L=curLight(),n=L.items.filter(i=>i.type==='prop'&&propKind(i)===k).length,ni=ltMake('prop',400+Math.round((Math.random()-.5)*120),260+Math.round((Math.random()-.5)*80),{kind:k,len:P.len,label:P.n+(n?' '+(n+1):''),rot:k==='car'?90:0});
+  L.items.push(ni);S.lightSel=ni.id;lt3Sync();save()});
 document.addEventListener('input',e=>{if(!SB3.on||!e.target.dataset||!e.target.dataset.sb3mm||!LT3)return;SB3.mm=parseInt(e.target.value,10)||35;setText('#sb3mm',SB3.mm+' мм');LT3.cam.fov=sbFov(SB3.mm);LT3.cam.updateProjectionMatrix()});
 document.addEventListener('click',e=>{
   const b=e.target.closest&&e.target.closest('#sb3tools [data-sb3]');if(!b||!SB3.on)return;
