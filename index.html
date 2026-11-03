@@ -1014,7 +1014,7 @@ body.sbed-open{overflow:hidden}
 .sbt-3d{background:rgba(255,210,63,.18)}
 .sbt-shot{background:var(--btn-y);color:var(--btn-y-ink);font-weight:700}
 .trole{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}.trole button{all:unset;cursor:pointer;font-size:12.5px;padding:5px 10px}.trole button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
-body.ro::before{content:'Только просмотр · изменения не сохраняются';position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9998;background:#FFD23F;color:#1E3A8A;font:600 13.5px/1 var(--f-ui);padding:10px 16px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none}
+#roBar{display:none}body.ro #roBar{display:block;position:fixed;left:50%;bottom:14px;top:auto;right:auto;transform:translateX(-50%);z-index:9998;background:#FFD23F;color:#1E3A8A;font:600 13.5px/1 var(--f-ui);padding:10px 16px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none;white-space:nowrap}
 body.ro #main :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea){pointer-events:none;opacity:.8}
 .sb3-kind{position:relative}.sb3-kind select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
 .sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
@@ -1124,6 +1124,7 @@ body.ro #main :is(input:not([type=range]):not([type=checkbox]):not([type=radio])
     </div>
   </header>
   <main id="main"></main>
+  <div id="roBar" role="status">Только просмотр · изменения не сохраняются</div>
   <nav class="bottom" id="botnav" aria-label="Основное меню"></nav>
 </div>
 <div class="onb" id="onb" hidden></div>
@@ -2904,9 +2905,17 @@ async function teamLeave(){
   CLOUD.noPush=true;try{localStorage.removeItem(dataKey());localStorage.removeItem('zp.lastpid.'+uid)}catch(e){}
   toast('Вы вышли из проекта команды');switchProject(uid);
 }
-const KEEP_LOCAL=['tab','role','pc','dockOpen','hubAll','seen','onboarded','rtab','dealCat','artCat'];
-let PULL_WAIT=false,PULL_BUSY=false;
+const KEEP_LOCAL=['tab','role','pc','dockOpen','hubAll','seen','onboarded','rtab','dealCat','artCat','lightSel'];
+let PULL_WAIT=false,PULL_BUSY=false,ROLE_AT=0;
+async function roleCheck(){
+  const c=CLOUD;if(!c||!SB||!isShared())return;const w=2500-(Date.now()-ROLE_AT);if(w>0){if(!roleCheck.t)roleCheck.t=setTimeout(()=>{roleCheck.t=0;roleCheck()},w);return}ROLE_AT=Date.now();
+  try{const m=await SB.from('project_members').select('role').eq('owner_id',c.pid).eq('member_id',c.uid).maybeSingle();
+    if(CLOUD!==c||m.error||!m.data)return;const ro=m.data.role==='viewer';
+    if(ro!==!!c.ro){c.ro=ro;document.body.classList.toggle('ro',ro);if(!ro)c.dirty=false;toast(ro?'Владелец изменил ваши права: теперь только просмотр':'Владелец изменил ваши права: теперь вы редактор');if(S&&S.tab==='proj')render()}
+  }catch(e){}
+}
 async function pullRemote(){
+  roleCheck();
   const c=CLOUD;if(!c||!SB||(c.dirty&&!c.ro)||(c.noPush&&!c.ro)||cloudBusy||!S||PULL_BUSY)return;
   const ae=document.activeElement;if(!c.ro&&ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)){PULL_WAIT=true;return}
   PULL_BUSY=true;PULL_WAIT=false;
