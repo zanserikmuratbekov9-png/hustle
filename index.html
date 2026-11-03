@@ -2075,8 +2075,8 @@ function legendHtml(L){
     else if(['flag','diff','window'].indexOf(it.type)>-1)sp=Math.round(num(it.len)||0)+' см условно';
     return '<tr><td>'+(i+1)+'</td><td><b>'+esc(it.label||'')+'</b></td><td>'+LT_NAMES[it.type]+'</td><td>'+sp+'</td></tr>';
   }).join('');
-  const W=L.items.filter(i=>i.type==='light').reduce((a,i)=>a+num(i.w),0);
-  return '<div class="tw"><table class="grid" style="min-width:420px"><thead><tr><th>№</th><th>Название</th><th>Тип</th><th>Параметры</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="muted" style="margin:8px 0 0;font-size:14px">Суммарная мощность света: '+W+' Вт.</p>';
+  const W=L.items.filter(i=>i.type==='light').reduce((a,i)=>a+num(i.w),0),tdn=TOD[L.tod]?'<p class="muted" style="margin:0 0 8px;font-size:14px">Время суток: <b>'+TOD[L.tod].n+'</b></p>':'';
+  return tdn+'<div class="tw"><table class="grid" style="min-width:420px"><thead><tr><th>№</th><th>Название</th><th>Тип</th><th>Параметры</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="muted" style="margin:8px 0 0;font-size:14px">Суммарная мощность света: '+W+' Вт.</p>';
 }
 function paintLight(){
   if(LT3&&PREF.lt3d)lt3Sync();
@@ -2115,6 +2115,7 @@ function vLights(){
   const canvas=info+'<div class="row noprint" style="margin-bottom:10px"><label>Сцена <select data-a="ltscene" data-r="1" style="margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px;max-width:60vw">'+opts+'</select></label></div>'+
     '<div class="row noprint" style="margin-bottom:10px">'+adds+'</div>'+
     '<div class="row noprint lt-props" style="margin-bottom:10px"><span class="muted" style="font-size:14px">Мебель и объекты:</span>'+Object.keys(PROP_K).filter(k=>k!=='box').map(k=>'<button class="chip" type="button" data-c="ltProp" data-k="'+k+'">'+PROP_K[k].n+'</button>').join('')+'</div>'+
+    '<div class="chips noprint" role="group" aria-label="Время суток" style="margin-bottom:10px"><span class="muted" style="font-size:14px;align-self:center">Время суток:</span>'+[['','Студия'],['day','День'],['eve','Вечер'],['night','Ночь']].map(o=>'<button class="chip" type="button" data-c="ltTod" data-k="'+o[0]+'" aria-pressed="'+((L.tod||'')===o[0])+'">'+o[1]+'</button>').join('')+'</div>'+
     '<div class="chips noprint lt-mode" role="group" aria-label="Вид схемы" style="margin-bottom:10px"><button class="chip" type="button" data-c="ltView" data-k="2d" aria-pressed="'+!PREF.lt3d+'">План сверху</button><button class="chip" type="button" data-c="ltView" data-k="3d" aria-pressed="'+!!PREF.lt3d+'">3D-вид</button></div>'+
     '<div class="lt'+(PREF.lt3d?' is3d':'')+'"><div>'+(PREF.lt3d?'<div id="lt3d" class="lt3d"><p class="lt3d-hint">Загружаю 3D…</p></div><p class="muted lt3d-help">Вращайте мышью или пальцем, колёсико или два пальца — приближение, правая кнопка или два пальца — сдвиг. Предметы можно перетаскивать по полу, выбранный предмет настраивается справа.</p>':'')+'<svg id="lt-svg"'+(PREF.lt3d?' hidden':'')+' viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
     '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>'+
@@ -2164,10 +2165,16 @@ async function lt3Mount(sel){
   lt3Size();lt3Sync();
   if(!LT3.raf)lt3Loop();
 }
+const TOD={day:{n:'День',bg:0xa9cdf0,sky:0xe4f0ff,gr:0x7a6c58,hemi:1.05,sun:2.3,sc:0xfff1d8,sp:[4,11,6],floor:0x8a8f9c},
+  eve:{n:'Вечер',bg:0xe7a07c,sky:0xffc29a,gr:0x40304e,hemi:.6,sun:1.9,sc:0xff9550,sp:[9,2.4,-5],floor:0x6e6070},
+  night:{n:'Ночь',bg:0x060a17,sky:0x6f86c9,gr:0x101425,hemi:.16,sun:.45,sc:0x9fb4ff,sp:[-5,9,-3],floor:0x232838}};
 function lt3Look(){
-  if(!LT3)return;const T=LT3.T,sb=LT3.mode==='sb',lit=sb&&SB3.lit,bg=lit?0x05070f:sb?0x9aa4ba:0x0d1226;
+  if(!LT3)return;const T=LT3.T,sb=LT3.mode==='sb',lit=sb&&SB3.lit,bg=lit?0x05070f:sb?0x9aa4ba:0x0d1226,td=TOD[curLight().tod];
+  LT3.hemi.color.set(0xb8c6ff);LT3.hemi.groundColor.set(0x2a3050);LT3.sun.color.set(0xfff4e0);LT3.sun.position.set(4,8,6);
   LT3.scene.background=new T.Color(bg);LT3.scene.fog.color=new T.Color(bg);
   LT3.hemi.intensity=lit?0.12:sb?1.3:0.75;LT3.sun.intensity=sb&&!lit?1.6:0;LT3.floor.material.color=new T.Color(lit?0x262b3d:sb?0x6b7590:0x3a4266);LT3.grid.visible=!sb;
+  if(td){LT3.scene.background=new T.Color(td.bg);LT3.scene.fog.color=new T.Color(td.bg);LT3.hemi.color.set(td.sky);LT3.hemi.groundColor.set(td.gr);LT3.hemi.intensity=td.hemi;
+    LT3.sun.color.set(td.sc);LT3.sun.intensity=td.sun;LT3.sun.position.set(td.sp[0],td.sp[1],td.sp[2]);LT3.floor.material.color=new T.Color(td.floor)}
   LT3.controls.maxPolarAngle=sb?Math.PI*0.62:Math.PI/2-0.03;
 }
 function lt3Size(){
@@ -3975,6 +3982,7 @@ document.addEventListener('click',e=>{
     S.shots.forEach(x=>rows.push([x.scene,x.no,x.size,x.angle,x.move,x.mm,x.desc,x.done?'да':'нет']));
     copyText(rows.map(r=>r.join('\t')).join('\n'),'Шот-лист скопирован')}
   else if(c==='explicCopy'){copyText(exText(),'Экспликация скопирована')}
+  else if(c==='ltTod'){const L=curLight();L.tod=b.dataset.k||'';if(!L.tod)delete L.tod;document.querySelectorAll('[data-c=ltTod]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));lt3Look();const lg=$('#lt-legend');if(lg)lg.innerHTML=legendHtml(L);save()}
   else if(c==='ltProp'){const L=curLight(),k=b.dataset.k,P=PROP_K[k];if(!P)return;const n=L.items.filter(i=>i.type==='prop'&&propKind(i)===k).length;
     const it=ltMake('prop',400+Math.round((Math.random()-.5)*160),260+Math.round((Math.random()-.5)*120),{kind:k,len:P.len,label:P.n+(n?' '+(n+1):''),rot:k==='car'?90:0});L.items.push(it);S.lightSel=it.id;paintLight();paintInspector();save()}
   else if(c==='ltAdd'){
@@ -4059,6 +4067,7 @@ async function sb3dEnter(){
     '<label class="sbsize">Объектив <b id="sb3mm">'+SB3.mm+' мм</b><input type="range" min="14" max="135" step="1" value="'+SB3.mm+'" data-sb3mm="1"></label><span class="sbsep"></span>'+
     '<button class="sbt" type="button" data-sb3="actor">'+sbIcon('person')+'<span>Актёр</span></button><label class="sbt sb3-kind"><span>＋ Предмет</span><select data-sb3kind="1" aria-label="Добавить предмет"><option value="">выбрать…</option>'+Object.keys(PROP_K).map(k=>'<option value="'+k+'">'+PROP_K[k].n+'</option>').join('')+'</select></label>'+
     '<button class="sbt" type="button" data-sb3="pose"><span>Сидит / стоит</span></button><button class="sbt" type="button" data-sb3="turn"><span>Повернуть</span></button><button class="sbt" type="button" data-sb3="del"><span>Удалить</span></button><span class="sbsep"></span>'+
+    '<label class="sbt sb3-kind"><span id="sb3tod">'+((TOD[curLight().tod]||{}).n||'Время суток')+'</span><select data-sb3tod="1" aria-label="Время суток"><option value="">Студия</option><option value="day">День</option><option value="eve">Вечер</option><option value="night">Ночь</option></select></label>'+
     '<button class="sbt" type="button" data-sb3="lit" aria-pressed="'+SB3.lit+'" title="Показать сцену со светом из светосхемы">'+sbIcon('light')+'<span>Свет сцены</span></button><span class="sbsep"></span>'+
     '<button class="sbt" type="button" data-sb3="back"><span>Назад к рисунку</span></button><button class="sbt sbt-shot" type="button" data-sb3="shot">'+sbIcon('camera')+'<span>Снять кадр</span></button>'+
     '<span class="sb3-help">Крутите и приближайте сцену, чтобы найти ракурс. Персонажей можно перетаскивать по полу.</span></div>');
@@ -4081,6 +4090,7 @@ function sb3dShot(){
   if(!url){toast('Не удалось снять кадр');return}
   const im=new Image();im.onload=()=>{sb3dExit();const cv=$('#sbBig');if(!cv)return;sbPush();cv.getContext('2d').drawImage(im,0,0,SB_W,SB_H);sbSave();toast('Кадр снят. Можно дорисовать поверх.')};im.src=url;
 }
+document.addEventListener('change',e=>{if(!SB3.on||!e.target.dataset||!e.target.dataset.sb3tod||!LT3)return;const L=curLight(),v=e.target.value;if(TOD[v])L.tod=v;else delete L.tod;setText('#sb3tod',(TOD[v]||{}).n||'Время суток');lt3Look();save()});
 document.addEventListener('change',e=>{if(!SB3.on||!e.target.dataset||!e.target.dataset.sb3kind||!LT3)return;const k=e.target.value;e.target.value='';const P=PROP_K[k];if(!P)return;
   const L=curLight(),n=L.items.filter(i=>i.type==='prop'&&propKind(i)===k).length,ni=ltMake('prop',400+Math.round((Math.random()-.5)*120),260+Math.round((Math.random()-.5)*80),{kind:k,len:P.len,label:P.n+(n?' '+(n+1):''),rot:k==='car'?90:0});
   L.items.push(ni);S.lightSel=ni.id;lt3Sync();save()});
