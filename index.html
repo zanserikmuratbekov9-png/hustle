@@ -955,7 +955,7 @@ body.sbed-open{overflow:hidden}
 .sbed-top .btn[disabled]{opacity:.35}
 .sbed-n{white-space:nowrap;font-size:14px}
 .sbed-cap{flex:1;min-width:160px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:9px 12px;color:#fff}
-.sbed-main{flex:1;min-height:0;display:grid;place-items:center}
+.sbed-main{flex:1;min-height:0;display:grid;place-items:start center}
 #sbBig{background:#fff;border-radius:10px;touch-action:none;cursor:crosshair;max-width:100%;max-height:100%;width:auto;height:auto;aspect-ratio:16/9;box-shadow:0 10px 40px rgba(0,0,0,.4)}
 @supports (width:min(1px,2px)){#sbBig{width:min(100%,calc((100vh - 190px) * 16 / 9));height:auto}}
 .sbed-tools{display:flex;align-items:center;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
@@ -971,7 +971,7 @@ body.sbed-open{overflow:hidden}
 .sbtext{flex:none;width:170px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 12px;color:#fff}
 @media (max-width:700px){.sbt span{display:none}.sbt{padding:9px}.sbsize .sbl{font-size:12px}.sbsize input{width:72px}#sbBig{width:100%}}
 @media (min-width:1000px){.sbed-tools{flex-wrap:wrap;overflow:visible}}
-@media (max-height:500px){.sbed{gap:6px;padding:6px}.sbed-top .btn{padding:6px 10px!important}.sbed-cap{padding:6px 10px}#sbBig{width:min(100%,calc((100vh - 110px) * 16 / 9))}.sbt span{display:none}.sbt{padding:8px}}
+@media (max-height:500px){.sbz-b{height:38px}.sbed{gap:6px;padding:6px}.sbed-top .btn{padding:6px 10px!important}.sbed-cap{padding:6px 10px}#sbBig{width:min(100%,calc((100vh - 110px) * 16 / 9))}.sbt span{display:none}.sbt{padding:8px}}
 
 /* ===== съёмочный день ===== */
 .td-top{margin:14px 0 16px;padding:20px;border-radius:22px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
@@ -1009,10 +1009,10 @@ body.sbed-open{overflow:hidden}
 
 /* ===== раскадровка из 3D ===== */
 .sbed-main{position:relative;overflow:hidden}
-.sbz{position:absolute;left:8px;right:8px;top:8px;display:flex;align-items:center;gap:6px;z-index:6;pointer-events:none}
+.sbz{flex:none;display:flex;align-items:center;gap:6px}
 .sbz[hidden]{display:none}
 .sbz-sp{flex:1}
-.sbz-b{all:unset;box-sizing:border-box;pointer-events:auto;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;height:44px;padding:0 14px;border-radius:999px;background:var(--btn-y);color:var(--btn-y-ink);font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.sbz-b{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;height:44px;padding:0 14px;border-radius:999px;background:var(--btn-y);color:var(--btn-y-ink);font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
 .sbz-b .ic{width:20px;height:20px}
 .sbz-b:not(.sbz-undo){background:rgba(13,18,38,.78);color:#fff;font-size:20px;padding:0 12px}
 .sbz-r{font-size:13px!important}
@@ -4175,7 +4175,8 @@ function sbOpen(id){
   const el=document.createElement('div');el.className='sbed';el.id='sbed';el.setAttribute('role','dialog');el.setAttribute('aria-label','Рисование кадра');
   el.innerHTML='<div class="sbed-top"><button class="btn sec" type="button" data-sbe="prev"'+(idx>0?'':' disabled')+' aria-label="Предыдущий кадр">‹</button><b class="sbed-n">Кадр '+(idx+1)+' из '+list.length+'</b><button class="btn sec" type="button" data-sbe="next"'+(idx<list.length-1?'':' disabled')+' aria-label="Следующий кадр">›</button>'+
     '<input class="sbed-cap" value="'+esc(f.cap||'')+'" placeholder="Что в кадре: крупность, действие, звук"><button class="btn" type="button" data-sbe="done">Готово</button></div>'+
-    '<div class="sbed-main"><canvas id="sbBig" width="'+SB_W+'" height="'+SB_H+'"></canvas><div class="sbz"><button class="sbz-b sbz-undo" type="button" data-sbe="undo" aria-label="Отменить последнее действие">'+sbIcon('undo')+'<span>Назад</span></button><span class="sbz-sp"></span><button class="sbz-b" type="button" data-sbe="zout" aria-label="Уменьшить">−</button><button class="sbz-b" type="button" data-sbe="zin" aria-label="Увеличить">+</button><button class="sbz-b sbz-r" type="button" data-sbe="zreset" aria-label="Показать целиком">1:1</button></div></div>'+
+    '<div class="sbz"><button class="sbz-b sbz-undo" type="button" data-sbe="undo" aria-label="Отменить последнее действие">'+sbIcon('undo')+'<span>Назад</span></button><span class="sbz-sp"></span><button class="sbz-b" type="button" data-sbe="zout" aria-label="Уменьшить">−</button><button class="sbz-b" type="button" data-sbe="zin" aria-label="Увеличить">+</button><button class="sbz-b sbz-r" type="button" data-sbe="zreset" aria-label="Показать целиком">1:1</button></div>'+
+    '<div class="sbed-main"><canvas id="sbBig" width="'+SB_W+'" height="'+SB_H+'"></canvas></div>'+
     '<div class="sbed-tools">'+SB_TOOLS.map(x=>'<button class="sbt" type="button" data-sbt="'+x[0]+'" aria-pressed="'+(ED.tool===x[0])+'">'+sbIcon(x[0])+'<span>'+x[1]+'</span></button>').join('')+
     '<span class="sbsep"></span>'+
     '<label class="sbsize"><span class="sbl">Размер</span><input type="range" min="0.5" max="4" step="0.1" value="'+ED.scale+'" data-sbscale="1" aria-label="Размер фигуры: камеры, света, человека, текста"></label>'+
