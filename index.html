@@ -805,7 +805,7 @@ body.homebg{background:color-mix(in srgb,var(--brand-dark) 55%,#000)}
 .app.rail .menu-pop,.app.rail .menu-pop.wide{left:100px}
 body.railed #toast{left:calc(50% + 42px)}
 }
-@media (max-width:860px){.fsfab{top:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px));right:12px}body.fs .fsfab{bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:860px){.fltlab{display:flex;flex-direction:column;gap:6px;max-width:100%}.fltlab select{margin-left:0!important;width:100%}.fsfab:not(.keeptxt) span{display:none}.fsfab{padding:12px;top:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px));right:12px}body.fs .fsfab{bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
 @media print{.fsfab{display:none!important}}
 body.fs .top,body.fs .bottom{display:none!important}
 body.fs .app{display:block!important;padding:10px}
@@ -1439,10 +1439,10 @@ async function onAuthSubmitCloud(e){
       if(pw.length<8){msg.textContent='Пароль слишком короткий: нужно не меньше 8 символов.';return}
       if(!g('consent')||!g('consent').checked){msg.textContent='Нужно согласие на обработку персональных данных.';return}
       const name=((g('name')||{value:''}).value||'').trim()||email.split('@')[0];
-      const r=await SB.auth.signUp({email:email,password:pw,options:{data:{name:name,consent_at:new Date().toISOString()},emailRedirectTo:location.origin+location.pathname}});
+      const r=await SB.auth.signUp({email:email,password:pw,options:{data:Object.assign({name:name,consent_at:new Date().toISOString()},pendingJoin()?{join:pendingJoin()}:{}),emailRedirectTo:location.origin+location.pathname}});
       if(r.error)throw r.error;
       if(r.data&&r.data.session){enterCloud(r.data.session)}
-      else{authMode='login';renderAuth();$('#authMsg').textContent='Мы отправили письмо на '+email+'. Подтвердите адрес по ссылке из письма, затем войдите.'}
+      else{authMode='login';renderAuth();$('#authMsg').textContent='Мы отправили письмо на '+email+'. Подтвердите адрес по ссылке из письма, затем войдите'+(pendingJoin()?': проект команды откроется сам.':'.')}
       return;
     }
     const r=await SB.auth.signInWithPassword({email:email,password:pw});
@@ -2015,7 +2015,7 @@ function vShots(){
     '<td style="min-width:200px"><input data-a="sh" data-id="'+x.id+'" data-f="desc" value="'+esc(x.desc)+'" placeholder="Что в кадре" aria-label="Описание"></td>'+
     '<td style="width:60px;text-align:center"><input type="checkbox" data-a="sh" data-r="1" data-id="'+x.id+'" data-f="done"'+(x.done?' checked':'')+' style="width:22px;height:22px" aria-label="Снято"></td>'+
     '<td style="width:44px"><button class="x" type="button" data-c="shotDel" data-id="'+x.id+'" aria-label="Удалить кадр">×</button></td></tr>').join('');
-  const body='<div class="row" style="margin-bottom:10px"><label>Показать сцену <select data-a="shotflt" data-r="1" style="margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"><option value="">Все сцены</option>'+sceneOpts(flt,false)+'</select></label><span class="muted">Снято '+done+' из '+S.shots.length+'</span></div>'+
+  const body='<div class="row" style="margin-bottom:10px"><label class="fltlab">Показать сцену <select data-a="shotflt" data-r="1" style="margin-left:8px;max-width:100%;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"><option value="">Все сцены</option>'+sceneOpts(flt,false)+'</select></label><span class="muted">Снято '+done+' из '+S.shots.length+'</span></div>'+
     (list.length?'<div class="tw"><table class="grid" style="min-width:980px"><thead><tr><th>Сцена</th><th>№</th><th>Размер</th><th>Ракурс</th><th>Движение</th><th>мм</th><th>Описание</th><th>Снято</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty"><b>Кадров пока нет</b>Добавьте первый кадр кнопкой ниже.</div>')+
     '<div class="row" style="margin-top:12px"><button class="btn" type="button" data-c="shotAdd">'+icon('plus')+'Добавить кадр</button>'+(S.shots.length?'<button class="btn sec" type="button" data-c="shotCopy">'+icon('copy')+'Скопировать для таблицы</button><button class="btn sec" type="button" data-c="shotXlsx">'+icon('download')+'Скачать .xlsx</button>':'')+'</div>';
   return head+'<div class="col">'+panel('shl','frame','Кадры',body)+'</div>';
@@ -2834,8 +2834,12 @@ try{const m=/[#&]join=([A-Za-z0-9_-]{20,64})/.exec(location.hash);if(m){localSto
 const pendingJoin=()=>{try{return localStorage.getItem('zp.join')}catch(e){return null}};
 const isShared=()=>!!(CLOUD&&CLOUD.pid&&CLOUD.pid!==CLOUD.uid);
 async function processJoin(){
-  const tok=pendingJoin();if(!tok||!CLOUD||!SB)return;
+  if(!CLOUD||!SB)return;
+  let tok=pendingJoin(),fromMeta=false;
+  if(!tok){try{const u=(await SB.auth.getSession()).data.session;const j=u&&u.user&&u.user.user_metadata&&u.user.user_metadata.join;if(j&&/^[A-Za-z0-9_-]{20,64}$/.test(j)){tok=j;fromMeta=true}}catch(e){}}
+  if(!tok)return;
   try{localStorage.removeItem('zp.join')}catch(e){}
+  try{if(fromMeta)SB.auth.updateUser({data:{join:null}})}catch(e){}
   try{
     const r=await SB.rpc('join_project',{p_token:tok});
     if(r.error)throw r.error;
