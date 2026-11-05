@@ -1032,7 +1032,7 @@ body.sbed-open{overflow:hidden}
 body.ro #main :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea){pointer-events:none;opacity:.8}
 .sb3-kind{position:relative}.sb3-kind select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
 .sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
-.land-vid{margin:18px 0 0;max-width:280px}.land-vid video{width:100%;aspect-ratio:9/16;border-radius:20px;background:#0b1450;display:block;object-fit:cover}.land-vid figcaption{margin-top:8px;font-size:13px;opacity:.8}
+.tour{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap;margin:18px 0;padding:20px;border-radius:24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}.tour-t{flex:1 1 240px;max-width:380px}.tour-t h2{margin:0 0 8px}.tour-t p{margin:0 0 14px;opacity:.85}.tour-v{flex:0 0 auto;width:min(100%,250px);aspect-ratio:540/1170;border-radius:22px;background:#0b1450;object-fit:cover;box-shadow:0 14px 40px rgba(0,0,0,.35)}@media(prefers-reduced-motion:reduce){.tour-v{animation:none}}.land-vid{margin:18px 0 0;max-width:280px}.land-vid video{width:100%;aspect-ratio:9/16;border-radius:20px;background:#0b1450;display:block;object-fit:cover}.land-vid figcaption{margin-top:8px;font-size:13px;opacity:.8}
 .rent-fold{margin-top:20px}
 </style>
 </head>
@@ -2846,6 +2846,7 @@ function heroHtml(){
     '<div class="yf-mid">'+big+sub+'<div class="yf-act"><button class="yw-btn yf-b1" type="button" data-c="tab" data-k="proj">Начать проект</button></div></div>'+
     '<div aria-hidden="true"></div></section>'+heroCtl();
 }
+function tourHtml(){return '<section class="tour" aria-label="Обзор HUSTLE"><div class="tour-t"><h2>Как это работает</h2><p>Светосхема в 2D и 3D, раскадровка и смета — в одном месте. Всё, что нужно до первого съёмочного дня.</p><button class="btn" type="button" data-c="tab" data-k="proj">'+icon('frame')+'Попробовать на примере</button></div><video class="tour-v" src="media/site-tour.mp4" poster="media/site-tour.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Видеообзор: светосхема, раскадровка, смета"></video></section>'}
 function heroCtl(){return ''}
 function sloganHtml(){return '';
   return '<footer class="slogan'+(S.tab==='home'?' big':'')+'" aria-label="Слоган"><span class="sl-t">Снимай кино…</span><span class="sl-b">HUSTLE — рабочий стол для съёмок</span></footer>';
@@ -2877,7 +2878,7 @@ function vHome(){
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
-  return heroHtml()+todayBanner()+proj+backupBanner()+
+  return heroHtml()+tourHtml()+todayBanner()+proj+backupBanner()+
     '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Узнали о скидке сами? Добавьте её постером. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+addForm+'</details>'+
     '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
