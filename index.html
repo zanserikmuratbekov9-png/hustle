@@ -1370,21 +1370,23 @@ async function hashPw(pw,salt){
 let RECOVERY=false;
 function renderAuth(){
   {const jn=$('#joinNote');if(jn)jn.hidden=!(SB&&pendingJoin())}
-  const cloud=!!SB,mode=authMode,reg=mode==='register',rec=mode==='recover',forgot=mode==='forgot',ver=mode==='verify';
+  const cloud=!!SB,mode=authMode,reg=mode==='register',rec=mode==='recover',forgot=mode==='forgot',ver=mode==='verify',res=mode==='reset';
   const card=$('#authCard');if(card)card.classList.toggle('cloud',cloud);
   const sm=$('.auth-more summary');if(sm)sm.textContent=cloud?'Вход и регистрация':'Локальный аккаунт (демо)';
   const det=$('.auth-more');if(det&&cloud&&!renderAuth.opened){det.open=true;renderAuth.opened=true}
-  const tabs=$('.auth-more .tabs');if(tabs)tabs.hidden=rec||forgot||ver;
+  const tabs=$('.auth-more .tabs');if(tabs)tabs.hidden=rec||forgot||ver||res;
   $('#tab-login').setAttribute('aria-selected',String(mode==='login'));
   $('#tab-register').setAttribute('aria-selected',String(reg));
   const minPw=cloud?8:6;
   let h='';
   if(rec){
     h='<p class="auth-sub">Введите новый пароль для вашего аккаунта.</p><label>Новый пароль (не короче 8 символов)<input name="password" type="password" autocomplete="new-password" required></label><button class="btn" type="submit">Сохранить пароль</button>';
+  }else if(res){
+    h='<p class="auth-sub">Если аккаунт с почтой <b>'+esc(AUTH_PENDING)+'</b> есть, мы отправили на неё код. Введите код и придумайте новый пароль. Проверьте также папку «Спам».</p><label>Код из письма<input name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9 ]*" required placeholder="123456"></label><label>Новый пароль (не короче 8 символов)<input name="password" type="password" autocomplete="new-password" required></label><button class="btn" type="submit">Сменить пароль</button><button class="link" type="button" data-c="authTab" data-k="resend">Отправить код ещё раз</button><button class="link" type="button" data-c="authTab" data-k="login">Вернуться ко входу</button>';
   }else if(ver){
     h='<p class="auth-sub">Мы отправили код подтверждения на <b>'+esc(AUTH_PENDING)+'</b>. Введите его ниже. Письмо может прийти в течение минуты, проверьте также папку «Спам».</p><label>Код из письма<input name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9 ]*" required placeholder="123456"></label><button class="btn" type="submit">Подтвердить</button><button class="link" type="button" data-c="authTab" data-k="resend">Отправить код ещё раз</button><button class="link" type="button" data-c="authTab" data-k="register">Изменить почту</button>';
   }else if(forgot){
-    h='<p class="auth-sub">Укажите почту аккаунта — пришлём ссылку для смены пароля.</p><label>Эл. почта<input name="email" type="email" autocomplete="email" required></label><button class="btn" type="submit">Отправить ссылку</button><button class="link" type="button" data-c="authTab" data-k="login">Назад ко входу</button>';
+    h='<p class="auth-sub">Укажите почту аккаунта — пришлём код для смены пароля.</p><label>Эл. почта<input name="email" type="email" autocomplete="email" required></label><button class="btn" type="submit">Отправить ссылку</button><button class="link" type="button" data-c="authTab" data-k="login">Назад ко входу</button>';
   }else{
     h=(reg?'<label>Имя<input name="name" autocomplete="name" placeholder="Как к вам обращаться"></label>':'')+
       '<label>Эл. почта<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>'+
@@ -1444,6 +1446,20 @@ async function onAuthSubmitCloud(e){
       if(s)enterCloud(s);else renderAuth();
       return;
     }
+    if(authMode==='reset'){
+      const code=((g('code')||{value:''}).value||'').replace(/\D/g,'');
+      if(code.length<6){msg.textContent='Введите код из письма: он состоит из цифр, обычно их 6.';return}
+      if(pw.length<8){msg.textContent='Пароль слишком короткий: нужно не меньше 8 символов.';return}
+      const v=await SB.auth.verifyOtp({email:AUTH_PENDING,token:code,type:'recovery'});
+      if(v.error)throw v.error;
+      const u=await SB.auth.updateUser({password:pw});
+      if(u.error)throw u.error;
+      AUTH_PENDING='';authMode='login';
+      toast('Пароль изменён');
+      const ss=(v.data&&v.data.session)||(await SB.auth.getSession()).data.session;
+      if(ss)enterCloud(ss);else renderAuth();
+      return;
+    }
     if(authMode==='verify'){
       const code=((g('code')||{value:''}).value||'').replace(/\D/g,'');
       if(code.length<6){msg.textContent='Введите код из письма: он состоит из цифр, обычно их 6.';return}
@@ -1458,7 +1474,7 @@ async function onAuthSubmitCloud(e){
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){msg.textContent='Проверьте адрес почты: он должен выглядеть как name@example.com.';return}
       const r=await SB.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
       if(r.error)throw r.error;
-      msg.textContent='Если такой аккаунт есть, мы отправили письмо со ссылкой для смены пароля.';
+      AUTH_PENDING=email;authMode='reset';renderAuth();
       return;
     }
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){msg.textContent='Проверьте адрес почты: он должен выглядеть как name@example.com.';return}
@@ -3942,7 +3958,7 @@ document.addEventListener('click',e=>{
   if(c==='logo'){clap(b);return}
   if(c==='authTab'&&b.dataset.k==='resend'){
     if(!SB||!AUTH_PENDING)return;b.disabled=true;
-    SB.auth.resend({type:'signup',email:AUTH_PENDING}).then(r=>{const mm=$('#authMsg');if(mm)mm.textContent=r.error?authError(r.error):'Новый код отправлен на '+AUTH_PENDING+'.';setTimeout(()=>{b.disabled=false},30000)});
+    (authMode==='reset'?SB.auth.resetPasswordForEmail(AUTH_PENDING,{redirectTo:location.origin+location.pathname}):SB.auth.resend({type:'signup',email:AUTH_PENDING})).then(r=>{const mm=$('#authMsg');if(mm)mm.textContent=r.error?authError(r.error):'Новый код отправлен на '+AUTH_PENDING+'.';setTimeout(()=>{b.disabled=false},30000)});
     return;
   }
   if(c==='authTab'){authMode=b.dataset.k;renderAuth();return}
