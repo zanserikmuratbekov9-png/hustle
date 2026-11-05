@@ -1357,7 +1357,7 @@ async function saveFile(name,data,mime){
 }
 
 /* ---------- вход ---------- */
-let authMode='login';
+let authMode='login',AUTH_PENDING='';
 const getUsers=()=>{try{return JSON.parse(localStorage.getItem(USERS_KEY))||{}}catch(e){return {}}};
 const setUsers=u=>{try{localStorage.setItem(USERS_KEY,JSON.stringify(u))}catch(e){}};
 async function hashPw(pw,salt){
@@ -1370,17 +1370,19 @@ async function hashPw(pw,salt){
 let RECOVERY=false;
 function renderAuth(){
   {const jn=$('#joinNote');if(jn)jn.hidden=!(SB&&pendingJoin())}
-  const cloud=!!SB,mode=authMode,reg=mode==='register',rec=mode==='recover',forgot=mode==='forgot';
+  const cloud=!!SB,mode=authMode,reg=mode==='register',rec=mode==='recover',forgot=mode==='forgot',ver=mode==='verify';
   const card=$('#authCard');if(card)card.classList.toggle('cloud',cloud);
   const sm=$('.auth-more summary');if(sm)sm.textContent=cloud?'Вход и регистрация':'Локальный аккаунт (демо)';
   const det=$('.auth-more');if(det&&cloud&&!renderAuth.opened){det.open=true;renderAuth.opened=true}
-  const tabs=$('.auth-more .tabs');if(tabs)tabs.hidden=rec||forgot;
+  const tabs=$('.auth-more .tabs');if(tabs)tabs.hidden=rec||forgot||ver;
   $('#tab-login').setAttribute('aria-selected',String(mode==='login'));
   $('#tab-register').setAttribute('aria-selected',String(reg));
   const minPw=cloud?8:6;
   let h='';
   if(rec){
     h='<p class="auth-sub">Введите новый пароль для вашего аккаунта.</p><label>Новый пароль (не короче 8 символов)<input name="password" type="password" autocomplete="new-password" required></label><button class="btn" type="submit">Сохранить пароль</button>';
+  }else if(ver){
+    h='<p class="auth-sub">Мы отправили код подтверждения на <b>'+esc(AUTH_PENDING)+'</b>. Введите его ниже. Письмо может прийти в течение минуты, проверьте также папку «Спам».</p><label>Код из письма<input name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9 ]*" required placeholder="123456"></label><button class="btn" type="submit">Подтвердить</button><button class="link" type="button" data-c="authTab" data-k="resend">Отправить код ещё раз</button><button class="link" type="button" data-c="authTab" data-k="register">Изменить почту</button>';
   }else if(forgot){
     h='<p class="auth-sub">Укажите почту аккаунта — пришлём ссылку для смены пароля.</p><label>Эл. почта<input name="email" type="email" autocomplete="email" required></label><button class="btn" type="submit">Отправить ссылку</button><button class="link" type="button" data-c="authTab" data-k="login">Назад ко входу</button>';
   }else{
@@ -1416,10 +1418,11 @@ function enter(user){
 function authError(e){
   const m=String((e&&(e.code||e.message))||'').toLowerCase();
   if(m.indexOf('invalid_credentials')>-1||m.indexOf('invalid login')>-1)return 'Неверная почта или пароль.';
-  if(m.indexOf('email_not_confirmed')>-1||m.indexOf('not confirmed')>-1)return 'Почта ещё не подтверждена. Откройте письмо и перейдите по ссылке.';
+  if(m.indexOf('email_not_confirmed')>-1||m.indexOf('not confirmed')>-1)return 'Почта ещё не подтверждена. Введите код из письма.';
   if(m.indexOf('user_already_exists')>-1||m.indexOf('already registered')>-1)return 'Такой аккаунт уже есть. Войдите или восстановите пароль.';
   if(m.indexOf('weak_password')>-1||(m.indexOf('password')>-1&&m.indexOf('should')>-1))return 'Пароль слишком простой: нужно не меньше 8 символов, лучше буквы и цифры.';
   if(m.indexOf('over_email_send_rate_limit')>-1||m.indexOf('over_request_rate_limit')>-1||(m.indexOf('rate')>-1&&m.indexOf('limit')>-1))return 'Слишком много попыток. Подождите немного и повторите.';
+  if(m.indexOf('otp_expired')>-1||m.indexOf('token has expired')>-1||m.indexOf('invalid')>-1&&m.indexOf('token')>-1)return 'Код неверный или устарел. Проверьте цифры или запросите новый код.';
   if(m.indexOf('failed to fetch')>-1||m.indexOf('network')>-1)return 'Нет связи с сервером. Проверьте интернет.';
   const raw=String((e&&(e.message||e.code))||'').slice(0,160);
   return 'Не удалось выполнить действие. Попробуйте ещё раз чуть позже.'+(raw?' Причина: '+raw:'');
@@ -1441,6 +1444,16 @@ async function onAuthSubmitCloud(e){
       if(s)enterCloud(s);else renderAuth();
       return;
     }
+    if(authMode==='verify'){
+      const code=((g('code')||{value:''}).value||'').replace(/\D/g,'');
+      if(code.length<6){msg.textContent='Введите код из письма: он состоит из цифр, обычно их 6.';return}
+      const r=await SB.auth.verifyOtp({email:AUTH_PENDING,token:code,type:'signup'});
+      if(r.error)throw r.error;
+      AUTH_PENDING='';authMode='login';
+      if(r.data&&r.data.session){enterCloud(r.data.session)}
+      else{renderAuth();$('#authMsg').textContent='Почта подтверждена. Теперь войдите.'}
+      return;
+    }
     if(authMode==='forgot'){
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){msg.textContent='Проверьте адрес почты: он должен выглядеть как name@example.com.';return}
       const r=await SB.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
@@ -1456,11 +1469,18 @@ async function onAuthSubmitCloud(e){
       const r=await SB.auth.signUp({email:email,password:pw,options:{data:Object.assign({name:name,consent_at:new Date().toISOString()},pendingJoin()?{join:pendingJoin()}:{}),emailRedirectTo:location.origin+location.pathname}});
       if(r.error)throw r.error;
       if(r.data&&r.data.session){enterCloud(r.data.session)}
-      else{authMode='login';renderAuth();$('#authMsg').textContent='Мы отправили письмо на '+email+'. Подтвердите адрес по ссылке из письма, затем войдите'+(pendingJoin()?': проект команды откроется сам.':'.')}
+      else{AUTH_PENDING=email;authMode='verify';renderAuth();$('#authMsg').textContent='Код отправлен на '+email+'.'+(pendingJoin()?' После подтверждения откроется проект команды.':'')}
       return;
     }
     const r=await SB.auth.signInWithPassword({email:email,password:pw});
-    if(r.error)throw r.error;
+    if(r.error){
+      if(String(r.error.code||r.error.message).toLowerCase().indexOf('not_confirmed')>-1||String(r.error.message||'').toLowerCase().indexOf('not confirmed')>-1){
+        AUTH_PENDING=email;authMode='verify';renderAuth();
+        try{await SB.auth.resend({type:'signup',email:email})}catch(x){}
+        $('#authMsg').textContent='Почта ещё не подтверждена. Мы отправили новый код на '+email+'.';return;
+      }
+      throw r.error;
+    }
     enterCloud(r.data.session);
   }catch(err){msg.textContent=authError(err)}
   finally{if(btn)btn.disabled=false}
@@ -3916,6 +3936,11 @@ document.addEventListener('click',e=>{
   if(['tab','role','lang','demo','exportProj','exportAll'].indexOf(c)>-1)closeMenus();
   if(c==='tab'&&b.classList.contains('brand')){const lg=$('#logoBtn');if(lg)clap(lg)}
   if(c==='logo'){clap(b);return}
+  if(c==='authTab'&&b.dataset.k==='resend'){
+    if(!SB||!AUTH_PENDING)return;b.disabled=true;
+    SB.auth.resend({type:'signup',email:AUTH_PENDING}).then(r=>{const mm=$('#authMsg');if(mm)mm.textContent=r.error?authError(r.error):'Новый код отправлен на '+AUTH_PENDING+'.';setTimeout(()=>{b.disabled=false},30000)});
+    return;
+  }
   if(c==='authTab'){authMode=b.dataset.k;renderAuth();return}
   if(c==='guest'){enter('guest');return}
   if(c==='landReg'){const d=$('.auth-more');if(d){d.hidden=false;d.open=true}const tb=$('#tab-register');if(tb)tb.click();const cd=$('#authCard');if(cd)cd.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const f=$('#authForm input');if(f)f.focus({preventScroll:true})},350);return}
