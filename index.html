@@ -1468,6 +1468,10 @@ async function onAuthSubmitCloud(e){
       const name=((g('name')||{value:''}).value||'').trim()||email.split('@')[0];
       const r=await SB.auth.signUp({email:email,password:pw,options:{data:Object.assign({name:name,consent_at:new Date().toISOString()},pendingJoin()?{join:pendingJoin()}:{}),emailRedirectTo:location.origin+location.pathname}});
       if(r.error)throw r.error;
+      if(r.data&&!r.data.session&&r.data.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0){
+        authMode='login';renderAuth();const em=$('#authForm input[name=email]');if(em)em.value=email;
+        $('#authMsg').textContent='Аккаунт с такой почтой уже есть, письмо с кодом не отправляется. Войдите с паролем или нажмите «Забыли пароль?». Если почта не подтверждена, после входа придёт новый код.';return;
+      }
       if(r.data&&r.data.session){enterCloud(r.data.session)}
       else{AUTH_PENDING=email;authMode='verify';renderAuth();$('#authMsg').textContent='Код отправлен на '+email+'.'+(pendingJoin()?' После подтверждения откроется проект команды.':'')}
       return;
