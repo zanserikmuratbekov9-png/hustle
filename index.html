@@ -1034,6 +1034,38 @@ body.ro #main :is(input:not([type=range]):not([type=checkbox]):not([type=radio])
 .sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
 .land-vid{margin:18px 0 0;max-width:280px}.land-vid video{width:100%;aspect-ratio:9/16;border-radius:20px;background:#0b1450;display:block;object-fit:cover}.land-vid figcaption{margin-top:8px;font-size:13px;opacity:.8}
 .rent-fold{margin-top:20px}
+
+/* ===== v9: освежённый вид — чище, больше воздуха, один акцент ===== */
+:root[data-palette="hustle"][data-theme="dark"]{--bg:#0C1745;--surface:#142463;--soft:#101E58;--line:rgba(255,255,255,.12);--muted:rgba(226,232,255,.72);--ink:#F4F6FF;--side-bg:#0A133A;--shadow:none}
+:root[data-palette="hustle"][data-theme="dark"] body{background:#0C1745}
+.panel,.card,.ev,.art,.loc-card,.tcard,.cont,.step,.frame{border-radius:22px;padding:20px 22px;border:1px solid rgba(255,255,255,.1);background:var(--surface)}
+.panel>h2,.card h2,.sec-h h2{letter-spacing:-.02em}
+main{padding-top:22px}
+.head{margin-bottom:26px}
+.head h1,h1{font-family:'Unbounded','Onest',system-ui,sans-serif;font-weight:700;font-size:clamp(24px,3.2vw,36px);line-height:1.15;letter-spacing:-.03em}
+.head p{font-size:16px;opacity:.85}
+.stats b,.res,.total b,.dock-tot b{font-family:'Unbounded','Onest',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;color:var(--btn-y)}
+.stats small,.stats span{opacity:.75}
+.btn{padding:12px 22px;font-weight:700;letter-spacing:.005em;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.sec,.poster.p1 .btn.sec,.hero .btn.sec,.land-cta .btn.sec{background:transparent!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.38)!important}
+.btn.sec:hover{background:rgba(255,255,255,.08)!important}
+.chip{border:1px solid rgba(255,255,255,.28);background:transparent;color:var(--ink);padding:7px 15px;font-weight:600;font-size:14.5px;transition:background .15s,border-color .15s}
+.chip:hover{background:rgba(255,255,255,.08)}
+.chip[aria-pressed="true"]{background:var(--btn-y);color:var(--btn-y-ink);border-color:var(--btn-y)}
+.tn[aria-current="page"],.bt[aria-current="page"],.nav.on{background:var(--btn-y);color:var(--btn-y-ink)}
+.bottom{border-top:1px solid rgba(255,255,255,.1)}
+.pill{background:rgba(255,210,63,.16);color:var(--btn-y);border:1px solid rgba(255,210,63,.35)}
+.fields input,.fields select,.fields textarea,.grid input,.grid select,.searchbox{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:12px;color:var(--ink)}
+.fields input:focus,.fields select:focus,.fields textarea:focus,.grid input:focus,.searchbox:focus-within{outline:none;border-color:var(--btn-y);box-shadow:0 0 0 3px rgba(255,210,63,.22)}
+.tool{background:var(--surface);border:1px solid rgba(255,255,255,.1);border-radius:22px;transition:transform .15s,border-color .15s}
+.tool:hover{transform:translateY(-2px);border-color:rgba(255,210,63,.55)}
+.tool .ti{background:rgba(255,210,63,.16);color:var(--btn-y)}
+.hero.projcard,.mh,.slogan{border-radius:28px}
+.addp,.dock,.hint{border-radius:18px}
+.sec-h{margin:30px 0 14px}
+.slogan,.slogan *{text-shadow:none!important}
+@media (max-width:860px){main{padding:18px 16px 96px}.panel,.card{padding:18px}}
 </style>
 </head>
 <body>
