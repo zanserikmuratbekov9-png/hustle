@@ -1066,27 +1066,15 @@ main{padding-top:22px}
 .sec-h{margin:30px 0 14px}
 .slogan,.slogan *{text-shadow:none!important}
 @media (max-width:860px){main{padding:18px 16px 96px}.panel,.card{padding:18px}}
-/* ===== главная: история прокруткой ===== */
-.ss{position:relative;height:340vh;margin:0 0 24px}
-.ss-stage{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;gap:10px;overflow:hidden;border-radius:28px;background:#2E52BE}
-.ss-scene{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;padding:70px 12px 0}
-.ss-svg{width:100%;height:100%;max-width:760px;display:block;overflow:visible}
-#ssPrep,#ssShoot{will-change:transform,opacity}
-.ss-card{transform-box:fill-box}
-.ss-caps{position:relative;flex:0 0 auto;min-height:190px;padding:0 clamp(18px,4vw,40px) 34px}
-.ss-cap{position:absolute;left:0;right:0;bottom:34px;margin:0 auto;max-width:640px;padding:0 clamp(18px,4vw,40px);text-align:center;opacity:0;visibility:hidden}
-.ss-n{display:inline-block;font:700 13px/1 Onest,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B1450;background:#FFD23F;border-radius:999px;padding:7px 12px;margin-bottom:12px}
-.ss-cap h2{margin:0 0 8px;font:700 clamp(22px,3.4vw,34px)/1.15 'Unbounded',Onest,system-ui,sans-serif;letter-spacing:-.02em;color:#fff;text-wrap:balance}
-.ss-cap p{margin:0;color:rgba(235,240,255,.82);font-size:16.5px}
-.ss-fin{bottom:50%;transform:translateY(50%)}
-.ss-fin h2{font-size:clamp(30px,5.4vw,60px);line-height:1.08;margin-bottom:22px}
-.ss-fin h2 span{color:#FFD23F}
-.ss-fin .btn{font-size:17px;padding:15px 30px}
-.ss-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font:600 13px/1 Onest,system-ui,sans-serif;color:rgba(255,255,255,.75);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
-.ss-hint span{width:2px;height:22px;border-radius:2px;background:linear-gradient(#FFD23F,transparent);animation:ssDrip 1.6s ease-in-out infinite}
-@keyframes ssDrip{0%{transform:translateY(-6px);opacity:0}40%{opacity:1}100%{transform:translateY(8px);opacity:0}}
-@media (max-width:860px){.ss{margin:-18px -16px 20px}.ss-stage{border-radius:0;height:calc(100vh - 140px);height:calc(100svh - 140px);top:64px}.ss-cap p{font-size:15px}.ss-caps{padding-bottom:18px}.ss-cap{bottom:18px}.ss-scene{padding-top:16px}.ss-caps{min-height:200px}}
-@media (prefers-reduced-motion:reduce){.ss{height:auto}.ss-stage{position:relative;height:auto;min-height:80vh}.ss-hint{display:none}.ss-fin{position:relative;bottom:auto;transform:none}}
+/* ===== главная: большая иллюстрация ===== */
+.story-wrap{margin:0 auto 28px;max-width:920px}
+.story-box{border-radius:26px;overflow:hidden;background:#a9a59c;aspect-ratio:800/2160;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.story-box svg{display:block;width:100%;height:auto}
+.story-end{text-align:center;padding:42px 16px 8px}
+.story-end h2{margin:0 0 20px;font:700 clamp(26px,4.6vw,48px)/1.1 'Unbounded',Onest,system-ui,sans-serif;letter-spacing:-.02em;color:#fff;text-wrap:balance}
+.story-end h2 span{color:#FFD23F}
+.story-end .btn{font-size:17px;padding:15px 30px}
+@media (max-width:640px){.story-wrap{margin:-18px -16px 24px}.story-box{border-radius:0;aspect-ratio:600/2160}.story-box svg{width:133.34%;margin-left:-16.67%}}
 </style>
 </head>
 <body>
@@ -2916,100 +2904,31 @@ function quickActions(){
   }[S.role];
   return m.map((x,i)=>'<button class="btn'+(i?' sec':'')+'" type="button" data-c="tab" data-k="'+x[0]+'">'+icon(x[1])+x[2]+'</button>').join('');
 }
-/* ---------- главная: история прокруткой ---------- */
-const SS_SVG=(()=>{
-  const P=(x,y,o)=>{/* человек: x — центр, y — макушка */
-    const sk=o.skin,sh=o.shirt,hr=o.hair,s=o.s||1;
-    let g='<g transform="translate('+x+' '+y+') scale('+s+')">';
-    if(o.stand)g+='<rect x="-13" y="96" width="11" height="78" rx="5" fill="'+(o.pants||'#0B1230')+'"/><rect x="2" y="96" width="11" height="78" rx="5" fill="'+(o.pants||'#0B1230')+'"/><rect x="-17" y="168" width="17" height="8" rx="4" fill="#0B1230"/><rect x="0" y="168" width="17" height="8" rx="4" fill="#0B1230"/>';
-    g+='<rect x="-26" y="44" width="52" height="'+(o.stand?62:58)+'" rx="22" fill="'+sh+'"/>';
-    g+='<rect x="-6" y="34" width="12" height="14" rx="4" fill="'+sk+'"/>';
-    g+='<circle cx="0" cy="22" r="20" fill="'+sk+'"/>';
-    g+=o.long?'<path d="M-21 24C-23 2-12-6 0-6S23 2 21 24L21 46 14 46 14 18C8 12-8 12-14 18L-14 46-21 46Z" fill="'+hr+'"/>':'<path d="M-20 18C-20 2-10-5 1-5S21 2 20 18C14 8-14 8-20 18Z" fill="'+hr+'"/>';
-    if(o.cap)g+='<path d="M-20 12C-18-6 18-6 20 12Z" fill="'+o.cap+'"/><rect x="8" y="8" width="20" height="5" rx="2.5" fill="'+o.cap+'"/>';
-    if(o.arm==='up')g+='<path d="M22 54L44 30" stroke="'+sh+'" stroke-width="13" stroke-linecap="round"/><circle cx="46" cy="27" r="7" fill="'+sk+'"/>';
-    else if(o.arm==='fwd')g+='<path d="M20 56L46 64" stroke="'+sh+'" stroke-width="13" stroke-linecap="round"/><circle cx="49" cy="65" r="7" fill="'+sk+'"/>';
-    else if(o.arm==='desk')g+='<path d="M-20 58L-30 92M20 58L30 92" stroke="'+sh+'" stroke-width="12" stroke-linecap="round"/>';
-    else g+='<path d="M-22 56L-28 96M22 56L28 96" stroke="'+sh+'" stroke-width="12" stroke-linecap="round"/><circle cx="-28" cy="100" r="6.5" fill="'+sk+'"/><circle cx="28" cy="100" r="6.5" fill="'+sk+'"/>';
-    return g+'</g>'};
-  const card=(x,y,cls,title,body)=>'<g class="ss-card '+cls+'"><g transform="translate('+x+' '+y+')"><rect width="220" height="92" rx="16" fill="#fff"/><rect x="14" y="14" width="28" height="28" rx="8" fill="#FFD23F"/><text x="54" y="34" font-family="Unbounded,Onest,sans-serif" font-weight="700" font-size="15" fill="#1E3A8A">'+title+'</text>'+body+'</g></g>';
-  const prep='<g id="ssPrep">'+
-    '<rect x="150" y="96" width="140" height="4" rx="2" fill="rgba(255,255,255,.0)"/>'+
-    P(280,318,{skin:'#F1C7A5',shirt:'#FFD23F',hair:'#3B2A20',arm:'desk'})+
-    P(360,306,{skin:'#C98E64',shirt:'#FFFFFF',hair:'#1A1410',long:1,arm:'desk'})+
-    P(445,310,{skin:'#8D5A3B',shirt:'#2563EB',hair:'#140E0B',arm:'desk',cap:'#FFD23F'})+
-    P(525,318,{skin:'#F1C7A5',shirt:'#93B4FF',hair:'#B4652F',long:1,arm:'desk'})+
-    '<rect x="200" y="404" width="400" height="22" rx="11" fill="#E9EEFF"/><rect x="226" y="426" width="14" height="70" rx="5" fill="#C9D5FF"/><rect x="560" y="426" width="14" height="70" rx="5" fill="#C9D5FF"/>'+
-    '<rect x="368" y="370" width="74" height="40" rx="6" fill="#0B1230"/><rect x="374" y="375" width="62" height="29" rx="3" fill="#2563EB"/><rect x="356" y="404" width="98" height="8" rx="4" fill="#0B1230"/>'+
-    '<rect x="252" y="396" width="56" height="10" rx="3" fill="#fff" transform="rotate(-6 280 401)"/><rect x="490" y="394" width="60" height="11" rx="3" fill="#FFD23F" transform="rotate(5 520 400)"/>'+
-    '<circle cx="232" cy="398" r="9" fill="#fff"/><rect x="226" y="386" width="12" height="10" rx="2" fill="#fff" opacity=".8"/>'+
-    card(170,50,'k1','Сценарий','<rect x="54" y="50" width="140" height="7" rx="3.5" fill="#D6DEFF"/><rect x="54" y="64" width="100" height="7" rx="3.5" fill="#D6DEFF"/>')+
-    card(410,50,'k2','Смета','<text x="54" y="70" font-family="Unbounded,Onest,sans-serif" font-weight="700" font-size="18" fill="#2563EB">7 339 200 ₸</text>')+
-    card(170,158,'k3','Светосхема','<circle cx="80" cy="64" r="9" fill="#FFD23F"/><path d="M90 60L150 50 150 78Z" fill="#FFD23F" opacity=".45"/><circle cx="160" cy="64" r="8" fill="#1E3A8A"/>')+
-    card(410,158,'k4','Раскадровка','<rect x="54" y="48" width="44" height="28" rx="5" fill="#1E3A8A"/><rect x="104" y="48" width="44" height="28" rx="5" fill="#2563EB"/><rect x="154" y="48" width="44" height="28" rx="5" fill="#93B4FF"/>')+
-  '</g>';
-  const beam=(id,pts,op)=>'<polygon class="ss-beam" id="'+id+'" points="'+pts+'" fill="url(#ssBeam)" opacity="0"/>';
-  const shoot='<g id="ssShoot">'+
-    '<ellipse cx="420" cy="500" rx="260" ry="26" fill="rgba(255,255,255,.06)"/>'+
-    '<ellipse id="ssPool" cx="420" cy="486" rx="110" ry="16" fill="#FFD23F" opacity="0"/>'+
-    beam('ssB1','590,236 600,256 455,470 380,470')+
-    beam('ssB2','330,214 342,228 470,470 410,470')+
-    /* контровой свет сзади */
-    '<g><line x1="336" y1="226" x2="336" y2="480" stroke="#93B4FF" stroke-width="4"/><path d="M322 226L336 232 336 480" fill="none"/><rect x="318" y="198" width="34" height="24" rx="5" fill="#0B1230" stroke="#93B4FF" stroke-width="2" transform="rotate(30 335 210)"/><circle id="ssL2" cx="342" cy="216" r="6" fill="#3A4470"/></g>'+
-    /* актёр */
-    P(425,278,{skin:'#C98E64',shirt:'#FFFFFF',hair:'#1A1410',stand:1,pants:'#1E3A8A'})+
-    /* ключевой свет справа */
-    '<g><line x1="618" y1="250" x2="600" y2="490" stroke="#C9D5FF" stroke-width="5"/><line x1="600" y1="490" x2="570" y2="500" stroke="#C9D5FF" stroke-width="4"/><line x1="600" y1="490" x2="634" y2="500" stroke="#C9D5FF" stroke-width="4"/><rect x="574" y="214" width="56" height="40" rx="7" fill="#0B1230" stroke="#C9D5FF" stroke-width="2.5" transform="rotate(-28 602 234)"/><circle id="ssL1" cx="590" cy="246" r="10" fill="#3A4470"/></g>'+
-    /* режиссёр с хлопушкой */
-    P(505,300,{skin:'#F1C7A5',shirt:'#FFD23F',hair:'#3B2A20',stand:1,arm:'up',cap:'#1E3A8A',s:.92})+
-    '<g transform="translate(530 262)"><rect x="0" y="12" width="56" height="40" rx="4" fill="#0B1230"/><rect x="6" y="22" width="44" height="3" fill="#fff" opacity=".7"/><rect x="6" y="32" width="30" height="3" fill="#fff" opacity=".7"/><g id="ssClap" style="transform-origin:0px 12px;transform:rotate(-28deg)"><rect x="0" y="2" width="56" height="10" rx="2" fill="#fff"/><path d="M8 2l6 10h8l-6-10zM26 2l6 10h8l-6-10zM44 2l6 10h6v-2l-4-8z" fill="#0B1230"/></g></g>'+
-    /* камера и оператор */
-    P(196,300,{skin:'#8D5A3B',shirt:'#2563EB',hair:'#140E0B',stand:1,arm:'fwd',cap:'#FFD23F',s:.95})+
-    '<g><line x1="262" y1="370" x2="230" y2="498" stroke="#C9D5FF" stroke-width="5"/><line x1="262" y1="370" x2="262" y2="500" stroke="#C9D5FF" stroke-width="5"/><line x1="262" y1="370" x2="296" y2="498" stroke="#C9D5FF" stroke-width="5"/>'+
-    '<rect x="226" y="326" width="78" height="46" rx="8" fill="#0B1230" stroke="#C9D5FF" stroke-width="2"/><rect x="300" y="334" width="26" height="30" rx="5" fill="#0B1230" stroke="#C9D5FF" stroke-width="2"/><circle cx="326" cy="349" r="9" fill="#2563EB" stroke="#C9D5FF" stroke-width="2"/>'+
-    '<rect x="232" y="304" width="34" height="22" rx="4" fill="#0B1230" stroke="#C9D5FF" stroke-width="2"/><rect id="ssMon" x="236" y="308" width="26" height="14" rx="2" fill="#1E3A8A"/><circle id="ssRec" cx="296" cy="334" r="5" fill="#FF4D4D" opacity="0"/></g>'+
-  '</g>';
-  return '<svg class="ss-svg" viewBox="150 20 500 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="ssBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE68A" stop-opacity=".85"/><stop offset="1" stop-color="#FFD23F" stop-opacity=".05"/></linearGradient></defs>'+prep+shoot+'</svg>';
-})();
+/* ---------- главная: большая иллюстрация «подготовка → съёмка» ---------- */
+let STORY_SVG='';
+function storyLoad(){
+  if(STORY_SVG)return;
+  fetch('media/home-story.svg').then(r=>r.ok?r.text():'').then(t=>{if(!t)return;STORY_SVG=t;const b=document.getElementById('storyBox');if(b){b.innerHTML=t;storyTick()}}).catch(()=>{});
+}
 function ssHtml(){
-  return '<section class="ss" aria-label="Как работает HUSTLE: подготовка и съёмка"><div class="ss-stage">'+
-    '<div class="ss-scene">'+SS_SVG+'</div>'+
-    '<div class="ss-caps">'+
-      '<div class="ss-cap" id="ssC1"><span class="ss-n">01 · Подготовка</span><h2>Команда собирает всё в одном проекте</h2><p>Сценарий, смета, светосхема и раскадровка — у всех одна версия.</p></div>'+
-      '<div class="ss-cap" id="ssC2"><span class="ss-n">02 · Съёмка</span><h2>На площадке всё уже готово</h2><p>Свет стоит по схеме, кадры — по раскадровке. Мотор!</p></div>'+
-      '<div class="ss-cap ss-fin" id="ssC3"><h2>Снимай красивое кино вместе с <span>HUSTLE</span></h2><button class="btn" type="button" data-c="tab" data-k="proj">'+icon('frame')+'Начать проект</button></div>'+
-    '</div>'+
-    '<div class="ss-hint" id="ssHint">Листайте вниз<span></span></div>'+
-  '</div></section>';
+  storyLoad();
+  return '<section class="story-wrap" aria-label="Команда готовится к съёмке, потом снимает"><div class="story-box" id="storyBox">'+STORY_SVG+'</div>'+
+    '<div class="story-end"><h2>Снимай красивое кино вместе с <span>HUSTLE</span></h2><button class="btn" type="button" data-c="tab" data-k="proj">'+icon('frame')+'Начать проект</button></div></section>';
 }
-const ssCl=(v)=>v<0?0:v>1?1:v,ssSeg=(p,a,b)=>ssCl((p-a)/(b-a)),ssEase=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
-function ssTick(){
-  const el=document.querySelector('.ss');if(!el)return;
+let STORY_CLAP=0;
+function storyTick(){
+  const svg=document.querySelector('#storyBox svg');if(!svg)return;
+  const r=svg.getBoundingClientRect(),vh=innerHeight;
   const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let p;
-  if(still)p=1;else{const r=el.getBoundingClientRect(),tot=el.offsetHeight-innerHeight;p=tot>0?ssCl(-r.top/tot):1}
-  const $s=id=>document.getElementById(id);
-  const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')+')';
-  const tr=ssEase(ssSeg(p,.34,.56));
-  el.querySelector('.ss-stage').style.background='radial-gradient(120% 80% at 50% 30%,'+mix([46,82,190],[24,34,92],tr)+','+mix([20,40,120],[6,10,34],tr)+')';
-  const prep=$s('ssPrep'),sh=$s('ssShoot');
-  prep.style.transform='translateX('+(-tr*520)+'px)';prep.style.opacity=1-tr;
-  sh.style.transform='translateX('+((1-tr)*520)+'px)';sh.style.opacity=tr;
-  el.querySelectorAll('.ss-card').forEach((c,i)=>{const t=ssEase(ssSeg(p,.02+i*.06,.1+i*.06));c.style.opacity=t;c.style.transform='translateY('+((1-t)*24)+'px)'});
-  const lit=ssSeg(p,.56,.64);
-  ['ssB1','ssB2'].forEach((id,i)=>{$s(id).setAttribute('opacity',(ssSeg(p,.56+i*.03,.62+i*.03)*.9).toFixed(3))});
-  $s('ssPool').setAttribute('opacity',(lit*.25).toFixed(3));
-  $s('ssL1').setAttribute('fill',lit>.3?'#FFE68A':'#3A4470');$s('ssL2').setAttribute('fill',ssSeg(p,.59,.65)>.3?'#FFE68A':'#3A4470');
-  const clap=ssSeg(p,.66,.7);$s('ssClap').style.transform='rotate('+(-28+28*clap)+'deg)';
-  const rec=p>.72;$s('ssRec').setAttribute('opacity',rec&&(still||Math.floor(Date.now()/500)%2)?1:rec?.35:0);$s('ssMon').setAttribute('fill',rec?'#FFD23F':'#1E3A8A');
-  const c1=ssSeg(p,0,.04)*(1-ssSeg(p,.3,.38)),c2=ssSeg(p,.5,.58)*(1-ssSeg(p,.76,.82)),c3=ssSeg(p,.82,.9);
-  [[$s('ssC1'),still?0:c1],[$s('ssC2'),still?0:c2],[$s('ssC3'),c3]].forEach(([c,o])=>{c.style.opacity=o;c.style.transform='translateY('+((1-o)*16)+'px)';c.style.visibility=o<.02?'hidden':'visible'});
-  el.querySelector('.ss-scene').style.opacity=1-ssSeg(p,.8,.9)*.8;
-  $s('ssHint').style.opacity=1-ssSeg(p,0,.06);
+  const lit=still||r.top+r.height*.5<vh*.85;
+  svg.classList.toggle('lit',lit);
+  const camIn=r.top+r.height*.76<vh*.9&&r.top+r.height*.6>0;
+  if(still){svg.classList.add('clap');return}
+  if(camIn&&!STORY_CLAP){STORY_CLAP=setTimeout(()=>{const s=document.querySelector('#storyBox svg');if(s)s.classList.add('clap')},700)}
+  if(!camIn&&STORY_CLAP){clearTimeout(STORY_CLAP);STORY_CLAP=0;svg.classList.remove('clap')}
 }
-addEventListener('scroll',()=>requestAnimationFrame(ssTick),{passive:true});
-addEventListener('resize',()=>requestAnimationFrame(ssTick));
-setInterval(()=>{if(document.querySelector('.ss'))ssTick()},500);
+addEventListener('scroll',()=>requestAnimationFrame(storyTick),{passive:true});
+addEventListener('resize',()=>requestAnimationFrame(storyTick));
 function vHome(){
   const cat=S.artCat||'Все';
   const steps=homeSteps();let next=-1;steps.forEach((x,i)=>{if(next<0&&!stepDone(x[0]))next=i});
@@ -3465,7 +3384,7 @@ function render(){
   if(S.tab==='calc')calcUpdate();
   if(S.tab==='rentals'){S.seen.deals=true;if(S.rtab==='list')gearUpdate()}
   if(S.tab==='story')paintStory();
-  if(S.tab==='home')ssTick();
+  if(S.tab==='home')storyTick();
   save();
 }
 
