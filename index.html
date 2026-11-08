@@ -1066,6 +1066,56 @@ main{padding-top:22px}
 .sec-h{margin:30px 0 14px}
 .slogan,.slogan *{text-shadow:none!important}
 @media (max-width:860px){main{padding:18px 16px 96px}.panel,.card{padding:18px}}
+
+/* ===== сценарий: итоги, помощник, карточки, просмотр сцены ===== */
+.sc-sum{display:grid;gap:18px;margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.sc-bars h3{font-size:14px;margin:0 0 10px;opacity:.75;font-weight:600}
+.sc-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;margin-bottom:10px;font-size:14px}
+.sc-bar b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.sc-bar span{opacity:.72;white-space:nowrap}
+.sc-bar i{grid-column:1/-1;height:6px;border-radius:99px;background:color-mix(in srgb,currentColor 10%,transparent);overflow:hidden}
+.sc-bar i::after{content:"";display:block;height:100%;width:var(--w);background:var(--btn-y,#ffd23f);border-radius:99px}
+.ai-sum{margin:0 0 10px}
+.ai-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ai{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,currentColor 5%,transparent);border:1px solid color-mix(in srgb,currentColor 10%,transparent);align-items:start}
+.ai p{margin:4px 0 0;font-size:14px;opacity:.85}
+.ai-k{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.ai-err .ai-k{background:rgba(255,107,107,.2);color:#ff9d9d}
+.ai-warn .ai-k{background:rgba(255,210,63,.18);color:var(--btn-y,#ffd23f)}
+.ai-tip .ai-k{background:rgba(120,190,255,.18);color:#9fd0ff}
+.ai-fix{background:var(--btn-y,#ffd23f)!important;color:var(--btn-y-ink,#1b1b2f)!important;border-color:transparent!important}
+.scl{display:grid;gap:10px}
+.scc{border:1px solid color-mix(in srgb,currentColor 10%,transparent);border-radius:16px;background:color-mix(in srgb,currentColor 4%,transparent);padding:6px 14px 10px}
+.scc-main{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:8px 0}
+.scc-main:focus-visible{outline:2px solid var(--btn-y,#ffd23f);outline-offset:3px;border-radius:10px}
+.scc-n{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:rgba(255,210,63,.16);color:var(--btn-y,#ffd23f);font-weight:700}
+.scc-t{display:grid;gap:2px;min-width:0}
+.scc-t b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scc-t small{opacity:.72;font-size:13.5px}
+.scc-t em{font-style:normal;color:var(--btn-y,#ffd23f)}
+.scc-go{font-size:24px;opacity:.6}
+.scc-ch{margin:2px 0 4px 48px}
+.scc-ed{margin:4px 0 0 48px}
+.scc-ed summary{cursor:pointer;font-size:13.5px;opacity:.7}
+.scc-f{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:10px}
+.scc-f label{display:grid;gap:4px;font-size:13px;opacity:.9}
+.scc-f input,.scc-f select{padding:9px 12px;background:color-mix(in srgb,currentColor 6%,transparent);border:1px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:12px;color:var(--ink)}
+.scv{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;background:#0C1745;color:#F4F6FF;padding:10px max(12px,env(safe-area-inset-left,0px)) 0}
+.scv-top{display:flex;align-items:center;gap:10px;padding:6px 0 10px}
+.scv-top .btn{padding:8px 16px!important}
+.scv-top .btn[disabled]{opacity:.35}
+.scv-n{white-space:nowrap}
+.scv-body{flex:1;min-height:0;overflow:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+.scv-page{max-width:640px;margin:0 auto;background:#fbfaf6;color:#1b1b2f;border-radius:6px;padding:28px clamp(18px,5vw,48px);font-family:'Courier Prime','Courier New',monospace;line-height:1.55;font-size:16px}
+.scv-page p{margin:0 0 14px}
+.sv-head{font:700 16px/1.4 'Courier Prime','Courier New',monospace;text-transform:uppercase;margin:0 0 4px}
+.sv-meta{font-size:13px!important;opacity:.6;font-family:'Onest',system-ui,sans-serif}
+.sv-cue{margin-left:36%!important;margin-bottom:2px!important;text-transform:uppercase;font-weight:700}
+.sv-par{margin-left:30%!important;margin-bottom:2px!important;font-style:italic}
+.sv-dlg{margin-left:18%!important;margin-right:12%}
+.scv-ai{max-width:640px;margin:18px auto 0}
+.scv-ai h3{font-size:15px;margin:0 0 10px}
+@media (max-width:560px){.sv-cue{margin-left:22%!important}.sv-par{margin-left:18%!important}.sv-dlg{margin-left:8%!important;margin-right:4%}}
 </style>
 </head>
 <body>
@@ -1772,28 +1822,226 @@ function applyScript(text,msg){
   render();
   toast(msg||(S.scenes.length?'Найдено сцен: '+S.scenes.length+(kept?'. Ручной план съёмок сохранён.':''):'Сцены не найдены — проверьте заголовки (ИНТ./НАТ.)'));
 }
+/* ---------- сценарий: текст по сценам, итоги, помощник ---------- */
+function splitScenes(text){
+  const out=[],pre=[];let cur=null;
+  text.replace(/\r/g,'').split('\n').forEach(raw=>{
+    const m=raw.trim().match(HEAD);
+    if(m){cur={head:raw.trim(),num:m[1]?parseInt(m[1],10):0,lines:[]};out.push(cur);return}
+    if(cur)cur.lines.push(raw);else if(raw.trim())pre.push(raw);
+  });
+  out.pre=pre;return out;
+}
+function sceneBlocks(lines){
+  const b=[];let dlg=false;
+  const push=(k,t,who)=>{const l=b[b.length-1];if(l&&l.k===k&&(k==='act'||k==='dlg')&&!who){l.t+=' '+t}else b.push({k:k,t:t})};
+  lines.forEach(raw=>{
+    const line=raw.trim();
+    if(!line){dlg=false;return}
+    if(isCue(line)){b.push({k:'cue',t:line});dlg=true;return}
+    const mc=line.match(/^([А-ЯЁA-Z][А-ЯЁA-Z0-9 .'\-]{1,22})(\s*\([^)]*\))?\s*[:—]\s+(\S.*)$/);
+    if(mc&&!/^(ПРИМЕЧАНИЕ|ВНИМАНИЕ|ТИТР|СУПЕР|ЗТМ|ПРИМ|ВАЖНО|ЗАМЕТКА)/.test(mc[1].trim())){b.push({k:'cue',t:mc[1].trim()+(mc[2]||'')});b.push({k:'dlg',t:mc[3]});dlg=true;return}
+    if(dlg&&/^\(/.test(line)){b.push({k:'par',t:line});return}
+    push(dlg?'dlg':'act',line);
+  });
+  return b;
+}
+const cueName=t=>t.replace(/\(.*?\)/g,'').trim().toUpperCase();
+let _SM={key:'',v:null};
+function sceneModel(){
+  if(_SM.key===S.script&&_SM.v&&_SM.v.n===S.scenes.length)return _SM.v;
+  const sp=splitScenes(S.script),list=sp.map((s,i)=>{
+    const blocks=sceneBlocks(s.lines),replies={},empty=[],long=[];
+    blocks.forEach((x,j)=>{if(x.k!=='cue')return;const n=cueName(x.t),nx=blocks[j+1];
+      if(nx&&nx.k==='par'&&blocks[j+2]&&blocks[j+2].k==='dlg'){replies[n]=(replies[n]||0)+1;if(blocks[j+2].t.length>600)long.push(n)}
+      else if(nx&&nx.k==='dlg'){replies[n]=(replies[n]||0)+1;if(nx.t.length>600)long.push(n)}
+      else empty.push(n)});
+    const parens=s.lines.filter(l=>(l.match(/\(/g)||[]).length!==(l.match(/\)/g)||[]).length);
+    return {head:s.head,num:s.num,blocks:blocks,replies:replies,empty:empty,long:long,parens:parens.length,hasBody:blocks.some(x=>x.k==='act'||x.k==='dlg')};
+  });
+  _SM={key:S.script,v:{n:S.scenes.length,list:list,pre:sp.pre}};return _SM.v;
+}
+function fmtDur(e){const sec=Math.round(e/8*60);return sec<90?'≈ '+Math.max(5,Math.round(sec/5)*5)+' с':'≈ '+Math.round(sec/60)+' мин'}
+const timeKind=s=>/НОЧ/.test(s.time)?'night':(/ДЕНЬ|ДНЁМ|ДНЕМ|УТР|ВЕЧЕР|РАССВЕТ|ЗАКАТ|ПОЛДЕНЬ|СУМЕРК/.test(s.time)?'day':'none');
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=[];for(let j=0;j<=n;j++)p[j]=j;
+  for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+const TIME_WORDS=['ДЕНЬ','НОЧЬ','УТРО','ВЕЧЕР','РАССВЕТ','ЗАКАТ','ПОЗЖЕ','ПОЛДЕНЬ','ПОЛНОЧЬ','СУМЕРКИ','ТОТ ЖЕ','ПОТОМ','СПУСТЯ','ДНЁМ','ДНЕМ','ВЕЧЕРОМ','УТРОМ','НОЧЬЮ','МГНОВЕНИЕ'];
+function scriptCheck(){
+  const out=[],M=sceneModel(),sc=S.scenes,add=(sev,id,t,d,fix)=>out.push({sev:sev,sc:id,t:t,d:d||'',fix:fix||null});
+  if(!S.script.trim())return out;
+  if(!sc.length){add('err',0,'Сцены не найдены','Каждая сцена должна начинаться с заголовка: «ИНТ.» или «НАТ.», место и время суток. Например: ИНТ. КВАРТИРА МАРИИ — НОЧЬ.');return out}
+  if(M.pre&&M.pre.length)add('tip',0,'Перед первой сценой есть текст','Это '+M.pre.length+' строк (титульный лист или заметки). В разбор они не попадают.');
+  const nums=M.list.map(x=>x.num).filter(Boolean);
+  if(nums.length>1){for(let i=1;i<nums.length;i++){if(nums[i]!==nums[i-1]+1){add('warn',0,'Номера сцен идут не по порядку','После сцены '+nums[i-1]+' стоит '+nums[i]+'. Проверьте нумерацию.');break}}}
+  sc.forEach((s,i)=>{
+    const m=M.list[i];
+    if(!s.time)add('warn',s.id,'Не указано время суток','Без него сайт не сможет отличить день от ночи в плане съёмок. Добавьте, например: «— ДЕНЬ».');
+    else{const w=s.time.split(/[\s,]+/)[0];if(w&&!TIME_WORDS.some(x=>s.time.indexOf(x)===0)){
+      const best=TIME_WORDS.map(x=>[x,lev(w,x)]).sort((a,b)=>a[1]-b[1])[0];
+      if(best&&best[1]<=2)add('warn',s.id,'Возможно, опечатка во времени суток','Написано «'+s.time+'». Может быть, «'+best[0]+'»?')}}
+    if(i>0&&M.list[i-1].head.toUpperCase()===m.head.toUpperCase())add('warn',s.id,'Заголовок повторяет предыдущую сцену','Если действие в том же месте непрерывно, это одна сцена.');
+    if(m){
+      if(!m.hasBody&&!Object.keys(m.replies).length)add('err',s.id,'Пустая сцена','Под заголовком нет ни действия, ни реплик.');
+      m.empty.forEach(n=>add('warn',s.id,'«'+n+'»: нет текста под именем','Строка выглядит как имя персонажа, но реплики под ней нет. Если это не персонаж, напишите её строчными буквами.'));
+      if(m.parens)add('warn',s.id,'Не закрыта скобка','Проверьте ремарки в круглых скобках: открывающих и закрывающих должно быть поровну.');
+      m.long.forEach(n=>add('tip',s.id,'Очень длинная реплика: '+n,'Больше 600 знаков подряд. В кадре это тяжело, подумайте, не разбить ли её действием или паузой.'));
+    }
+    if(s.e>=40)add('tip',s.id,'Длинная сцена: '+fmtDur(s.e),'Для короткого метра сцену дольше 5 страниц стоит разбить или сократить.');
+  });
+  /* персонажи: похожие имена */
+  const st=charStats(),names=Object.keys(st),seen={};
+  for(let i=0;i<names.length;i++)for(let j=i+1;j<names.length;j++){
+    const a=names[i],b=names[j],mn=Math.min(a.length,b.length),mx=Math.max(a.length,b.length);
+    const near=mn>=4&&lev(a,b)<=(mx>=7?2:1),pref=mn>=3&&(a.indexOf(b+' ')===0||b.indexOf(a+' ')===0);
+    if(!near&&!pref)continue;
+    const keep=st[a].replies>=st[b].replies?a:b,drop=keep===a?b:a;if(seen[drop])continue;seen[drop]=1;
+    add('warn',0,'Один ли это персонаж: «'+a+'» и «'+b+'»?','Имена очень похожи. Если это опечатка, сайт посчитает двух разных людей, а в вызывном листе будет два актёра.',{c:'aiMerge',k:'char',a:drop,b:keep,l:'Объединить: '+drop+' → '+keep});
+  }
+  /* локации */
+  const lk={};sc.forEach(s=>{const k=locKey(s);(lk[k]=lk[k]||{ids:[],types:{}}).ids.push(s.id);lk[k].types[s.type]=1});
+  Object.keys(lk).forEach(k=>{const ty=Object.keys(lk[k].types).filter(x=>x!=='ИНТ/НАТ');if(ty.length>1)add('warn',lk[k].ids[0],'«'+k+'»: то интерьер, то натура','Сцены '+lk[k].ids.join(', ')+'. Проверьте, везде ли указано верно: от этого зависит свет и разрешения.')});
+  const ks=Object.keys(lk),ls={};
+  for(let i=0;i<ks.length;i++)for(let j=i+1;j<ks.length;j++){
+    const a=ks[i],b=ks[j],mn=Math.min(a.length,b.length);
+    const near=mn>=6&&lev(a,b)<=2,pref=mn>=5&&(a.indexOf(b+' ')===0||b.indexOf(a+' ')===0);
+    if(!near&&!pref)continue;
+    const keep=lk[a].ids.length>=lk[b].ids.length?a:b,drop=keep===a?b:a;if(ls[drop])continue;ls[drop]=1;
+    add('tip',lk[drop].ids[0],'Одна ли это локация: «'+a+'» и «'+b+'»?','Сайт группирует сцены по названию места. Разные написания разведут их по разным съёмочным дням.',{c:'aiMerge',k:'loc',a:drop,b:keep,l:'Объединить: '+drop+' → '+keep});
+  }
+  /* персонажи с одной репликой */
+  const once=names.filter(n=>st[n].replies===1&&names.length>3);
+  if(once.length>1)add('tip',0,'Говорят один раз: '+once.slice(0,6).join(', ')+(once.length>6?' и ещё '+(once.length-6):''),'Эпизодические роли — это лишние актёры и смены. Проверьте, нужны ли они.');
+  /* производственные советы */
+  const nightExt=sc.filter(s=>s.type==='НАТ'&&timeKind(s)==='night').length;
+  if(nightExt)add('tip',0,'Ночных съёмок на улице: '+nightExt,'Нужен свет, больше времени на подготовку и разрешение на ночную съёмку.');
+  const nl=ks.length;
+  if(nl>=5&&nl*2>sc.length)add('tip',0,'Много локаций: '+nl+' на '+sc.length+' сцен','Каждый переезд — потерянные часы и деньги. Для короткого метра чаще всего хватает 2–4 мест.');
+  if(names.length>6)add('tip',0,'Много персонажей: '+names.length,'Чем больше актёров, тем сложнее собрать их в один день. Подумайте, кого можно объединить.');
+  const order={err:0,warn:1,tip:2};out.sort((x,y)=>order[x.sev]-order[y.sev]||x.sc-y.sc);
+  return out;
+}
+function charStats(){
+  const M=sceneModel(),st={};
+  S.scenes.forEach((s,i)=>{
+    s.chars.forEach(c=>{const n=c.toUpperCase();st[n]=st[n]||{replies:0,scenes:0};st[n].scenes++});
+    const m=M.list[i];if(m)Object.keys(m.replies).forEach(n=>{st[n]=st[n]||{replies:0,scenes:0};st[n].replies+=m.replies[n]});
+  });
+  return st;
+}
+function barsHtml(title,rows,unit){
+  const mx=Math.max.apply(null,rows.map(r=>r.v).concat([1]));
+  return '<div class="sc-bars"><h3>'+title+'</h3>'+rows.map(r=>'<div class="sc-bar"><b title="'+esc(r.n)+'">'+esc(r.n)+'</b><span>'+r.l+'</span><i style="--w:'+Math.max(4,Math.round(r.v/mx*100))+'%"></i></div>').join('')+'</div>';
+}
+function plural(n,a,b,c){const m=n%100,k=n%10;return (m>10&&m<20)?c:(k===1?a:(k>1&&k<5?b:c))}
+function summaryHtml(){
+  const total=S.scenes.reduce((a,s)=>a+s.e,0),st=charStats(),lk={};
+  S.scenes.forEach(s=>{const k=locKey(s);lk[k]=lk[k]||{n:0,e:0};lk[k].n++;lk[k].e+=s.e});
+  const chars=Object.keys(st).sort((a,b)=>st[b].replies-st[a].replies||st[b].scenes-st[a].scenes).slice(0,6).map(n=>({n:n,v:st[n].replies||st[n].scenes*0.5,l:st[n].replies+' '+plural(st[n].replies,'реплика','реплики','реплик')+' · '+st[n].scenes+' '+plural(st[n].scenes,'сцена','сцены','сцен')}));
+  const locs=Object.keys(lk).sort((a,b)=>lk[b].e-lk[a].e).slice(0,6).map(n=>({n:n,v:lk[n].e,l:lk[n].n+' '+plural(lk[n].n,'сцена','сцены','сцен')+' · '+fmtDur(lk[n].e)}));
+  const cnt={day:0,night:0,none:0,int:0,ext:0};S.scenes.forEach(s=>{cnt[timeKind(s)]++;if(s.type==='НАТ')cnt.ext++;else cnt.int++});
+  const split=[{n:'День / утро / вечер',v:cnt.day,l:cnt.day+''},{n:'Ночь',v:cnt.night,l:cnt.night+''},{n:'Время не указано',v:cnt.none,l:cnt.none+''},{n:'Интерьер',v:cnt.int,l:cnt.int+''},{n:'Натура',v:cnt.ext,l:cnt.ext+''}].filter(r=>r.v>0);
+  return '<div class="stats"><div><b>'+S.scenes.length+'</b><span>'+plural(S.scenes.length,'сцена','сцены','сцен')+'</span></div><div><b>'+Object.keys(lk).length+'</b><span>'+plural(Object.keys(lk).length,'локация','локации','локаций')+'</span></div><div><b>'+Object.keys(st).length+'</b><span>'+plural(Object.keys(st).length,'персонаж','персонажа','персонажей')+'</span></div><div><b>'+eighths(total)+'</b><span>страниц (оценка)</span></div><div><b>'+fmtDur(total).replace('≈ ','≈')+'</b><span>на экране</span></div></div>'+
+    '<p class="muted" style="margin:8px 0 0;font-size:14px">Хронометраж грубый: одна страница сценария — около минуты на экране.</p>'+
+    '<div class="sc-sum">'+(chars.length?barsHtml('Кто сколько говорит',chars):'')+barsHtml('Где снимаем дольше всего',locs)+barsHtml('День, ночь, интерьер, натура',split)+'</div>';
+}
+function assistHtml(){
+  const is=scriptCheck();
+  if(!S.script.trim())return '<p class="muted" style="margin:0">Вставьте сценарий — помощник проверит оформление, имена и последовательность.</p>';
+  const cnt={err:0,warn:0,tip:0};is.forEach(x=>cnt[x.sev]++);
+  const sum=is.length?[cnt.err?cnt.err+' '+plural(cnt.err,'ошибка','ошибки','ошибок'):'',cnt.warn?cnt.warn+' проверить':'',cnt.tip?cnt.tip+' '+plural(cnt.tip,'совет','совета','советов'):''].filter(Boolean).join(' · '):'Явных проблем не найдено';
+  const lab={err:'Ошибка',warn:'Проверьте',tip:'Совет'};
+  const items=is.map(x=>{const i=x.sc?S.scenes.findIndex(s=>s.id===x.sc):-1;
+    return '<li class="ai ai-'+x.sev+'"><span class="ai-k">'+lab[x.sev]+'</span><div><b>'+esc(x.t)+'</b>'+(x.d?'<p>'+esc(x.d)+'</p>':'')+
+      '<div class="row noprint" style="gap:8px;margin-top:6px">'+(i>-1?'<button class="chip" type="button" data-c="scOpen" data-i="'+i+'">Сцена '+x.sc+'</button>':'')+
+      (x.fix?'<button class="chip ai-fix" type="button" data-c="aiMerge" data-k="'+x.fix.k+'" data-a="'+esc(x.fix.a)+'" data-b="'+esc(x.fix.b)+'">'+esc(x.fix.l)+'</button>':'')+'</div></div></li>'}).join('');
+  return '<p class="ai-sum"><b>'+sum+'</b></p>'+(items?'<ul class="ai-list">'+items+'</ul>':'')+
+    '<p class="muted" style="margin:12px 0 0;font-size:14px">Помощник проверяет оформление и последовательность по правилам. Сюжет он не оценивает и текст не переписывает.</p>';
+}
+function sceneIssueCount(id){return scriptCheck().filter(x=>x.sc===id).length}
+function scenesHtml(){
+  if(!S.scenes.length)return '<div class="empty"><b>Сцен пока нет</b>Вставьте текст сценария или загрузите файл. Сцены найдутся сами. Можно загрузить пример проекта в меню слева.</div>';
+  const iss=scriptCheck(),by={};iss.forEach(x=>{if(x.sc)by[x.sc]=(by[x.sc]||0)+1});
+  return '<div class="scl">'+S.scenes.map((s,i)=>{
+    const mk=timeKind(s),n=by[s.id]||0;
+    return '<article class="scc"><button class="scc-main" type="button" data-c="scOpen" data-i="'+i+'" aria-label="Открыть сцену '+s.id+'"><span class="scc-n">'+s.id+'</span><span class="scc-t"><b>'+esc(s.type)+'. '+esc(s.loc||'без названия')+'</b><small>'+(s.time?esc(s.time):'время не указано')+' · '+fmtDur(s.e)+(n?' · <em>'+n+' '+plural(n,'замечание','замечания','замечаний')+'</em>':'')+'</small></span><span class="scc-go" aria-hidden="true">›</span></button>'+
+      (s.chars.length?'<div class="scc-ch">'+s.chars.map(c=>'<span class="tag">'+esc(c)+'</span>').join('')+'</div>':'')+
+      '<details class="scc-ed"><summary>Изменить данные сцены</summary><div class="scc-f">'+
+      '<label>Тип<select data-a="scene" data-id="'+s.id+'" data-f="type">'+['ИНТ','НАТ','ИНТ/НАТ'].map(t=>'<option'+(t===s.type?' selected':'')+'>'+t+'</option>').join('')+'</select></label>'+
+      '<label>Локация<input data-a="scene" data-id="'+s.id+'" data-f="loc" value="'+esc(s.loc)+'"></label>'+
+      '<label>Время суток<input data-a="scene" data-id="'+s.id+'" data-f="time" value="'+esc(s.time)+'"></label>'+
+      '<label>Персонажи<input data-a="scene" data-id="'+s.id+'" data-f="chars" value="'+esc(s.chars.join(', '))+'" placeholder="через запятую"></label></div></details></article>';
+  }).join('')+'</div>';
+}
+function scriptDerived(){
+  const body=S.scenes.length?summaryHtml():'';
+  return (S.scenes.length?panel('ssum','list','Итоги и хронометраж',body):'')+
+    (S.script.trim()?panel('sai','check','Помощник: ошибки и несостыковки',assistHtml()):'')+
+    panel('sscenes','list','Сцены'+(S.scenes.length?' ('+S.scenes.length+')':''),scenesHtml());
+}
+function refreshScriptDerived(){const el=$('#scDer');if(el)el.innerHTML=scriptDerived()}
+function silentParse(){
+  const sig=a=>a.map(x=>x.id+'|'+x.loc+'|'+x.time).join('#'),before=sig(S.scenes),keep=S.assign;
+  S.scenes=parseScript(S.script);
+  if(S.scenes.length&&sig(S.scenes)===before)S.assign=keep;else{S.assign={};autoPlan()}
+  save();refreshScriptDerived();
+}
+function aiMerge(k,a,b){
+  const lines=S.script.replace(/\r/g,'').split('\n');let n=0;
+  const out=lines.map(raw=>{
+    const line=raw.trim();
+    if(k==='char'){
+      if(isCue(line)&&cueName(line)===a){n++;return raw.replace(new RegExp(a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'),b)}
+      const mc=line.match(/^([А-ЯЁA-Z][А-ЯЁA-Z0-9 .'\-]{1,22})(?=\s*(?:\([^)]*\))?\s*[:—]\s+\S)/);
+      if(mc&&mc[1].trim().toUpperCase()===a){n++;return raw.replace(mc[1].trim(),b)}
+      return raw;
+    }
+    const m=line.match(HEAD);
+    if(m&&locKey({loc:m[3].trim().split(/\s*[-–—]\s+/)[0]})===a){n++;return raw.replace(new RegExp(a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'),b)}
+    return raw;
+  });
+  if(!n){toast('Не нашёл, что заменить');return}
+  applyScript(out.join('\n'),'Объединено: '+a+' → '+b+' (правок: '+n+')');
+}
+/* просмотр сцены */
+let SV=null;
+function scvHtml(){
+  const M=sceneModel(),i=SV.i,s=S.scenes[i],m=M.list[i];if(!s)return '';
+  const iss=scriptCheck().filter(x=>x.sc===s.id);
+  const lab={err:'Ошибка',warn:'Проверьте',tip:'Совет'};
+  const body=m?m.blocks.map(b=>{
+    if(b.k==='cue')return '<p class="sv-cue">'+esc(b.t)+'</p>';
+    if(b.k==='par')return '<p class="sv-par">'+esc(b.t)+'</p>';
+    if(b.k==='dlg')return '<p class="sv-dlg">'+esc(b.t)+'</p>';
+    return '<p class="sv-act">'+esc(b.t)+'</p>';
+  }).join(''):'';
+  return '<div class="scv-top"><button class="btn sec" type="button" data-c="scNav" data-d="-1"'+(i>0?'':' disabled')+' aria-label="Предыдущая сцена">‹</button><b class="scv-n">Сцена '+s.id+' из '+S.scenes.length+'</b><button class="btn sec" type="button" data-c="scNav" data-d="1"'+(i<S.scenes.length-1?'':' disabled')+' aria-label="Следующая сцена">›</button><span style="flex:1"></span><button class="btn" type="button" data-c="scClose">Закрыть</button></div>'+
+    '<div class="scv-body"><div class="scv-page"><h2 class="sv-head">'+esc(s.type)+'. '+esc(s.loc)+(s.time?' — '+esc(s.time):'')+'</h2>'+
+    '<p class="sv-meta">'+fmtDur(s.e)+' · '+(s.chars.length?esc(s.chars.join(', ')):'без реплик')+'</p>'+(body||'<p class="muted">В этой сцене пока нет текста.</p>')+'</div>'+
+    (iss.length?'<div class="scv-ai"><h3>Помощник по этой сцене</h3><ul class="ai-list">'+iss.map(x=>'<li class="ai ai-'+x.sev+'"><span class="ai-k">'+lab[x.sev]+'</span><div><b>'+esc(x.t)+'</b>'+(x.d?'<p>'+esc(x.d)+'</p>':'')+'</div></li>').join('')+'</ul></div>':'')+'</div>';
+}
+function scvOpen(i){
+  if(!S.scenes[i])return;SV={i:i};
+  let el=$('#scv');if(!el){el=document.createElement('div');el.id='scv';el.className='scv';el.setAttribute('role','dialog');el.setAttribute('aria-label','Просмотр сцены');document.body.appendChild(el);document.body.style.overflow='hidden'}
+  el.innerHTML=scvHtml();const bd=$('#scv .scv-body');if(bd)bd.scrollTop=0;
+}
+function scvClose(){const el=$('#scv');if(el)el.remove();document.body.style.overflow='';SV=null}
+document.addEventListener('keydown',e=>{
+  if(!SV)return;
+  if(e.key==='Escape'){scvClose();return}
+  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight')scvOpen(Math.min(S.scenes.length-1,SV.i+1));
+  else if(e.key==='ArrowLeft')scvOpen(Math.max(0,SV.i-1));
+});
 function vScript(){
-  const total=S.scenes.reduce((a,s)=>a+s.e,0),chars={},locs={};
-  S.scenes.forEach(s=>{s.chars.forEach(c=>{chars[c]=1});locs[locKey(s)]=1});
+  if(S.script.trim()&&!S.scenes.length){S.scenes=parseScript(S.script);if(S.scenes.length){S.assign={};autoPlan()}}
   const text='<textarea class="script" data-a="script" placeholder="ИНТ. КВАРТИРА МАРИИ — НОЧЬ&#10;&#10;Мария сидит у окна.&#10;&#10;МАРИЯ&#10;Позвони. Просто позвони." aria-label="Текст сценария">'+esc(S.script)+'</textarea>'+
     '<div class="row" style="margin-top:12px">'+
-    '<button class="btn" type="button" data-c="parse">'+icon('parse')+'Разобрать сценарий</button>'+
-    '<label class="btn sec" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл сценария</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+
+    '<label class="btn" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл сценария</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+
     (S.script.trim()?'<button class="btn sec" type="button" data-c="dlScript">'+icon('download')+'Скачать .txt</button><button class="btn sec" type="button" data-c="dlScriptDocx">'+icon('download')+'Скачать .docx</button>':'')+
     '</div>'+
-    '<p class="muted" style="margin:10px 0 0;font-size:14px">Загружаются PDF, Word (.docx), Final Draft (.fdx), .txt, .md и .fountain. PDF-скан без текстового слоя прочитать не получится.</p>';
-  const table=S.scenes.length?
-    '<div class="stats"><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+Object.keys(locs).length+'</b><span>локаций</span></div><div><b>'+Object.keys(chars).length+'</b><span>персонажей</span></div><div><b>'+eighths(total)+'</b><span>страниц (оценка)</span></div></div>'+
-    '<div class="tw" style="margin-top:10px"><table class="grid"><thead><tr><th>Сцена</th><th>Тип</th><th>Локация</th><th>Время суток</th><th>Персонажи</th><th class="r">Объём, стр.</th></tr></thead><tbody>'+
-    S.scenes.map(s=>'<tr><td style="width:60px"><b>'+s.id+'</b></td>'+
-      '<td style="width:110px"><select data-a="scene" data-id="'+s.id+'" data-f="type">'+['ИНТ','НАТ','ИНТ/НАТ'].map(t=>'<option'+(t===s.type?' selected':'')+'>'+t+'</option>').join('')+'</select></td>'+
-      '<td><input data-a="scene" data-id="'+s.id+'" data-f="loc" value="'+esc(s.loc)+'" aria-label="Локация"></td>'+
-      '<td style="width:130px"><input data-a="scene" data-id="'+s.id+'" data-f="time" value="'+esc(s.time)+'" aria-label="Время суток"></td>'+
-      '<td><input data-a="scene" data-id="'+s.id+'" data-f="chars" value="'+esc(s.chars.join(', '))+'" aria-label="Персонажи" placeholder="через запятую"></td>'+
-      '<td class="r" style="width:100px">'+eighths(s.e)+'</td></tr>').join('')+'</tbody></table></div>':
-    '<div class="empty"><b>Сцен пока нет</b>Вставьте текст сценария или загрузите файл, затем нажмите «Разобрать сценарий». Можно загрузить пример проекта в меню слева.</div>';
-  return '<header class="head"><div class="slate"></div><h1>Разбор сценария</h1><p>Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам, набранным заглавными буквами. Всё можно поправить в таблице.</p></header>'+
-  '<div class="col">'+panel('stext','script','Текст сценария',text)+panel('sscenes','list','Разбивка по сценам',table)+'</div>';
+    '<p class="muted" style="margin:10px 0 0;font-size:14px">Сцены находятся сами, когда вы вставляете или правите текст. Загружаются PDF, Word (.docx), Final Draft (.fdx), .txt, .md и .fountain. PDF-скан без текстового слоя прочитать не получится.</p>';
+  return '<header class="head"><div class="slate"></div><h1>Сценарий</h1><p>Вставьте текст или загрузите файл. Сайт сам найдёт сцены, локации и персонажей, посчитает хронометраж и подскажет, что проверить. Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам заглавными буквами.</p></header>'+
+    '<div class="col">'+panel('stext','script','Текст сценария',text)+'<div id="scDer" style="display:contents">'+scriptDerived()+'</div></div>';
 }
 
 /* ---------- план съёмок ---------- */
@@ -3842,7 +4090,7 @@ const A={
     if(t.dataset.f==='rate'){r.kzt=num(t.value)*per();r.src='';const bd=t.closest('tr').querySelector('.src');if(bd)bd.remove()}else if(t.dataset.f==='fact')r.fact=num(t.value)*per();else r[t.dataset.f]=t.value;
     updateTotals();save()},
   pct:t=>{S[t.dataset.f]=t.value;updateTotals();save()},
-  script:t=>{S.script=t.value;save()},
+  script:t=>{S.script=t.value;save();clearTimeout(A._st);A._st=setTimeout(silentParse,600)},
   upload:t=>{
     const f=t.files&&t.files[0];if(!f)return;
     if(f.size>5*1024*1024){toast('Файл слишком большой: максимум 5 МБ');t.value='';return}
@@ -4077,6 +4325,10 @@ document.addEventListener('click',e=>{
     if(idx>-1){const last=S.budget.pop();S.budget.splice(idx+1,0,last)}render()}
   else if(c==='delRow'){S.budget=S.budget.filter(r=>r.id!==b.dataset.id);if(!S.budget.length)S.budget=fresh().budget;render()}
   else if(c==='parse'){applyScript($('textarea.script').value)}
+  else if(c==='scOpen'){scvOpen(parseInt(b.dataset.i,10))}
+  else if(c==='scClose'){scvClose()}
+  else if(c==='scNav'){if(SV)scvOpen(Math.max(0,Math.min(S.scenes.length-1,SV.i+parseInt(b.dataset.d,10))))}
+  else if(c==='aiMerge'){aiMerge(b.dataset.k,b.dataset.a,b.dataset.b)}
   else if(c==='plan'){autoPlan();render();toast('План составлен')}
   else if(c==='print'){if(b.dataset.dock&&!S.dockOpen){S.dockOpen=true;render()}try{window.print()}catch(err){toast('Печать недоступна — используйте печать браузера (Ctrl+P)')}}
   else if(c==='copyBudget'){copyText(budgetRows().map(r=>r.join('\t')).join('\n'),'Скопировано — вставьте в Excel или Google Таблицы')}
