@@ -1066,15 +1066,6 @@ main{padding-top:22px}
 .sec-h{margin:30px 0 14px}
 .slogan,.slogan *{text-shadow:none!important}
 @media (max-width:860px){main{padding:18px 16px 96px}.panel,.card{padding:18px}}
-/* ===== главная: большая иллюстрация ===== */
-.story-wrap{margin:0 auto 28px;max-width:920px}
-.story-box{border-radius:26px;overflow:hidden;background:#a9a59c;aspect-ratio:800/2160;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.story-box svg{display:block;width:100%;height:auto}
-.story-end{text-align:center;padding:42px 16px 8px}
-.story-end h2{margin:0 0 20px;font:700 clamp(26px,4.6vw,48px)/1.1 'Unbounded',Onest,system-ui,sans-serif;letter-spacing:-.02em;color:#fff;text-wrap:balance}
-.story-end h2 span{color:#FFD23F}
-.story-end .btn{font-size:17px;padding:15px 30px}
-@media (max-width:640px){.story-wrap{margin:-18px -16px 24px}.story-box{border-radius:0;aspect-ratio:600/2160}.story-box svg{width:133.34%;margin-left:-16.67%}}
 </style>
 </head>
 <body>
@@ -2904,31 +2895,6 @@ function quickActions(){
   }[S.role];
   return m.map((x,i)=>'<button class="btn'+(i?' sec':'')+'" type="button" data-c="tab" data-k="'+x[0]+'">'+icon(x[1])+x[2]+'</button>').join('');
 }
-/* ---------- главная: большая иллюстрация «подготовка → съёмка» ---------- */
-let STORY_SVG='';
-function storyLoad(){
-  if(STORY_SVG)return;
-  fetch('media/home-story.svg').then(r=>r.ok?r.text():'').then(t=>{if(!t)return;STORY_SVG=t;const b=document.getElementById('storyBox');if(b){b.innerHTML=t;storyTick()}}).catch(()=>{});
-}
-function ssHtml(){
-  storyLoad();
-  return '<section class="story-wrap" aria-label="Команда готовится к съёмке, потом снимает"><div class="story-box" id="storyBox">'+STORY_SVG+'</div>'+
-    '<div class="story-end"><h2>Снимай красивое кино вместе с <span>HUSTLE</span></h2><button class="btn" type="button" data-c="tab" data-k="proj">'+icon('frame')+'Начать проект</button></div></section>';
-}
-let STORY_CLAP=0;
-function storyTick(){
-  const svg=document.querySelector('#storyBox svg');if(!svg)return;
-  const r=svg.getBoundingClientRect(),vh=innerHeight;
-  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const lit=still||r.top+r.height*.5<vh*.85;
-  svg.classList.toggle('lit',lit);
-  const camIn=r.top+r.height*.76<vh*.9&&r.top+r.height*.6>0;
-  if(still){svg.classList.add('clap');return}
-  if(camIn&&!STORY_CLAP){STORY_CLAP=setTimeout(()=>{const s=document.querySelector('#storyBox svg');if(s)s.classList.add('clap')},700)}
-  if(!camIn&&STORY_CLAP){clearTimeout(STORY_CLAP);STORY_CLAP=0;svg.classList.remove('clap')}
-}
-addEventListener('scroll',()=>requestAnimationFrame(storyTick),{passive:true});
-addEventListener('resize',()=>requestAnimationFrame(storyTick));
 function vHome(){
   const cat=S.artCat||'Все';
   const steps=homeSteps();let next=-1;steps.forEach((x,i)=>{if(next<0&&!stepDone(x[0]))next=i});
@@ -2943,7 +2909,7 @@ function vHome(){
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
-  return ssHtml()+todayBanner()+proj+backupBanner()+
+  return heroHtml()+todayBanner()+proj+backupBanner()+
     '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Узнали о скидке сами? Добавьте её постером. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+addForm+'</details>'+
     '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
@@ -3384,7 +3350,6 @@ function render(){
   if(S.tab==='calc')calcUpdate();
   if(S.tab==='rentals'){S.seen.deals=true;if(S.rtab==='list')gearUpdate()}
   if(S.tab==='story')paintStory();
-  if(S.tab==='home')storyTick();
   save();
 }
 
