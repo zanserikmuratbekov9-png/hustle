@@ -2583,9 +2583,9 @@ const TAB_DEF={
   lights:['Светосхема','План света по сцене','bulb'],calc:['Калькуляторы','Выдержка, ND, память','calc']
 };
 const NAV={
-  producer:[['Главное',['home','rentals']],['Мой проект',['proj','script','schedule','budget','callsheet']],['Команда',['tasks']]],
-  director:[['Главное',['home','rentals']],['Мой проект',['proj','script','notes','explic','shots']],['Команда',['tasks']]],
-  operator:[['Главное',['home','rentals']],['Мой проект',['proj','lights','shots','calc','script']],['Команда',['tasks']]]
+  producer:[['Главное',['home','rentals']],['Мой проект',['proj','script','schedule','budget','callsheet']]],
+  director:[['Главное',['home','rentals']],['Мой проект',['proj','script','notes','explic','shots']]],
+  operator:[['Главное',['home','rentals']],['Мой проект',['proj','lights','shots','calc','script']]]
 };
 const ROLE_TABS={};Object.keys(NAV).forEach(r=>{ROLE_TABS[r]=[].concat.apply([],NAV[r].map(g=>g[1]))});
 /* ========== v4: новая структура сайта ========== */
@@ -2774,15 +2774,15 @@ const TOOLS=[
  {id:'docs',g:'Подготовка',ic:'file',n:'Документы',d:'Договоры, согласия, акт приёма техники',r:['producer']},
  {id:'shots',g:'Съёмки',ic:'frame',n:'Шот-лист',d:'Кадры по сценам для режиссёра и оператора',r:['director','operator']},
  {id:'story',g:'Съёмки',ic:'pencil',n:'Раскадровка',d:'Рисунки кадров с подписями',r:['producer','director','operator']},
- {id:'lights',g:'Съёмки',ic:'bulb',n:'Светосхема',d:'План света, камеры и актёров',r:['producer','director','operator']},
+ {id:'lights',g:'Съёмки',ic:'bulb',n:'Светосхема',d:'План света, камеры и актёров',r:['operator']},
  {id:'calc',g:'Съёмки',ic:'calc',n:'Калькуляторы',d:'Выдержка, ND, память, свет',r:['operator']},
  {id:'today',g:'Съёмки',ic:'camera',n:'Съёмочный день',d:'Экран для площадки: сцены, кадры, вызовы',r:['producer','director','operator']},
  {id:'callsheet',g:'Съёмки',ic:'callsheet',n:'Вызывной лист',d:'Документ на съёмочный день с рассветом и закатом',r:['producer']},
  {id:'tasks',g:'Команда',ic:'check',n:'Задачи',d:'Доска задач по ролям',r:['producer','director','operator']}
 ];
 const TOOL_IDS=TOOLS.map(x=>x.id);
-const CORE=['lights','story','today','script','schedule','budget','callsheet','shots','docs'];
-const HUB_FIRST=['lights','story'];
+const CORE=['lights','script','schedule','budget','callsheet','shots','notes','explic','calc'];
+const HUB_FIRST=['lights'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
 Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
@@ -2901,7 +2901,7 @@ function vHome(){
   const intro={producer:'Продюсер: сценарий, план съёмок, смета и документы.',director:'Режиссёр: сценарий, заметки, экспликация и кадры.',operator:'Оператор: свет, кадры и техника.'}[S.role];
   const nextBlock=next>-1?
     '<div class="pc-next"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
-    '<div class="pc-next"><div><b>Все шаги выполнены</b><span>Проверьте задачи и вызывной лист.</span></div><button class="btn" type="button" data-c="tab" data-k="tasks">'+icon('check')+'Открыть задачи</button></div>';
+    '<div class="pc-next"><div><b>Все шаги выполнены</b><span>Всё главное заполнено.</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[steps.length-1][0]+'">'+icon(TAB_DEF[steps[steps.length-1][0]][2])+steps[steps.length-1][3]+'</button></div>';
   const demo=S.scenes.length?'':'<div class="row" style="margin-top:10px"><span class="muted">Начать с готового примера:</span>'+[['1','Короткий метр'],['3','Клип'],['4','Реклама'],['2','Короткий метр «Ночной эфир»']].map(x=>'<button class="btn sec" type="button" data-c="demo" data-k="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
   const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+(isShared()?'Проект команды':t('Мой проект'))+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div>'+statsOrHint()+'</div>'+
     '<div class="row" style="margin-top:14px">'+quickActions()+'</div>'+demo+'</section>';
@@ -3067,12 +3067,12 @@ function vProj(){
   const head='<section class="hub-head"><div><span class="lbl">'+t('Название проекта')+'</span><input id="pname" data-a="pname" value="'+esc(S.name)+'" autocomplete="off" aria-label="Название проекта"></div>'+statsOrHint()+'</section>';
   const nextCard=next>-1?
     '<div class="cont"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span><div class="prog">'+steps.map(x=>'<i class="'+(stepDone(x[0])?'on':'')+'"></i>').join('')+'</div></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
-    '<div class="cont"><div><b>Все шаги выполнены</b><span>Вы готовы к съёмкам. Проверьте задачи и вызывной лист.</span></div><button class="btn" type="button" data-c="tab" data-k="tasks">'+icon('check')+'Открыть задачи</button></div>';
+    '<div class="cont"><div><b>Все шаги выполнены</b><span>Вы готовы к съёмкам. Всё главное заполнено.</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[steps.length-1][0]+'">'+icon(TAB_DEF[steps[steps.length-1][0]][2])+steps[steps.length-1][3]+'</button></div>';
   const chips='<div class="chips" style="margin-top:16px" role="group" aria-label="Фильтр инструментов"><button class="chip" type="button" data-c="hubfilter" data-k="mine" aria-pressed="'+!S.hubAll+'">'+t('Для моей роли')+'</button><button class="chip" type="button" data-c="hubfilter" data-k="all" aria-pressed="'+!!S.hubAll+'">'+t('Все инструменты')+'</button></div>';
-  const mine=x=>S.hubAll||x.r.indexOf(S.role)>-1;
+  const mine=x=>x.r.indexOf(S.role)>-1;
   const main=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&mine(x)).sort((a,b)=>{const ia=HUB_FIRST.indexOf(a.id),ib=HUB_FIRST.indexOf(b.id);return (ia<0?9:ia)-(ib<0?9:ib)}),more=TOOLS.filter(x=>CORE.indexOf(x.id)<0&&mine(x));
-  const groups='<div class="tools" style="margin-top:16px">'+main.map(toolCard).join('')+'</div>'+(more.length?'<details class="addp"><summary>Ещё инструменты ('+more.length+')</summary><div class="tools" style="margin-top:10px">'+more.map(toolCard).join('')+'</div></details>':'');
-  return head+nextCard+backupBanner()+chips+groups+teamHtml();
+  const groups='<div class="tools" style="margin-top:16px">'+main.map(toolCard).join('')+'</div>';
+  return head+nextCard+backupBanner()+groups+teamHtml();
 }
 
 /* ---------- фестивали и гранты ---------- */
