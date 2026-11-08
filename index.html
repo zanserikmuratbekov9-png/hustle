@@ -2781,8 +2781,8 @@ const TOOLS=[
  {id:'tasks',g:'Команда',ic:'check',n:'Задачи',d:'Доска задач по ролям',r:['producer','director','operator']}
 ];
 const TOOL_IDS=TOOLS.map(x=>x.id);
-const CORE=['lights','script','schedule','budget','callsheet','shots','notes','explic','calc'];
-const HUB_FIRST=['lights'];
+const CORE=['lights','story','script','schedule','budget','callsheet','shots','notes','explic','calc'];
+const HUB_FIRST=['lights','story'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
 Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
@@ -4267,7 +4267,7 @@ function sbOpen(id){
     '<span class="sbsep"></span>'+SB_COLORS.map(x=>'<button class="sbc" type="button" data-sbcol="'+x[0]+'" aria-label="'+x[1]+'" aria-pressed="'+(ED.color===x[0])+'" style="--c:'+x[0]+'"></button>').join('')+
     '<label class="sbsize"><span class="sbl">Толщина</span><input type="range" min="2" max="18" value="'+ED.size+'" data-sbsize="1" aria-label="Толщина линии"></label>'+
     '<input class="sbtext" data-sbtext="1" placeholder="Текст для штампа"'+(ED.tool==='text'?'':' hidden')+'>'+
-    '<span class="sbsep"></span><button class="sbt sbt-3d" type="button" data-sbe="s3d">'+sbIcon('camera')+'<span>3D-сцена</span></button><button class="sbt" type="button" data-sbe="frame" aria-label="Рамка 2.39">'+sbIcon('frame')+'<span>Рамка 2.39</span></button><button class="sbt" type="button" data-sbe="grid" aria-label="Сетка третей">'+sbIcon('grid')+'<span>Сетка третей</span></button>'+
+    '<button class="sbt" type="button" data-sbe="frame" aria-label="Рамка 2.39">'+sbIcon('frame')+'<span>Рамка 2.39</span></button><button class="sbt" type="button" data-sbe="grid" aria-label="Сетка третей">'+sbIcon('grid')+'<span>Сетка третей</span></button>'+
     '<button class="sbt" type="button" data-sbe="undo" aria-label="Отменить">'+sbIcon('undo')+'<span>Отменить</span></button><button class="sbt" type="button" data-sbe="clear" aria-label="Очистить кадр">'+sbIcon('clear')+'<span>Очистить</span></button></div>';
   document.body.appendChild(el);document.body.classList.add('sbed-open');
   const cv=$('#sbBig'),c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,SB_W,SB_H);
