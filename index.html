@@ -1329,7 +1329,7 @@ const fresh=()=>({v:2,name:'Новый проект',cur:'₸',tab:'home',
   contPct:10,feePct:0,taxPct:0,script:'',scenes:[],perDay:4,assign:{},
   cs:{day:1,info:{},castCalls:{},director:'',producer:'',phone:''},
   pc:{},dockOpen:false,seen:{},lastExport:0,bnDismiss:0,heroImg:'',
-  role:'producer',shots:[],shotScene:'',notes:{},explic:{},tasks:[],tasksAll:false,
+  role:'producer',shots:[],shotScene:'',notes:{},explic:{},kpp:{},tasks:[],tasksAll:false,
   light:{},lightScene:0,lightSel:'',gear:[],disc:0,dealCat:'Все',rtab:'deals',posters:[],artCat:'Все',city:'Алматы',onboarded:false,ptype:'',hubAll:false,doc:{type:'actor',vals:{}},bd:{},locs:[],story:{},storyScene:0,pen:'pen',
   calc:{fps:24,angle:180,ndFrom:8,ndTo:2,mbps:400,mins:30,card:512,d1:2,d2:3},
   });
@@ -1346,6 +1346,7 @@ function normalize(d){
     if(!Array.isArray(x.chars))x.chars=typeof x.chars==='string'?x.chars.split(',').map(t=>t.trim()).filter(Boolean):[];x.chars=x.chars.map(String);x.e=num(x.e)||1;return x});
   if(!d.assign||typeof d.assign!=='object'||Array.isArray(d.assign))d.assign={};
   if(!d.pc||typeof d.pc!=='object'||Array.isArray(d.pc))d.pc={};
+  if(!d.kpp||typeof d.kpp!=='object'||Array.isArray(d.kpp))d.kpp={};
   if(!(d.cur==='₸'||CURN[d.cur]))d.cur='₸';
   if(d.v!==2){d.budget.forEach(r=>{if(r.kzt==null){r.kzt=num(r.rate)*perOf(d,d.cur);delete r.rate}if(r.src==null)r.src=''});d.v=2}
   d.calc=Object.assign(f.calc,d.calc||{});
@@ -2358,6 +2359,42 @@ function vExplic(){
   return '<header class="head"><div class="slate"></div><h1>Экспликация</h1><p>Режиссёрское видение фильма на одной странице. Пригодится на защите проекта и чтобы команда понимала, что вы снимаете.</p></header><div class="col">'+panel('exp','megaphone','Видение фильма',fields)+'</div>';
 }
 
+/* ---------- КПП: календарно-постановочный план ---------- */
+function kppSummary(i){try{const m=sceneModel().list[i];if(!m)return '';const a=m.blocks.find(b=>b.k==='act');const t=a?a.t:'';return t.length>110?t.slice(0,108).replace(/\s+\S*$/,'')+'…':t}catch(e){return ''}}
+function kppDate(v){if(!v)return '';const d=new Date(v+'T12:00:00');return isNaN(d)?v:d.toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long'})}
+function kppRows(){ensurePlan();const out=[['День','Дата','Сцена','Объект','Режим','Содержание','Персонажи','Страниц','Кадров','Примечания']];
+  for(let d=1;d<=maxDay();d++)S.scenes.forEach((s,i)=>{if(S.assign[s.id]!==d)return;const sh=S.shots.filter(x=>String(x.scene)===String(s.id)).length;
+    out.push([d,(S.cs.info[d]||{}).date||'',s.id,s.loc,s.type+(s.time?' · '+s.time:''),kppSummary(i),s.chars.join(', '),eighths(s.e),sh,S.kpp[s.id]||''])});return out}
+function vKpp(){
+  const head='<header class="head"><div class="slate"></div><h1>КПП</h1><p>Календарно-постановочный план: по съёмочным дням — объекты, режим, сцены, персонажи, объём и кадры. Собирается сам из сценария, плана съёмок и шот-листа. Даты общие с вызывным листом.</p></header>';
+  if(!S.scenes.length)return head+NEED_SCENES('КПП строится по сценам — сначала вставьте сценарий.');
+  ensurePlan();const md=maxDay(),total=S.scenes.reduce((a,s)=>a+s.e,0);
+  const idx={};S.scenes.forEach((s,i)=>idx[s.id]=i);
+  let days='';
+  for(let d=1;d<=md;d++){
+    const sc=S.scenes.filter(s=>S.assign[s.id]===d);if(!sc.length)continue;
+    const tot=sc.reduce((a,s)=>a+s.e,0),locs=[];sc.forEach(s=>{const k=locKey(s);if(locs.indexOf(k)<0)locs.push(k)});
+    const night=sc.some(s=>/НОЧ/.test(s.time)),date=(S.cs.info[d]||{}).date||'';
+    const rows=sc.map(s=>{const sh=S.shots.filter(x=>String(x.scene)===String(s.id)),dn=sh.filter(x=>x.done).length,st=(S.notes[s.id]||{}).status;
+      return '<tr><td style="width:60px"><b>'+s.id+'</b></td>'+
+        '<td style="min-width:170px"><b>'+esc(s.loc||'—')+'</b><br><span class="muted" style="font-size:13px">'+esc(s.type)+(s.time?' · '+esc(s.time):'')+'</span></td>'+
+        '<td style="min-width:220px;font-size:14px">'+esc(kppSummary(idx[s.id])||'—')+(st==='ok'?' <span class="tag">утверждена</span>':st==='fix'?' <span class="tag">доработать</span>':'')+'</td>'+
+        '<td style="min-width:130px;font-size:14px">'+(s.chars.length?esc(s.chars.join(', ')):'<span class="muted">—</span>')+'</td>'+
+        '<td class="r" style="width:70px">'+eighths(s.e)+'</td>'+
+        '<td class="r" style="width:80px">'+(sh.length?dn+'/'+sh.length:'<span class="muted">0</span>')+'</td>'+
+        '<td style="min-width:200px"><input data-a="kppnote" data-id="'+s.id+'" value="'+esc(S.kpp[s.id]||'')+'" placeholder="Реквизит, массовка, трюки…" aria-label="Примечание к сцене '+s.id+'"></td></tr>'}).join('');
+    const body='<div class="row" style="margin-bottom:10px;gap:14px;align-items:center"><label class="muted" style="font-size:14px">Дата <input type="date" data-a="kppdate" data-d="'+d+'" value="'+esc(date)+'" style="margin-left:6px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:7px 10px"></label>'+
+      locs.map(l=>'<span class="tag">'+esc(l)+'</span>').join('')+(night?'<span class="tag">ночная смена</span>':'')+'</div>'+
+      '<div class="tw"><table class="grid" style="min-width:900px"><thead><tr><th>Сц.</th><th>Объект и режим</th><th>Содержание</th><th>Персонажи</th><th class="r">Стр.</th><th class="r">Кадры</th><th>Примечания</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    days+=panel('kpp'+d,'schedule','День '+d+(date?' · '+esc(kppDate(date)):''),body,{right:'<span class="muted">'+sc.length+' сц. · '+eighths(tot)+' стр.</span>'});
+  }
+  const shotsN=S.shots.length;
+  const stats='<section class="panel"><div class="stats"><div><b>'+md+'</b><span>съёмочных дней</span></div><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+eighths(total)+'</b><span>страниц</span></div><div><b>'+shotsN+'</b><span>кадров в шот-листе</span></div></div>'+
+    '<div class="tbar noprint" style="margin-top:14px"><button class="btn sec" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn sec" type="button" data-c="kppCopy">'+icon('copy')+'Скопировать для таблицы</button></div>'+
+    '<p class="muted noprint" style="margin:12px 0 0;font-size:14px">Сцены между днями переставляет продюсер в «Плане съёмок» — здесь они обновятся сами.</p></section>';
+  return head+'<div class="col">'+stats+days+'</div>';
+}
+
 /* ---------- шот-лист ---------- */
 const SIZES=['Общий','Средний','Крупный','Деталь','Двойной','Через плечо'];
 const ANGLES=['Прямо','Сверху','Снизу','Голландский','Субъективный'];
@@ -2855,11 +2892,12 @@ const TAB_DEF={
   rentals:['Ренталы','Техника и скидки','store'],deals:['Скидки и цены','Прайсы ренталов','tag'],gear:['Список техники','Что берём в аренду','camera'],
   tasks:['Задачи','Что сделать по роли','check'],
   notes:['Заметки по сценам','Что доработать','note'],explic:['Экспликация','Видение режиссёра','megaphone'],shots:['Шот-лист','Кадры по сценам','frame'],
+  kpp:['КПП','Календарно-постановочный план','schedule'],
   lights:['Светосхема','План света по сцене','bulb'],calc:['Калькуляторы','Выдержка, ND, память','calc']
 };
 const NAV={
   producer:[['Главное',['home','rentals']],['Мой проект',['proj','script','schedule','budget','callsheet']]],
-  director:[['Главное',['home','rentals']],['Мой проект',['proj','script','notes','explic','shots']]],
+  director:[['Главное',['home','rentals']],['Мой проект',['proj','script','notes','explic','shots','kpp']]],
   operator:[['Главное',['home','rentals']],['Мой проект',['proj','lights','shots','calc','script']]]
 };
 const ROLE_TABS={};Object.keys(NAV).forEach(r=>{ROLE_TABS[r]=[].concat.apply([],NAV[r].map(g=>g[1]))});
@@ -3039,6 +3077,7 @@ const t=s=>s;
 /* ---------- страницы и инструменты ---------- */
 const C_RIGHTS='Права и сценарий',C_DIR='Режиссура и творческая группа',C_ACT='Актёры',C_CREW='Съёмочная группа',C_TECH='Техника: камера, свет, звук',C_LOC='Локации и транспорт',C_PROP='Реквизит, костюмы, грим',C_FOOD='Питание и быт',C_POST='Постпродакшн',C_LEG='Юридические расходы и страховка',C_MKT='Маркетинг и фестивали';
 const TOOLS=[
+ {id:'kpp',g:'Подготовка',ic:'schedule',n:'КПП',d:'Календарно-постановочный план: что снимаем в каждый день',r:['director']},
  {id:'script',g:'Идея и текст',ic:'script',n:'Сценарий',d:'Текст, загрузка файла, разбор на сцены',r:['producer','director','operator']},
  {id:'notes',g:'Идея и текст',ic:'note',n:'Заметки по сценам',d:'Что доработать и статус каждой сцены',r:['director']},
  {id:'explic',g:'Идея и текст',ic:'megaphone',n:'Экспликация',d:'Видение фильма на одной странице',r:['director']},
@@ -3056,7 +3095,7 @@ const TOOLS=[
  {id:'tasks',g:'Команда',ic:'check',n:'Задачи',d:'Доска задач по ролям',r:['producer','director','operator']}
 ];
 const TOOL_IDS=TOOLS.map(x=>x.id);
-const CORE=['lights','story','script','schedule','budget','callsheet','shots','notes','explic','calc'];
+const CORE=['lights','story','script','schedule','budget','callsheet','shots','notes','explic','calc','kpp'];
 const HUB_FIRST=['lights','story'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
@@ -3624,7 +3663,7 @@ function render(){
   {const pn=$('#pname');if(pn&&document.activeElement!==pn)pn.value=S.name}
   $('#cur').value=S.cur;
   ['USD','EUR','RUB'].forEach(k=>{const el=$('#r'+k);if(el&&document.activeElement!==el)el.value=S.rates[k]});
-  const views={home:vHome,proj:vProj,script:vScript,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
+  const views={home:vHome,proj:vProj,script:vScript,kpp:vKpp,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
   let page;try{page=(views[S.tab]||views.home)()}catch(err){console.error(err);page='<div class="empty"><b>Раздел не открылся</b>Произошла ошибка: '+esc(String((err&&err.message)||err))+'. Обновите страницу. Если повторится, пришлите этот текст.</div>'}
   $('#main').innerHTML=toolBar()+page+sloganHtml();$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
@@ -4188,6 +4227,8 @@ const A={
     if(f==='rate'){g.kzt=num(t.value)*per();g.src=''}else if(f==='qty'||f==='days')g[f]=Math.max(0,num(t.value));else g[f]=t.value;
     gearUpdate();save()},
   nstatus:t=>{const id=t.dataset.id;S.notes[id]=Object.assign({text:'',status:'draft'},S.notes[id]);S.notes[id].status=t.value;save()},
+  kppdate:t=>{dayInfo(+t.dataset.d).date=t.value;save()},
+  kppnote:t=>{S.kpp[t.dataset.id]=t.value;save()},
   ntext:t=>{const id=t.dataset.id;S.notes[id]=Object.assign({text:'',status:'draft'},S.notes[id]);S.notes[id].text=t.value;save()},
   ex:t=>{S.explic[t.dataset.f]=t.value;save()},
   sh:t=>{const x=S.shots.find(i=>i.id===t.dataset.id);if(!x)return;const f=t.dataset.f;x[f]=f==='done'?t.checked:t.value;save()},
@@ -4400,6 +4441,7 @@ document.addEventListener('click',e=>{
     const sc=S.shotScene||(S.scenes[0]?S.scenes[0].id:'');const n=S.shots.filter(x=>String(x.scene)===String(sc)).length+1;
     S.shots.push({id:uid(),scene:sc,no:String(n),size:'Средний',angle:'Прямо',move:'Статика',mm:35,desc:'',done:false});render()}
   else if(c==='shotDel'){S.shots=S.shots.filter(x=>x.id!==b.dataset.id);render()}
+  else if(c==='kppCopy'){copyText(kppRows().map(r=>r.join('\t')).join('\n'),'КПП скопирован — вставьте в таблицу')}
   else if(c==='shotCopy'){
     const rows=[['Сцена','№','Размер','Ракурс','Движение','мм','Описание','Снято']];
     S.shots.forEach(x=>rows.push([x.scene,x.no,x.size,x.angle,x.move,x.mm,x.desc,x.done?'да':'нет']));
