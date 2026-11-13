@@ -1281,8 +1281,10 @@ body:not(.homebg) main>.tbar,body:not(.homebg) main>.row,body:not(.homebg) main 
 body:not(.homebg) .hub-team{border-top:0}
 @media print{main .head,main .hub-head{background:none!important;border:0!important;padding:0!important}}
 
-.homebg main>details.addp>summary,.homebg .site-foot{background:color-mix(in srgb,var(--surface) 90%,transparent);color:var(--ink)!important;text-shadow:none!important;border-radius:12px;padding:8px 14px;width:fit-content;max-width:100%;box-sizing:border-box}
+:root body.homebg.homebg main>details.addp.addp>summary,:root body.homebg.homebg main .site-foot.site-foot{background:color-mix(in srgb,var(--surface) 90%,transparent);color:var(--ink)!important;text-shadow:none!important;border-radius:12px;padding:8px 14px;width:fit-content;max-width:100%;box-sizing:border-box}
 .homebg .site-foot{margin-inline:auto}
+
+.homebg .yf{margin-top:28px}
 </style>
 </head>
 <body>
@@ -3420,9 +3422,9 @@ function vHome(){
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
-  return (showHero()?heroHtml():'')+todayBanner()+proj+backupBanner()+
+  return todayBanner()+proj+backupBanner()+
     '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Узнали о скидке сами? Добавьте её постером. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+addForm+'</details>'+
-    '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
+    (showHero()?heroHtml():'')+'<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
 
 
