@@ -3431,7 +3431,7 @@ function vHome(){
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
   return todayBanner()+proj+backupBanner()+
-    '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Узнали о скидке сами? Добавьте её постером. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+addForm+'</details>'+
+    '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+'</details>'+
     (showHero()?heroHtml():'')+'<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
 
