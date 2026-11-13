@@ -1202,6 +1202,11 @@ body.homebg::before{background:linear-gradient(180deg,rgba(8,40,90,.12) 0%,rgba(
 :root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(8,40,90,.12) 0%,rgba(8,40,90,0) 35%,rgba(8,30,60,.25) 100%),url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.84),rgba(255,255,255,.9)),url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}:root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(8,40,90,.12) 0%,rgba(8,40,90,0) 35%,rgba(8,30,60,.25) 100%),url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}}
 .homebg .yf-slogan,:root[data-theme="light"] .homebg .yf-slogan{text-shadow:0 2px 0 #0b3c75,0 0 22px rgba(5,35,80,.75)!important}
+/* главная: лого и слоган в центре первого экрана, карточка проекта ниже */
+.homebg .yf{min-height:calc(100vh - 60px)!important;min-height:calc(100svh - 60px)!important;justify-content:center!important;padding-top:0!important;padding-bottom:0!important}
+.homebg .yf-mid{gap:clamp(14px,2.4vw,28px)}
+.homebg .yf-logo{width:min(80vw,680px)}
+@media (max-width:860px){.homebg .yf{min-height:calc(100svh - 150px)!important}}
 </style>
 </head>
 <body>
@@ -3729,7 +3734,7 @@ function render(){
   if(ROLE_TABS[S.role].indexOf(S.tab)<0)S.tab='home';
   S.seen[S.tab]=true;
   applyTheme();renderAcct();
-  document.body.classList.toggle('homebg',S.tab==='home');requestAnimationFrame(heroCenter);
+  document.body.classList.toggle('homebg',S.tab==='home');
   if(TOOL_IDS.indexOf(S.tab)<0&&document.body.classList.contains('fs'))setFS(false);
   if(S.tab==='home'){const im=S.heroImg||PHOTO_BG;document.documentElement.style.setProperty('--hb-img',im?"url('"+im+"')":'none')}
   renderChrome();
