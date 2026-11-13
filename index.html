@@ -3255,6 +3255,12 @@ function todayBanner(){
   return '<div class="pc-next td-banner"><div><b>Сегодня съёмочный день '+ti+'</b><span>Сцены, кадры и вызовы для площадки на одном экране.</span></div><button class="btn" type="button" data-c="tab" data-k="today">'+icon('camera')+'Открыть</button></div>';
 }
 /* ---------- главная ---------- */
+/* лого и слоган на главной — по центру всего экрана, а не колонки справа от меню */
+function heroCenter(){const m=document.querySelector('.homebg .yf-mid');if(!m)return;m.style.transform='';
+  if(innerWidth<861)return;const r=m.getBoundingClientRect(),main=document.querySelector('main').getBoundingClientRect();
+  let dx=innerWidth/2-(r.left+r.width/2);const lg=m.querySelector('.yf-logo');const half=lg?lg.getBoundingClientRect().width/2:0;
+  const minC=main.left+half+8;dx=Math.max(dx,minC-(r.left+r.width/2));if(Math.abs(dx)>2)m.style.transform='translateX('+dx.toFixed(0)+'px)'}
+addEventListener('resize',()=>{clearTimeout(window.__hc);window.__hc=setTimeout(heroCenter,120)});
 function heroHtml(){
   const bg=S.heroImg||PHOTO_BG;
   const flt=(id,sc)=>'<filter id="'+id+'" x="-6%" y="-25%" width="112%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.016 0.03" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="'+sc+'" xChannelSelector="R" yChannelSelector="G" result="d"/><feDropShadow in="d" dx="0" dy="4" stdDeviation="0" style="flood-color:var(--brand-dark);flood-opacity:.35"/></filter>';
@@ -3723,7 +3729,7 @@ function render(){
   if(ROLE_TABS[S.role].indexOf(S.tab)<0)S.tab='home';
   S.seen[S.tab]=true;
   applyTheme();renderAcct();
-  document.body.classList.toggle('homebg',S.tab==='home');
+  document.body.classList.toggle('homebg',S.tab==='home');requestAnimationFrame(heroCenter);
   if(TOOL_IDS.indexOf(S.tab)<0&&document.body.classList.contains('fs'))setFS(false);
   if(S.tab==='home'){const im=S.heroImg||PHOTO_BG;document.documentElement.style.setProperty('--hb-img',im?"url('"+im+"')":'none')}
   renderChrome();
