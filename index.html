@@ -1285,6 +1285,14 @@ body:not(.homebg) .hub-team{border-top:0}
 .homebg .site-foot{margin-inline:auto}
 
 .homebg .yf{margin-top:28px}
+
+/* главная: раскрытый блок цен Rental8 — на светлой карточке, всё читается */
+:root body.homebg.homebg main>details.rent-fold[open]{background:color-mix(in srgb,var(--surface) 94%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:12px 16px 16px}
+:root body.homebg.homebg main>details.rent-fold[open]>summary{background:none;padding:4px 0}
+:root body.homebg.homebg main>details.rent-fold[open] p,:root body.homebg.homebg main>details.rent-fold[open] .muted{color:var(--muted)!important;text-shadow:none!important}
+:root body.homebg.homebg main>details.rent-fold details.addp>summary{color:var(--ink)!important;text-shadow:none!important}
+:root body main .poster.poster.p1 .btn.btn.sec{color:#fff!important;-webkit-text-fill-color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.6)!important;background:rgba(255,255,255,.08)!important;opacity:1!important}
+:root body main .poster.poster.p1 .btn.btn.sec:hover{background:rgba(255,255,255,.18)!important}
 </style>
 </head>
 <body>
