@@ -1175,6 +1175,20 @@ body.homebg::after{content:"";position:fixed;inset:14px;z-index:-1;pointer-event
 :root[data-theme="light"] .homebg .addp summary,:root[data-theme="light"] .homebg .site-foot{color:#fff!important;text-shadow:0 1px 0 #04406a!important}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .homebg .yf-slogan,:root:not([data-theme="dark"]) .homebg .addp summary,:root:not([data-theme="dark"]) .homebg .site-foot{color:#fff!important;text-shadow:0 1px 0 #04406a!important}}
 .yf-logo{filter:drop-shadow(0 6px 0 #04406a) drop-shadow(0 18px 40px rgba(4,40,80,.5))}
+/* ===== фон сайта: синяя сетка-волна (фото повернуто горизонтально; на узких экранах — вертикальное) ===== */
+body::before{background:linear-gradient(rgba(12,23,69,.72),rgba(12,23,69,.86)),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
+body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
+:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
+:root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}:root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}}
+@media (max-width:700px) and (orientation:portrait){
+body::before{background:linear-gradient(rgba(12,23,69,.72),rgba(12,23,69,.86)),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
+body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
+:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
+:root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}:root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}}
+}
+body.homebg::after{display:none}
 </style>
 </head>
 <body>
