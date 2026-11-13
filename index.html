@@ -426,6 +426,7 @@ main{max-width:1240px;margin:0 auto;padding:28px clamp(14px,3vw,32px) 48px}
 .hub-head input:focus{outline:0;border-bottom-color:var(--accent)}
 .hub-head .lbl{font-size:13px;color:var(--muted)}
 .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.hub-team{margin-top:32px;padding-top:28px;border-top:1px solid var(--line)}
 .tool{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow);position:relative;transition:transform .12s,border-color .12s}
 .tool:hover{transform:translateY(-2px);border-color:var(--accent)}
 .tool:focus-visible{outline:3px solid var(--accent)}
@@ -3108,7 +3109,7 @@ function vToday(){
       (s.chars.length?'<p class="td-chars">'+esc(s.chars.join(', '))+'</p>':'')+list+'</article>';
   }).join(''):'<div class="empty"><b>В этот день сцен нет</b>Распределите сцены в плане съёмок.</div>';
   const castT=cast.length?'<ul class="td-cast">'+cast.map(c=>{const cc=S.cs.castCalls[d+'|'+c]||{};return '<li><b>'+esc(c)+'</b><span>'+esc(cc.actor||'актёр не указан')+'</span><time>'+esc(cc.time||inf.call||'—')+'</time></li>'}).join('')+'</ul>':'<p class="muted" style="margin:0">В сценах этого дня нет персонажей с репликами.</p>';
-  return head+days+top+'<div class="td-grid"><div class="col">'+scenes+'</div><div class="col">'+panel('tdcast','role','Вызов актёров',castT)+(inf.notes?panel('tdnotes','note','Примечания',esc(inf.notes)):'')+'</div></div>';
+  return head+days+top+'<div class="td-grid"><div class="col">'+scenes+'</div><div class="col">'+panel('tdcast','users','Вызов актёров',castT)+(inf.notes?panel('tdnotes','note','Примечания',esc(inf.notes)):'')+'</div></div>';
 }
 function todayBanner(){
   const ti=todayIndex();if(!ti)return '';
@@ -3285,9 +3286,9 @@ function liveSub(){
 }
 function teamHtml(){
   if(!SB)return '';
-  if(!CLOUD)return panel('team','role','Команда','<p class="muted" style="margin:0">Чтобы работать над проектом вместе, войдите в аккаунт. В демо-режиме проект хранится только в этом браузере.</p>');
+  if(!CLOUD)return panel('team','users','Команда','<p class="muted" style="margin:0">Чтобы работать над проектом вместе, войдите в аккаунт. В демо-режиме проект хранится только в этом браузере.</p>');
   loadTeam();
-  if(TEAM.err==='setup')return panel('team','role','Команда','<p class="muted" style="margin:0">Командная работа ещё не включена на сервере: нужно выполнить <b>supabase/team.sql</b> в Supabase.</p>');
+  if(TEAM.err==='setup')return panel('team','users','Команда','<p class="muted" style="margin:0">Командная работа ещё не включена на сервере: нужно выполнить <b>supabase/team.sql</b> в Supabase.</p>');
   const own=!isShared();
   const projBtn=(pid,label,sub)=>'<button class="tproj'+(CLOUD.pid===pid?' on':'')+'" type="button" data-c="switchProj" data-id="'+esc(pid)+'"'+(CLOUD.pid===pid?' aria-current="true"':'')+'><b>'+esc(label)+'</b><small>'+esc(sub)+'</small></button>';
   const projs='<div class="tprojs">'+projBtn(CLOUD.uid,'Мой проект',own?S.name:'ваш личный проект')+TEAM.teams.map(x=>projBtn(x.owner_id,x.project_name||'Проект без названия','владелец: '+(x.owner_name||x.owner_email||'участник'))).join('')+'</div>';
@@ -3303,7 +3304,7 @@ function teamHtml(){
     body+='<p style="margin:14px 0 0">Вы участник проекта'+(ow?' <b>'+esc(ow.owner_name||ow.owner_email||'')+'</b>':'')+'. '+(CLOUD.ro?'У вас доступ <b>только для просмотра</b>: ваши правки не сохраняются.':'Вы <b>редактор</b>: изменения сохраняются для всей команды.')+'</p>'+
       '<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="teamLeave">Покинуть проект</button></div>';
   }
-  return panel('team','role','Команда и проекты',body);
+  return panel('team','users','Команда и проекты',body);
 }
 /* ---------- проект: хаб инструментов ---------- */
 function toolCard(x){
@@ -3319,7 +3320,8 @@ function vProj(){
   const mine=x=>x.r.indexOf(S.role)>-1;
   const main=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&mine(x)).sort((a,b)=>{const ia=HUB_FIRST.indexOf(a.id),ib=HUB_FIRST.indexOf(b.id);return (ia<0?9:ia)-(ib<0?9:ib)}),more=TOOLS.filter(x=>CORE.indexOf(x.id)<0&&mine(x));
   const groups='<div class="tools" style="margin-top:16px">'+main.map(toolCard).join('')+'</div>';
-  return head+nextCard+backupBanner()+groups+teamHtml();
+  const team=teamHtml();
+  return head+nextCard+backupBanner()+groups+(team?'<div class="hub-team">'+team+'</div>':'');
 }
 
 /* ---------- фестивали и гранты ---------- */
