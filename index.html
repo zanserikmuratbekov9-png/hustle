@@ -1321,6 +1321,13 @@ function normalize(d){
   const f=fresh();
   Object.keys(f).forEach(k=>{if(d[k]===undefined)d[k]=f[k]});
   if(!d.rates)d.rates=f.rates;
+  /* старые и облачные проекты: приводим сценарий и сцены к нужному виду, чтобы разделы не падали */
+  if(typeof d.script!=='string')d.script=d.script==null?'':String(d.script);
+  if(!Array.isArray(d.scenes))d.scenes=[];
+  d.scenes=d.scenes.filter(x=>x&&typeof x==='object').map((x,i)=>{x.id=num(x.id)||i+1;x.type=String(x.type||'ИНТ');x.loc=String(x.loc==null?'':x.loc);x.time=String(x.time==null?'':x.time);
+    if(!Array.isArray(x.chars))x.chars=typeof x.chars==='string'?x.chars.split(',').map(t=>t.trim()).filter(Boolean):[];x.chars=x.chars.map(String);x.e=num(x.e)||1;return x});
+  if(!d.assign||typeof d.assign!=='object'||Array.isArray(d.assign))d.assign={};
+  if(!d.pc||typeof d.pc!=='object'||Array.isArray(d.pc))d.pc={};
   if(!(d.cur==='₸'||CURN[d.cur]))d.cur='₸';
   if(d.v!==2){d.budget.forEach(r=>{if(r.kzt==null){r.kzt=num(r.rate)*perOf(d,d.cur);delete r.rate}if(r.src==null)r.src=''});d.v=2}
   d.calc=Object.assign(f.calc,d.calc||{});
@@ -3592,7 +3599,8 @@ function render(){
   $('#cur').value=S.cur;
   ['USD','EUR','RUB'].forEach(k=>{const el=$('#r'+k);if(el&&document.activeElement!==el)el.value=S.rates[k]});
   const views={home:vHome,proj:vProj,script:vScript,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
-  $('#main').innerHTML=toolBar()+views[S.tab]()+sloganHtml();$('#main').dataset.title=S.name;
+  let page;try{page=(views[S.tab]||views.home)()}catch(err){console.error(err);page='<div class="empty"><b>Раздел не открылся</b>Произошла ошибка: '+esc(String((err&&err.message)||err))+'. Обновите страницу. Если повторится, пришлите этот текст.</div>'}
+  $('#main').innerHTML=toolBar()+page+sloganHtml();$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
   if(S.tab==='budget')updateTotals();
   if(S.tab==='lights'){paintLight();paintInspector();if(PREF.lt3d)lt3Mount()}
