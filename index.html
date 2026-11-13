@@ -3138,7 +3138,7 @@ const TAB_DEF={
   lights:['Светосхема','План света по сцене','bulb'],calc:['Калькуляторы','Выдержка, ND, память','calc']
 };
 const NAV={
-  producer:[['Главное',['home','rentals']],['Мой проект',['proj','script','schedule','budget','callsheet']]],
+  producer:[['Главное',['home','rentals']],['Мой проект',['proj','script','schedule','budget','callsheet','kpp']]],
   director:[['Главное',['home','rentals']],['Мой проект',['proj','script','notes','explic','shots','kpp']]],
   operator:[['Главное',['home','rentals']],['Мой проект',['proj','lights','shots','calc','script']]]
 };
@@ -3320,7 +3320,7 @@ const t=s=>s;
 /* ---------- страницы и инструменты ---------- */
 const C_RIGHTS='Права и сценарий',C_DIR='Режиссура и творческая группа',C_ACT='Актёры',C_CREW='Съёмочная группа',C_TECH='Техника: камера, свет, звук',C_LOC='Локации и транспорт',C_PROP='Реквизит, костюмы, грим',C_FOOD='Питание и быт',C_POST='Постпродакшн',C_LEG='Юридические расходы и страховка',C_MKT='Маркетинг и фестивали';
 const TOOLS=[
- {id:'kpp',g:'Подготовка',ic:'schedule',n:'КПП',d:'Календарно-постановочный план: что снимаем в каждый день',r:['director']},
+ {id:'kpp',g:'Подготовка',ic:'schedule',n:'КПП',d:'Календарно-постановочный план: что снимаем в каждый день',r:['director','producer']},
  {id:'script',g:'Идея и текст',ic:'script',n:'Сценарий',d:'Текст, загрузка файла, разбор на сцены',r:['producer','director','operator']},
  {id:'notes',g:'Идея и текст',ic:'note',n:'Заметки по сценам',d:'Что доработать и статус каждой сцены',r:['director']},
  {id:'explic',g:'Идея и текст',ic:'megaphone',n:'Экспликация',d:'Видение фильма на одной странице',r:['director']},
