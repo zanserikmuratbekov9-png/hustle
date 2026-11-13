@@ -1208,6 +1208,72 @@ body.homebg::before{background:linear-gradient(180deg,rgba(8,40,90,.12) 0%,rgba(
 .homebg .yf-logo{width:min(80vw,680px)}
 @media (max-width:860px){.homebg .yf{min-height:calc(100svh - 150px)!important}}
 .yf-logo2{display:block;width:min(80vw,680px);height:auto;transform:rotate(-3deg);filter:drop-shadow(0 14px 30px rgba(5,25,60,.45));overflow:visible}
+
+/* ===== v20: структура — инструменты в меню, шапка проекта, единое место действий ===== */
+#roleMenu{display:none!important}
+.tnsub{display:none}
+@media (min-width:861px){
+  .tnsub{display:flex;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:1px solid color-mix(in srgb,var(--brand-light) 22%,transparent)}
+  .tns{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;border-radius:11px;font-size:14.5px;font-weight:600;color:color-mix(in srgb,var(--brand-light) 76%,transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tns .ic{width:17px;height:17px;flex:none}
+  .tns:hover{background:color-mix(in srgb,var(--brand-light) 12%,transparent);color:var(--brand-light)}
+  .tns:focus-visible{outline:3px solid var(--brand-light)}
+  .tns[aria-current="page"]{background:var(--btn-y);color:var(--btn-y-ink)}
+  .app.rail .tnsub{margin:2px 0 6px;padding-left:0;border-left:0}
+  .app.rail .tns{justify-content:center;padding:9px 0}
+  .app.rail .tns span{display:none}
+  .topnav{overflow-y:auto;min-height:0;flex:0 1 auto!important}
+  .top-in{overflow:hidden}
+  body:not(.fs) .crumbs{display:none}
+}
+body:not(.fs) .fsfab{display:none!important}
+@media (max-width:860px){
+  .crumbs{position:sticky;top:var(--toph,0px);z-index:15;margin:-4px -12px 16px;padding:8px 12px;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .crumbs .back span{display:none}
+  .tstrip{scrollbar-width:none}.tstrip::-webkit-scrollbar{display:none}
+}
+.phead{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;margin:0 0 22px;padding:8px 10px 8px 8px;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink)}
+.phead .ph-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.phead details.dd>summary.dd-b{padding:8px 14px;font-size:14.5px}
+.phead .ph-proj>summary.dd-b{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:12px;max-width:min(60vw,420px)}
+.phead .ph-proj>summary.dd-b:hover{background:var(--soft)}
+.phead .ph-proj>summary.dd-b:focus-visible{outline:3px solid var(--accent)}
+.phead .ph-proj>summary::-webkit-details-marker{display:none}
+.ph-n{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.ph-n small{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.ph-n b{font-family:'Unbounded','Onest',system-ui,sans-serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-you{color:var(--muted);font-weight:500}
+.phead summary .ic{width:17px;height:17px}
+.ph-avs{display:flex;padding-left:8px}
+.ph-avs i{font-style:normal;width:32px;height:32px;margin-left:-8px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--btn-y);color:var(--btn-y-ink);border:2px solid var(--surface)}
+.ph-avs i:nth-child(2){background:#8FB8FF;color:#0B2E63}.ph-avs i:nth-child(3){background:#9BE3B5;color:#0B3B22}.ph-avs i:nth-child(4){background:#F7B2C8;color:#5A1430}
+.ph-avs i.more{background:var(--soft);color:var(--ink)}
+.ph-fs{padding:9px!important}
+.ph-fs .ic{width:18px;height:18px;margin:0}
+.ph-pi{display:flex!important;flex-direction:column;align-items:flex-start!important;gap:2px}
+.ph-pi small{color:var(--muted);font-size:12.5px;font-weight:500}
+.ph-pi.on b::after{content:" ✓";color:var(--ok)}
+.dd-pop .ghost span b{display:block}.dd-pop .ghost span small{display:block;color:var(--muted);font-size:12.5px;font-weight:500}
+.ph-note{margin:6px 10px 4px;font-size:13px;color:var(--muted);line-height:1.4}
+.dd-pop hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.head .hrow{display:flex;align-items:center;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;margin-bottom:8px}
+.head .hrow h1{margin:0}
+.hact{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media (max-width:640px){
+  .phead{padding:6px;gap:6px}
+  .phead .ph-proj{flex:1 1 100%}
+  .phead .ph-proj>summary.dd-b{max-width:none;width:100%}
+  .phead .ph-r{width:100%;flex-wrap:nowrap;gap:6px}
+  .phead .ph-r>details:first-child{margin-right:auto}
+  .ph-you,.ph-lbl{display:none}
+  .hact{width:100%;flex-wrap:nowrap}
+  .hact>.btn,.hact>label.btn{flex:1 1 auto;justify-content:center}
+  .hact>details{flex:0 0 auto}
+  .hact>details:only-child,.hact>details:first-child{flex:1 1 auto}
+  .hact>details>summary{width:100%;justify-content:center}
+}
+@media print{.phead,.hact{display:none!important}}
+body.fs .phead,body.fs .head>p{display:none}
 </style>
 </head>
 <body>
@@ -1858,7 +1924,7 @@ function vDock(){
     '<div class="line"><span class="pct">Налог (НДС) <input type="number" min="0" step="any" data-a="pct" data-f="taxPct" value="'+esc(S.taxPct)+'" aria-label="Налог, %">%</span><span id="t-tax"></span></div>'+
     '<div class="total"><span>Бюджет проекта</span><b id="t-total"></b></div>'+
     '<div class="line"><span>Потрачено (факт)</span><b id="t-fact"></b></div><div class="line"><span>Остаток бюджета</span><b id="t-left"></b></div>'+
-    '<div class="tbar noprint"><button class="btn" type="button" data-c="budXlsx">'+icon('download')+'Скачать .xlsx</button>'+dd('Ещё',ddi('data-c="budgetPdf"',icon('download')+'Скачать PDF')+ddi('data-c="csvBudget"',icon('download')+'Скачать CSV')+ddi('data-c="copyBudget"',icon('copy')+'Копировать для таблицы')+ddi('data-c="print" data-dock="1"',icon('print')+'Печать'))+'</div>'+
+
   '</div><div><h2 style="margin-bottom:10px">Структура расходов</h2><div id="bars"></div></div></div>':'')+'</div>';
 }
 function vBudget(){
@@ -1877,10 +1943,10 @@ function vBudget(){
     const empty=S.budget.filter(r=>r.cat===c).every(r=>!String(r.name||'').trim()&&!num(r.kzt)&&!num(r.fact));
     return panel('cat:'+c,'',esc(c)+(empty?' <small class="muted" style="font-weight:500">· пусто</small>':''),body,{right:'<b data-sub="'+esc(c)+'"></b>',defClosed:empty});
   }).join('');
-  return '<header class="head"><div class="slate"></div><h1>Смета</h1><p>Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.</p></header>'+
-  '<div class="tbar noprint" style="margin-bottom:10px;justify-content:space-between">'+(cats.some(budOpen)?'<button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button>':'<button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все разделы</button>')+
-  dd(icon('upload')+'Загрузить из файла','<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+
-  '<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport"></div>'+
+  return hd('Смета','Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.',
+    dd(icon('upload')+'Загрузить','<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+'<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport">'+
+    dd(icon('download')+'Скачать',ddi('data-c="budXlsx"','Excel (.xlsx)')+ddi('data-c="budgetPdf"','PDF')+ddi('data-c="csvBudget"','CSV')+ddi('data-c="copyBudget"','Скопировать для таблицы')+ddi('data-c="print" data-dock="1"','Распечатать'),{right:true,primary:true}))+
+  '<div class="tbar noprint" style="margin-bottom:10px">'+(cats.some(budOpen)?'<button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button>':'<button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все разделы</button>')+'</div>'+
   backupBanner()+'<div class="col">'+budgetTplPanel()+groups+'</div>'+vDock();
 }
 
@@ -2136,12 +2202,8 @@ document.addEventListener('keydown',e=>{
 function vScript(){
   if(S.script.trim()&&!S.scenes.length){S.scenes=parseScript(S.script);if(S.scenes.length){S.assign={};autoPlan()}}
   const text='<textarea class="script" data-a="script" placeholder="ИНТ. КВАРТИРА МАРИИ — НОЧЬ&#10;&#10;Мария сидит у окна.&#10;&#10;МАРИЯ&#10;Позвони. Просто позвони." aria-label="Текст сценария">'+esc(S.script)+'</textarea>'+
-    '<div class="row" style="margin-top:12px">'+
-    '<label class="btn" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл сценария</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+
-    (S.script.trim()?dd(icon('download')+'Скачать',ddi('data-c="dlScriptDocx"','Word (.docx)')+ddi('data-c="dlScript"','Текст (.txt)')):'')+
-    '</div>'+
     '<p class="muted" style="margin:10px 0 0;font-size:14px">Сцены находятся сами, когда вы вставляете или правите текст. Загружаются PDF, Word (.docx), Final Draft (.fdx), .txt, .md и .fountain. PDF-скан без текстового слоя прочитать не получится.</p>';
-  return '<header class="head"><div class="slate"></div><h1>Сценарий</h1><p>Вставьте текст или загрузите файл. Сайт сам найдёт сцены, локации и персонажей, посчитает хронометраж и подскажет, что проверить. Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам заглавными буквами.</p></header>'+
+  return hd('Сценарий','Вставьте текст или загрузите файл. Сайт сам найдёт сцены, локации и персонажей, посчитает хронометраж и подскажет, что проверить. Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам заглавными буквами.','<label class="btn" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+(S.script.trim()?dlMenu(ddi('data-c="dlScriptDocx"','Word (.docx)')+ddi('data-c="dlScript"','Текст (.txt)')):''))+
     '<div class="col">'+panel('stext','script','Текст сценария',text)+'<div id="scDer" style="display:contents">'+scriptDerived()+'</div></div>';
 }
 
@@ -2155,7 +2217,7 @@ function autoPlan(){
 function ensurePlan(){if(S.scenes.some(s=>!S.assign[s.id]))autoPlan()}
 function maxDay(){let m=0;S.scenes.forEach(s=>{m=Math.max(m,S.assign[s.id]||0)});return m}
 function vSchedule(){
-  const head='<header class="head"><div class="slate"></div><h1>План съёмок</h1><p>Сцены собираются по локациям и раскладываются по дням с учётом нормы страниц в смену. Любую сцену можно перенести в другой день.</p></header>';
+  const head=hd('План съёмок','Сцены собираются по локациям и раскладываются по дням с учётом нормы страниц в смену. Любую сцену можно перенести в другой день.',S.scenes.length?dlMenu(ddi('data-c="print"','PDF через печать')):'');
   if(!S.scenes.length)return head+'<div class="empty"><b>Нет сцен для планирования</b>Сначала разберите сценарий.<br><br><button class="btn" type="button" data-c="tab" data-k="script">'+icon('script')+'Перейти к разбору сценария</button></div>';
   ensurePlan();
   const md=maxDay(),total=S.scenes.reduce((a,s)=>a+s.e,0);let days='';
@@ -2167,7 +2229,7 @@ function vSchedule(){
       (sc.length?'<div class="tw"><table class="grid"><tbody>'+sc.map(s=>'<tr><td style="width:70px"><b>Сц. '+s.id+'</b></td><td>'+esc(s.type)+'. '+esc(s.loc)+(s.time?', '+esc(s.time):'')+'</td><td class="muted">'+esc(s.chars.join(', '))+'</td><td class="r" style="width:70px">'+eighths(s.e)+'</td><td style="width:130px"><select data-a="assign" data-r="1" data-id="'+s.id+'" aria-label="День съёмки для сцены '+s.id+'">'+opts(d)+'</select></td></tr>').join('')+'</tbody></table></div>':'');
     days+=panel('day'+d,'schedule','День '+d,body,{cls:'day',right:'<span class="muted">'+eighths(tot)+' стр.</span>'});
   }
-  const top='<div class="row"><label>Норма, страниц в смену <input type="number" min="0.125" step="0.125" data-a="perDay" value="'+esc(S.perDay)+'" style="width:90px;margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"></label><button class="btn" type="button" data-c="plan">Составить план заново</button></div>'+
+  const top='<div class="row"><label>Норма, страниц в смену <input type="number" min="0.125" step="0.125" data-a="perDay" value="'+esc(S.perDay)+'" style="width:90px;margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"></label><button class="btn sec" type="button" data-c="plan">Составить план заново</button></div>'+
     '<div class="stats" style="margin-top:12px"><div><b>'+md+'</b><span>съёмочных дней</span></div><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+eighths(total)+'</b><span>страниц</span></div></div>';
   return head+'<div class="col">'+panel('plan','list','Параметры плана',top)+panel('matrix','users','Занятость актёров по дням',matrixHtml())+
     '<div class="row noprint">'+(Array.from({length:md},(_,i)=>'day'+(i+1)).some(k=>!(k in S.pc)||!S.pc[k])?'<button class="link" type="button" data-c="collapseAll" data-pre="day">Свернуть все дни</button>':'<button class="link" type="button" data-c="expandAll" data-pre="day">Развернуть все дни</button>')+'</div>'+days+'</div>';
@@ -2176,7 +2238,7 @@ function vSchedule(){
 /* ---------- вызывной лист ---------- */
 function dayInfo(d){S.cs.info[d]=S.cs.info[d]||{date:'',call:'08:00',addr:'',notes:''};return S.cs.info[d]}
 function vCall(){
-  const head='<header class="head"><div class="slate"></div><h1>Вызывной лист</h1><p>Документ для группы на конкретный съёмочный день: сцены, места, время вызова актёров. Заполните поля и распечатайте.</p></header>';
+  const head=hd('Вызывной лист','Документ для группы на конкретный съёмочный день: сцены, места, время вызова актёров. Заполните поля и отправьте команде.',S.scenes.length?'<button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button>'+dlMenu(ddi('data-c="csPdf"','PDF')+ddi('data-c="csDocx"','Word (.docx)')+ddi('data-c="print"','Распечатать')):'');
   if(!S.scenes.length)return head+'<div class="empty"><b>Нет данных для вызывного листа</b>Разберите сценарий — вызывной лист соберётся из плана съёмок.<br><br><button class="btn" type="button" data-c="tab" data-k="script">'+icon('script')+'Перейти к разбору сценария</button></div>';
   ensurePlan();
   const md=maxDay();if(S.cs.day>md||S.cs.day<1)S.cs.day=1;
@@ -2193,7 +2255,7 @@ function vCall(){
     '<label>Телефон продюсера<input type="tel" data-a="cs" data-f="phone" value="'+esc(S.cs.phone)+'"></label>'+
     cityFieldHtml()+'<label class="wide">Адрес съёмочной площадки<input data-a="csinfo" data-f="addr" value="'+esc(inf.addr)+'" placeholder="Город, улица, дом, ориентиры для парковки"></label>'+
     '<label class="wide">Примечания для группы<textarea rows="3" data-a="csinfo" data-f="notes" placeholder="Погода, транспорт, питание, требования по безопасности">'+esc(inf.notes)+'</textarea></label>'+
-    '<div class="wide tbar"><button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button>'+dd(icon('download')+'Скачать',ddi('data-c="csPdf"','PDF')+ddi('data-c="csDocx"','Word (.docx)')+ddi('data-c="print"',icon('print')+'Распечатать'))+'</div></div>';
+    '</div>';
   return head+'<div class="col"><div class="noprint">'+panel('csform','callsheet','Данные дня',form)+'</div>'+
   '<section class="panel"><div class="sheet-title"><h1>Вызывной лист</h1></div>'+
     '<div class="ph"><h2>'+esc(S.name)+'</h2><b>День '+d+' из '+md+'</b></div>'+
@@ -2409,7 +2471,7 @@ function vTasks(){
 /* ---------- заметки режиссёра по сценам ---------- */
 const NOTE_ST={draft:'Черновик',fix:'Доработать',ok:'Утверждена'};
 function vNotes(){
-  const head='<header class="head"><div class="slate"></div><h1>Заметки по сценам</h1><p>Для каждой сцены — что нужно доработать и статус.</p></header>';
+  const head=hd('Заметки по сценам','Для каждой сцены — что нужно доработать и статус.',S.scenes.length?dlMenu(ddi('data-c="print"','PDF через печать')):'');
   if(!S.scenes.length)return head+NEED_SCENES('Загрузите или вставьте сценарий и разберите его на сцены.');
   const cnt={draft:0,fix:0,ok:0};
   const rows=S.scenes.map(s=>{
@@ -2428,8 +2490,8 @@ const EX_FIELDS=[['logline','Логлайн','Одно предложение: �
 function exText(){return EX_FIELDS.map(f=>f[1]+':\n'+((S.explic[f[0]]||'').trim()||'—')).join('\n\n')}
 function vExplic(){
   const fields='<div class="fields" style="grid-template-columns:1fr">'+EX_FIELDS.map(f=>'<label>'+f[1]+' <span style="font-weight:400">— '+f[2]+'</span><textarea rows="3" data-a="ex" data-f="'+f[0]+'">'+esc(S.explic[f[0]]||'')+'</textarea></label>').join('')+
-    '<div class="row"><button class="btn sec" type="button" data-c="explicCopy">'+icon('copy')+'Скопировать текст экспликации</button></div></div>';
-  return '<header class="head"><div class="slate"></div><h1>Экспликация</h1><p>Режиссёрское видение фильма на одной странице. Пригодится на защите проекта и чтобы команда понимала, что вы снимаете.</p></header><div class="col">'+panel('exp','megaphone','Видение фильма',fields)+'</div>';
+    '</div>';
+  return hd('Экспликация','Режиссёрское видение фильма на одной странице. Пригодится на защите проекта и чтобы команда понимала, что вы снимаете.',dlMenu(ddi('data-c="explicCopy"','Скопировать текст')+ddi('data-c="print"','PDF через печать')))+'<div class="col">'+panel('exp','megaphone','Видение фильма',fields)+'</div>';
 }
 
 /* ---------- КПП: календарно-постановочный план ---------- */
@@ -2439,7 +2501,7 @@ function kppRows(){ensurePlan();const out=[['День','Дата','Сцена','
   for(let d=1;d<=maxDay();d++)S.scenes.forEach((s,i)=>{if(S.assign[s.id]!==d)return;const sh=S.shots.filter(x=>String(x.scene)===String(s.id)).length;
     out.push([d,(S.cs.info[d]||{}).date||'',s.id,s.loc,s.type+(s.time?' · '+s.time:''),kppSummary(i),s.chars.join(', '),eighths(s.e),sh,S.kpp[s.id]||''])});return out}
 function vKpp(){
-  const head='<header class="head"><div class="slate"></div><h1>КПП</h1><p>Календарно-постановочный план: по съёмочным дням — объекты, режим, сцены, персонажи, объём и кадры. Собирается сам из сценария, плана съёмок и шот-листа. Даты общие с вызывным листом.</p></header>';
+  const head=hd('КПП','Календарно-постановочный план: по съёмочным дням — объекты, режим, сцены, персонажи, объём и кадры. Собирается сам из сценария, плана съёмок и шот-листа. Даты общие с вызывным листом.',S.scenes.length?dlMenu(ddi('data-c="kppCopy"','Скопировать для таблицы')+ddi('data-c="print"','PDF через печать')):'');
   if(!S.scenes.length)return head+NEED_SCENES('КПП строится по сценам — сначала вставьте сценарий.');
   ensurePlan();const md=maxDay(),total=S.scenes.reduce((a,s)=>a+s.e,0);
   const idx={};S.scenes.forEach((s,i)=>idx[s.id]=i);
@@ -2463,7 +2525,7 @@ function vKpp(){
   }
   const shotsN=S.shots.length;
   const stats='<section class="panel"><div class="stats"><div><b>'+md+'</b><span>съёмочных дней</span></div><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+eighths(total)+'</b><span>страниц</span></div><div><b>'+shotsN+'</b><span>кадров в шот-листе</span></div></div>'+
-    '<div class="tbar noprint" style="margin-top:14px"><button class="btn sec" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn sec" type="button" data-c="kppCopy">'+icon('copy')+'Скопировать для таблицы</button></div>'+
+
     '<p class="muted noprint" style="margin:12px 0 0;font-size:14px">Сцены между днями переставляет продюсер в «Плане съёмок» — здесь они обновятся сами.</p></section>';
   return head+'<div class="col">'+stats+days+'</div>';
 }
@@ -2473,7 +2535,7 @@ const SIZES=['Общий','Средний','Крупный','Деталь','Дв
 const ANGLES=['Прямо','Сверху','Снизу','Голландский','Субъективный'];
 const MOVES=['Статика','Панорама','Наезд','Тележка','Ручная','Стедикам','Слайдер'];
 function vShots(){
-  const head='<header class="head"><div class="slate"></div><h1>Шот-лист</h1><p>Общий список кадров для режиссёра и оператора: размер, ракурс, движение, объектив. Отмечайте галочкой снятое.</p></header>';
+  const head=hd('Шот-лист','Общий список кадров для режиссёра и оператора: размер, ракурс, движение, объектив. Отмечайте галочкой снятое.',S.scenes.length?'<button class="btn" type="button" data-c="shotAdd">'+icon('plus')+'Добавить кадр</button>'+(S.shots.length?dlMenu(ddi('data-c="shotXlsx"','Excel (.xlsx)')+ddi('data-c="shotCopy"','Скопировать для таблицы')+ddi('data-c="print"','PDF через печать')):''):'');
   if(!S.scenes.length)return head+NEED_SCENES('Шот-лист строится по сценам — сначала разберите сценарий.');
   const flt=S.shotScene||'';
   const list=S.shots.filter(x=>!flt||String(x.scene)===String(flt));
@@ -2489,7 +2551,7 @@ function vShots(){
     '<td style="width:44px"><button class="x" type="button" data-c="shotDel" data-id="'+x.id+'" aria-label="Удалить кадр">×</button></td></tr>').join('');
   const body='<div class="row" style="margin-bottom:10px"><label class="fltlab">Показать сцену <select data-a="shotflt" data-r="1" style="margin-left:8px;max-width:100%;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"><option value="">Все сцены</option>'+sceneOpts(flt,false)+'</select></label><span class="muted">Снято '+done+' из '+S.shots.length+'</span></div>'+
     (list.length?'<div class="tw"><table class="grid" style="min-width:980px"><thead><tr><th>Сцена</th><th>№</th><th>Размер</th><th>Ракурс</th><th>Движение</th><th>мм</th><th>Описание</th><th>Снято</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty"><b>Кадров пока нет</b>Добавьте первый кадр кнопкой ниже.</div>')+
-    '<div class="row" style="margin-top:12px"><button class="btn" type="button" data-c="shotAdd">'+icon('plus')+'Добавить кадр</button>'+(S.shots.length?'<button class="btn sec" type="button" data-c="shotCopy">'+icon('copy')+'Скопировать для таблицы</button><button class="btn sec" type="button" data-c="shotXlsx">'+icon('download')+'Скачать .xlsx</button>':'')+'</div>';
+    '<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="shotAdd">'+icon('plus')+'Ещё кадр</button></div>';
   return head+'<div class="col">'+panel('shl','frame','Кадры',body)+'</div>';
 }
 
@@ -2600,8 +2662,9 @@ function vLights(){
     '<div class="lt'+(PREF.lt3d?' is3d':'')+'"><div>'+(PREF.lt3d?'<div id="lt3d" class="lt3d"><p class="lt3d-hint">Загружаю 3D…</p></div><p class="muted lt3d-help">Вращайте мышью или пальцем, колёсико или два пальца — приближение, правая кнопка или два пальца — сдвиг. Предметы можно перетаскивать по полу, выбранный предмет настраивается справа.</p>':'')+'<svg id="lt-svg"'+(PREF.lt3d?' hidden':'')+' viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
     '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>';
   const notes='<label class="fields" style="display:block"><span class="muted" style="font-size:14px">Настроение и заметки к свету</span><textarea rows="3" data-a="ltnote" style="width:100%;margin-top:4px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px" placeholder="Контраст, соотношение ключ/заполнение, откуда падает свет, что нужно для практиков">'+esc(L.note||'')+'</textarea></label>'+
-    '<div class="tbar noprint" style="margin-top:12px"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать схему</button>'+dd('Ещё',ddi('data-c="ltSvg"',icon('download')+'Скачать SVG')+ddi('data-c="ltClear"','Очистить схему'))+'</div>';
-  return '<header class="head"><div class="slate"></div><h1>Светосхема</h1><p>План света сверху: камера показывает угол кадра по объективу, свет — направление и цвет луча. Перетаскивайте предметы, меняйте мощность и температуру. Схема сохраняется отдельно для каждой сцены.</p></header>'+
+    '<div class="tbar noprint" style="margin-top:12px"><button class="btn sec" type="button" data-c="ltClear">Очистить схему</button></div>';
+  return hd('Светосхема','План света сверху: камера показывает угол кадра по объективу, свет — направление и цвет луча. Перетаскивайте предметы, меняйте мощность и температуру. Схема сохраняется отдельно для каждой сцены.',
+    '<button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать схему</button>'+dlMenu(ddi('data-c="ltSvg"','Картинка SVG')+ddi('data-c="print"','PDF через печать')))+
     '<div class="col">'+panel('ltcv','bulb','Схема',canvas)+panel('ltleg','list','Экспликация света','<div id="lt-legend"></div><div style="height:12px"></div>'+notes)+'</div>';
 }
 
@@ -2979,6 +3042,7 @@ Object.assign(IC,{
  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M17 14.5c2.4 0 4 1.8 4 4.5"/>',
  pin:'<path d="M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
  file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+ eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
  pencil:'<path d="M4 20l4-1 11-11a2.1 2.1 0 0 0-3-3L5 16z"/><path d="M14 7l3 3"/>',
  grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M9 20h6"/>',
@@ -3006,7 +3070,7 @@ function backupBanner(){
   if(!hasData()&&!bad)return '';
   if(!bad&&S.bnDismiss&&Date.now()-S.bnDismiss<3*864e5)return '';
   const when=S.lastExport?'Последняя копия в файле: '+new Date(S.lastExport).toLocaleDateString('ru-RU'):'Копии в файле пока нет';
-  return '<div class="note noprint" role="status"><b>'+(bad?(CLOUD?'Изменения пока не ушли в облако.':'Данные не сохраняются.'):'Данные хранятся только в этом браузере.')+'</b> Очистка браузера или смена устройства удалят проект. '+when+'.<div class="row" style="margin-top:8px"><button class="btn" type="button" data-c="exportProj">'+icon('download')+'Сохранить проект в файл</button>'+(bad?'':'<button class="link" type="button" data-c="bnClose">Напомнить позже</button>')+'</div></div>';
+  return '<div class="note noprint" role="status"><b>'+(bad?(CLOUD?'Изменения пока не ушли в облако.':'Данные не сохраняются.'):'Данные хранятся только в этом браузере.')+'</b> Очистка браузера или смена устройства удалят проект. '+when+'.<div class="row" style="margin-top:8px"><button class="btn sec" type="button" data-c="exportProj">'+icon('download')+'Сохранить проект в файл</button>'+(bad?'':'<button class="link" type="button" data-c="bnClose">Напомнить позже</button>')+'</div></div>';
 }
 function exportEnvelope(){
   const d=JSON.parse(JSON.stringify(S));
@@ -3177,7 +3241,7 @@ const TOP=[['home','home','Главная','Главная'],['proj','briefcase'
 const secOf=tab=>TOOL_IDS.indexOf(tab)>-1?'proj':tab;
 function closeMenus(){$$('details.menu').forEach(d=>{d.open=false})}
 /* компактное меню «Ещё ▾» вместо ряда кнопок */
-function dd(label,items,o){o=o||{};return '<details class="menu dd"><summary class="btn sec dd-b">'+label+'<i class="caret" aria-hidden="true">▾</i></summary><div class="menu-pop dd-pop'+(o.right?'':' l')+(o.wide?' wide':'')+'">'+items+'</div></details>'}
+function dd(label,items,o){o=o||{};return '<details class="menu dd'+(o.cls?' '+o.cls:'')+'"><summary class="btn'+(o.primary?'':' sec')+' dd-b">'+label+'<i class="caret" aria-hidden="true">▾</i></summary><div class="menu-pop dd-pop'+(o.right?'':' l')+(o.wide?' wide':'')+'">'+items+'</div></details>'}
 function ddi(attrs,txt){return '<button class="ghost" type="button" '+attrs+'>'+txt+'</button>'}
 function ddh(t){return '<small class="dd-h">'+t+'</small>'}
 document.addEventListener('click',e=>{const it=e.target.closest('details.dd .menu-pop button,details.dd .menu-pop label');if(it){const d=it.closest('details.dd');setTimeout(()=>{if(d)d.open=false},0)}});
@@ -3186,7 +3250,8 @@ document.addEventListener('click',e=>{if(!e.target.closest('details.menu'))close
 
 function renderChrome(){
   const sec=secOf(S.tab);
-  $('#topnav').innerHTML=TOP.map(x=>'<button class="tn" type="button" title="'+t(x[2])+'" data-c="tab" data-k="'+x[0]+'"'+(sec===x[0]?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[2])+'</span></button>').join('');
+  $('#topnav').innerHTML=TOP.map(x=>'<button class="tn" type="button" title="'+t(x[2])+'" data-c="tab" data-k="'+x[0]+'"'+((x[0]==='proj'?S.tab==='proj':sec===x[0])?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[2])+'</span></button>'+
+    (x[0]==='proj'?'<div class="tnsub" role="group" aria-label="Инструменты проекта">'+roleTools().map(y=>'<button class="tns" type="button" title="'+t(y.n)+'" data-c="tab" data-k="'+y.id+'"'+(S.tab===y.id?' aria-current="page"':'')+'>'+icon(y.ic)+'<span>'+t(y.n)+'</span></button>').join('')+'</div>':'')).join('');
   $('#botnav').innerHTML=TOP.map(x=>'<button class="bt" type="button" data-c="tab" data-k="'+x[0]+'"'+(sec===x[0]?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[3])+'</span></button>').join('');
   
   ['#topnav','#botnav'].forEach(q=>{const el=$(q);if(PREF.lang==='kk')el.setAttribute('lang','kk');else el.removeAttribute('lang')});
@@ -3195,11 +3260,46 @@ function renderChrome(){
   const nm=userName();
   $('#avBtn').innerHTML='<span class="av">'+esc(String(nm).charAt(0).toUpperCase())+'</span><span class="avn"><b>'+esc(nm)+'</b><small>'+(USER==='guest'?'демо без аккаунта':'профиль и настройки')+'</small></span>';
 }
+const FS_SVG='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+function roleTools(){
+  return TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&x.r.indexOf(S.role)>-1).sort((a,b)=>{const ia=HUB_FIRST.indexOf(a.id),ib=HUB_FIRST.indexOf(b.id);return (ia<0?9:ia)-(ib<0?9:ib)});
+}
 function toolBar(){
   if(TOOL_IDS.indexOf(S.tab)<0)return '';
-  const list=TOOLS.filter(x=>(x.r.indexOf(S.role)>-1&&CORE.indexOf(x.id)>-1)||x.id===S.tab);
-  return '<div class="crumbs noprint"><button class="back" type="button" data-c="tab" data-k="proj">'+icon('left')+'<span>'+t('Проект')+'</span></button><div class="tstrip" role="group" aria-label="Инструменты">'+list.map(x=>'<button class="chip" type="button" data-c="tab" data-k="'+x.id+'" aria-pressed="'+(x.id===S.tab)+'">'+t(x.n)+'</button>').join('')+'</div><button class="fsfab noprint" type="button" data-c="fs" aria-label="Развернуть инструмент на весь экран"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>'+(document.body.classList.contains('fs')?'Свернуть':'На весь экран')+'</span></button></div>';
+  const list=roleTools();if(!list.some(x=>x.id===S.tab)){const c=TOOLS.find(x=>x.id===S.tab);if(c)list.push(c)}
+  return '<div class="crumbs noprint"><button class="back" type="button" data-c="tab" data-k="proj">'+icon('left')+'<span>'+t('Проект')+'</span></button><div class="tstrip" role="group" aria-label="Инструменты">'+list.map(x=>'<button class="chip" type="button" data-c="tab" data-k="'+x.id+'" aria-pressed="'+(x.id===S.tab)+'">'+t(x.n)+'</button>').join('')+'</div></div>'+
+    '<button class="fsfab noprint" type="button" data-c="fs" aria-label="Свернуть полноэкранный режим">'+FS_SVG+'<span>Свернуть</span></button>';
 }
+/* шапка проекта: название и переключатель проектов, роль, команда, приглашение */
+function projHead(){
+  const own=!isShared(),isTool=TOOL_IDS.indexOf(S.tab)>-1;
+  if(CLOUD)loadTeam();
+  let projs='';
+  if(CLOUD){
+    const it=(pid,label,sub)=>'<button class="ghost ph-pi'+(CLOUD.pid===pid?' on':'')+'" type="button" data-c="switchProj" data-id="'+esc(pid)+'"><b>'+esc(label)+'</b><small>'+esc(sub)+'</small></button>';
+    projs=ddh('Ваши проекты')+it(CLOUD.uid,own?S.name:'Мой проект','личный проект')+TEAM.teams.map(x=>it(x.owner_id,x.project_name||'Проект без названия','владелец: '+(x.owner_name||x.owner_email||'участник'))).join('')+'<hr>';
+  }else{
+    projs=ddh('Проект')+'<button class="ghost ph-pi on" type="button" data-c="tab" data-k="proj"><b>'+esc(S.name)+'</b><small>хранится в этом браузере</small></button><hr>';
+  }
+  projs+=ddi('data-c="tab" data-k="proj"',icon('briefcase')+'Обзор проекта')+'<label class="ghost" for="projIn" style="cursor:pointer">'+icon('upload')+'Открыть проект из файла</label>'+ddi('data-c="exportProj"',icon('download')+'Сохранить проект в файл');
+  const name=dd('<span class="ph-n"><small>'+(isShared()?'Проект команды':'Проект')+'</small><b>'+esc(S.name)+'</b></span>',projs,{cls:'ph-proj',wide:true});
+  const role=dd('<span class="ph-you">Вы:</span> '+icon(ROLES[S.role].i)+t(ROLES[S.role].t),ddh(t('Я работаю как'))+Object.keys(ROLES).map(k=>'<button class="ghost opt'+(S.role===k?' on':'')+'" type="button" data-c="role" data-k="'+k+'">'+icon(ROLES[k].i)+'<span>'+t(ROLES[k].t)+'</span></button>').join(''),{right:true});
+  const ppl=[userName()];if(CLOUD&&own)TEAM.members.forEach(m=>ppl.push(m.member_name||m.member_email||'?'));
+  else if(CLOUD){const ow=TEAM.teams.find(x=>x.owner_id===CLOUD.pid);if(ow)ppl.unshift(ow.owner_name||ow.owner_email||'?')}
+  const avs='<span class="ph-avs" title="'+esc(ppl.join(', '))+'" aria-label="Команда: '+esc(ppl.join(', '))+'">'+ppl.slice(0,4).map(n=>'<i>'+esc(String(n).charAt(0).toUpperCase())+'</i>').join('')+(ppl.length>4?'<i class="more">+'+(ppl.length-4)+'</i>':'')+'</span>';
+  let inv;
+  if(!CLOUD)inv=ddh('Командная работа')+'<p class="ph-note">Чтобы работать над проектом вместе, войдите в аккаунт.</p>'+ddi('data-c="logout"',icon('users')+'Войти или создать аккаунт');
+  else if(!own)inv='<p class="ph-note">Пригласить людей может владелец проекта.</p>';
+  else inv=ddh('Ссылка-приглашение')+ddi('data-c="teamInvite" data-k="editor"',icon('pencil')+'<span><b>Редактор</b><small>может менять проект</small></span>')+ddi('data-c="teamInvite" data-k="viewer"',icon('eye')+'<span><b>Только просмотр</b><small>смотрит без правок</small></span>')+'<p class="ph-note">Ссылка скопируется, отправьте её в мессенджер.</p>';
+  const invite=dd(icon('plus')+'<span class="ph-lbl">Пригласить</span>',inv,{right:true});
+  const fs=isTool?'<button class="btn sec ph-fs" type="button" data-c="fs" title="На весь экран" aria-label="Развернуть инструмент на весь экран">'+FS_SVG+'</button>':'';
+  return '<div class="phead noprint">'+name+'<div class="ph-r">'+role+avs+invite+fs+'</div></div>';
+}
+/* заголовок инструмента: название слева, действия справа — одна жёлтая кнопка и «Скачать» */
+function hd(title,desc,acts){
+  return '<header class="head"><div class="slate"></div><div class="hrow"><h1>'+title+'</h1>'+(acts?'<div class="hact noprint">'+acts+'</div>':'')+'</div>'+(desc?'<p>'+desc+'</p>':'')+'</header>';
+}
+function dlMenu(items){return dd(icon('download')+'Скачать',items,{right:true})}
 
 
 /* ---------- съёмочный день ---------- */
@@ -3296,6 +3396,7 @@ function quickActions(){
   }[S.role];
   return m.map((x,i)=>'<button class="btn'+(i?' sec':'')+'" type="button" data-c="tab" data-k="'+x[0]+'">'+icon(x[1])+x[2]+'</button>').join('');
 }
+function showHero(){return !USER||USER==='guest'}
 function vHome(){
   const cat=S.artCat||'Все';
   const steps=homeSteps();let next=-1;steps.forEach((x,i)=>{if(next<0&&!stepDone(x[0]))next=i});
@@ -3310,7 +3411,7 @@ function vHome(){
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
   const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
-  return heroHtml()+todayBanner()+proj+backupBanner()+
+  return (showHero()?heroHtml():'')+todayBanner()+proj+backupBanner()+
     '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Узнали о скидке сами? Добавьте её постером. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+addForm+'</details>'+
     '<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
@@ -3631,13 +3732,13 @@ function vLocations(){
 /* ---------- раскадровка ---------- */
 function findFrame(id){const ids=Object.keys(S.story);for(let i=0;i<ids.length;i++){const f=S.story[ids[i]].find(x=>x.id===id);if(f)return f}return null}
 function vStory(){
-  const head='<header class="head"><div class="slate"></div><h1>'+t('Раскадровка')+'</h1><p>Рисуйте кадры пальцем или мышью и подписывайте их. Рисунки хранятся в вашем браузере.</p></header>';
+  const head=hd(t('Раскадровка'),'Рисуйте кадры пальцем или мышью и подписывайте их. Рисунки хранятся в вашем браузере.',S.scenes.length?'<button class="btn" type="button" data-c="sbAdd">'+icon('plus')+'Добавить кадр</button>'+dlMenu(ddi('data-c="print"','PDF через печать')):'');
   if(!S.scenes.length)return head+NEED_SCENES('Раскадровка строится по сценам — сначала разберите сценарий.');
   const sid=S.storyScene&&S.scenes.some(s=>s.id===S.storyScene)?S.storyScene:S.scenes[0].id;
   const list=S.story[sid]||[];
   const top='<div class="row noprint" style="margin-bottom:12px"><label>Сцена <select data-a="sbscene" data-r="1" style="margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:9px 12px;max-width:60vw">'+sceneOpts(sid,false)+'</select></label><span class="muted" style="font-size:14px">Нажмите на кадр, чтобы рисовать на весь экран.</span></div>';
-  const frames=list.length?'<div class="frames">'+list.map((f,i)=>'<div class="frame"><canvas class="sb-cv" data-id="'+f.id+'" width="1280" height="720" aria-label="Кадр '+(i+1)+'"></canvas><input data-a="sbcap" data-id="'+f.id+'" value="'+esc(f.cap||'')+'" placeholder="Кадр '+(i+1)+': что в кадре"><div class="row noprint" style="gap:6px"><button class="btn" type="button" data-c="sbOpen" data-id="'+f.id+'" style="padding:6px 14px;font-size:14px">'+icon('pencil')+'Рисовать</button><button class="btn sec" type="button" data-c="sbClear" data-id="'+f.id+'" style="padding:6px 12px;font-size:14px">Очистить</button><button class="x" type="button" data-c="sbDel" data-id="'+f.id+'" aria-label="Удалить кадр">×</button></div></div>').join('')+'</div>':'<div class="empty"><b>Кадров пока нет</b>Нажмите «Добавить кадр» и нарисуйте первый.</div>';
-  const add='<div class="row noprint" style="margin-top:12px"><button class="btn" type="button" data-c="sbAdd">'+icon('plus')+'Добавить кадр</button><button class="btn sec" type="button" data-c="print">'+icon('print')+'Печать / PDF</button></div>';
+  const frames=list.length?'<div class="frames">'+list.map((f,i)=>'<div class="frame"><canvas class="sb-cv" data-id="'+f.id+'" width="1280" height="720" aria-label="Кадр '+(i+1)+'"></canvas><input data-a="sbcap" data-id="'+f.id+'" value="'+esc(f.cap||'')+'" placeholder="Кадр '+(i+1)+': что в кадре"><div class="row noprint" style="gap:6px"><button class="btn sec" type="button" data-c="sbOpen" data-id="'+f.id+'" style="padding:6px 14px;font-size:14px">'+icon('pencil')+'Рисовать</button><button class="btn sec" type="button" data-c="sbClear" data-id="'+f.id+'" style="padding:6px 12px;font-size:14px">Очистить</button><button class="x" type="button" data-c="sbDel" data-id="'+f.id+'" aria-label="Удалить кадр">×</button></div></div>').join('')+'</div>':'<div class="empty"><b>Кадров пока нет</b>Нажмите «Добавить кадр» и нарисуйте первый.</div>';
+  const add='<div class="row noprint" style="margin-top:12px"><button class="btn sec" type="button" data-c="sbAdd">'+icon('plus')+'Ещё кадр</button></div>';
   return head+'<div class="col">'+panel('sbp','pencil','Кадры сцены',top+frames+add)+'</div>';
 }
 function paintStory(){
@@ -3678,7 +3779,7 @@ function applyBT(type,days){
 }
 function budgetTplPanel(){
   const body='<div class="fields"><label>Тип проекта<select id="bt-type">'+Object.keys(BT).map(k=>'<option value="'+k+'">'+BT[k].n+'</option>').join('')+'</select></label><label>Съёмочных дней<input id="bt-days" type="number" min="1" step="1" value="'+(S.scenes.length?Math.max(1,maxDay()):2)+'"></label>'+
-    '<div class="wide row"><button class="btn" type="button" data-c="btApply">'+icon('plus')+'Добавить строки шаблона</button><span class="muted" style="font-size:14px">Строки добавятся к смете. Ставки с пометкой «прайс» взяты у ренталов, «оценка» — ориентир.</span></div></div>';
+    '<div class="wide row"><button class="btn sec" type="button" data-c="btApply">'+icon('plus')+'Добавить строки шаблона</button><span class="muted" style="font-size:14px">Строки добавятся к смете. Ставки с пометкой «прайс» взяты у ренталов, «оценка» — ориентир.</span></div></div>';
   return panel('btpl','budget','Шаблон сметы под тип проекта',body);
 }
 
@@ -3737,7 +3838,7 @@ function render(){
   if(ROLE_TABS[S.role].indexOf(S.tab)<0)S.tab='home';
   S.seen[S.tab]=true;
   applyTheme();renderAcct();
-  document.body.classList.toggle('homebg',S.tab==='home');
+  document.body.classList.toggle('homebg',S.tab==='home'&&showHero());
   if(TOOL_IDS.indexOf(S.tab)<0&&document.body.classList.contains('fs'))setFS(false);
   if(S.tab==='home'){const im=S.heroImg||PHOTO_BG;document.documentElement.style.setProperty('--hb-img',im?"url('"+im+"')":'none')}
   renderChrome();
@@ -3746,7 +3847,10 @@ function render(){
   ['USD','EUR','RUB'].forEach(k=>{const el=$('#r'+k);if(el&&document.activeElement!==el)el.value=S.rates[k]});
   const views={home:vHome,proj:vProj,script:vScript,kpp:vKpp,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
   let page;try{page=(views[S.tab]||views.home)()}catch(err){console.error(err);page='<div class="empty"><b>Раздел не открылся</b>Произошла ошибка: '+esc(String((err&&err.message)||err))+'. Обновите страницу. Если повторится, пришлите этот текст.</div>'}
-  $('#main').innerHTML=toolBar()+page+sloganHtml();$('#main').dataset.title=S.name;
+  const ph=(secOf(S.tab)==='proj'||(S.tab==='home'&&!showHero()))?projHead():'';
+  $('#main').innerHTML=ph+toolBar()+page+sloganHtml();
+  {const pc=$('.tstrip [aria-pressed="true"]');if(pc)pc.parentNode.scrollLeft=pc.offsetLeft-48}
+  {const tp=$('.top');if(tp)document.documentElement.style.setProperty('--toph',(innerWidth<=860?tp.offsetHeight:0)+'px')}$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
   if(S.tab==='budget')updateTotals();
   if(S.tab==='lights'){paintLight();paintInspector();if(PREF.lt3d)lt3Mount()}
