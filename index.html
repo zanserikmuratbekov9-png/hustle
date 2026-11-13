@@ -1312,6 +1312,17 @@ table.kpp-t td:nth-child(2){min-width:140px}table.kpp-t td:nth-child(6){min-widt
 table.kpp-t td:nth-child(7) input{min-width:110px}table.kpp-t td:nth-child(8) input{min-width:170px}table.kpp-t td:nth-child(11) input{min-width:150px}
 table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 @media print{table.kpp-t{min-width:0;font-size:10px}.kpp-bar input{border:0;background:none;padding:0}}
+
+/* поле сценария: в светлой теме тёмное с белым текстом, в тёмной — светлое с тёмным текстом */
+:root body textarea.script.script{background:#F4F1E8!important;color:#141A33!important;caret-color:#141A33;border:1px solid #D9D3C2!important}
+:root body textarea.script.script::placeholder{color:#7A7F94!important}
+:root[data-theme="light"] body textarea.script.script{background:#141A33!important;color:#FFFFFF!important;caret-color:#FFD23F;border:1px solid #141A33!important}
+:root[data-theme="light"] body textarea.script.script::placeholder{color:#9AA3C2!important}
+:root[data-theme="light"] body textarea.script.script::selection{background:#FFD23F;color:#141A33}
+@media (prefers-color-scheme:light){
+:root:not([data-theme="dark"]) body textarea.script.script{background:#141A33!important;color:#FFFFFF!important;caret-color:#FFD23F;border:1px solid #141A33!important}
+:root:not([data-theme="dark"]) body textarea.script.script::placeholder{color:#9AA3C2!important}
+:root:not([data-theme="dark"]) body textarea.script.script::selection{background:#FFD23F;color:#141A33}}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
