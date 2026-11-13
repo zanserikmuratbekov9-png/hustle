@@ -1135,6 +1135,17 @@ main{padding-top:22px}
 .scv-ai{max-width:640px;margin:18px auto 0}
 .scv-ai h3{font-size:15px;margin:0 0 10px}
 @media (max-width:560px){.sv-cue{margin-left:22%!important}.sv-par{margin-left:18%!important}.sv-dlg{margin-left:8%!important;margin-right:4%}}
+/* светлая тема: исправления к освежённому виду (там цвета рассчитаны на тёмный фон) */
+:root[data-theme="light"] .tool{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 2px 0 var(--line)}
+:root[data-theme="light"] .tool b{color:var(--ink)}
+:root[data-theme="light"] .tool small{color:var(--muted)}
+:root[data-theme="light"] .tool:hover{border-color:var(--btn-y,#f5b700)}
+:root[data-theme="light"] .btn.sec,.land-cta .btn.sec{color:var(--ink)!important;box-shadow:inset 0 0 0 1.5px var(--line)!important}
+:root[data-theme="light"] .chip{border-color:var(--line);color:var(--ink)}
+:root[data-theme="light"] .chip[aria-pressed="true"]{color:var(--btn-y-ink,#141A3C);background:var(--btn-y,#FFD23F);border-color:var(--btn-y,#FFD23F)}
+:root[data-theme="light"] .fields input,.fields select,.fields textarea,.grid input,.grid select,.searchbox{background:var(--soft);border-color:var(--line);color:var(--ink)}
+:root[data-theme="light"] .scc,.ai{border-color:var(--line)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tool{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 2px 0 var(--line)}:root:not([data-theme="dark"]) .tool b{color:var(--ink)}:root:not([data-theme="dark"]) .tool small{color:var(--muted)}:root:not([data-theme="dark"]) .tool:hover{border-color:var(--btn-y,#f5b700)}:root:not([data-theme="dark"]) .btn.sec,.land-cta .btn.sec{color:var(--ink)!important;box-shadow:inset 0 0 0 1.5px var(--line)!important}:root:not([data-theme="dark"]) .chip{border-color:var(--line);color:var(--ink)}:root:not([data-theme="dark"]) .chip[aria-pressed="true"]{color:var(--btn-y-ink,#141A3C);background:var(--btn-y,#FFD23F);border-color:var(--btn-y,#FFD23F)}:root:not([data-theme="dark"]) .fields input,.fields select,.fields textarea,.grid input,.grid select,.searchbox{background:var(--soft);border-color:var(--line);color:var(--ink)}:root:not([data-theme="dark"]) .scc,.ai{border-color:var(--line)}}
 </style>
 </head>
 <body>
