@@ -1032,7 +1032,7 @@ body.sbed-open{overflow:hidden}
 body.ro #main :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea){pointer-events:none;opacity:.8}
 .sb3-kind{position:relative}.sb3-kind select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
 .sb3-help{font-size:12.5px;opacity:.75;white-space:nowrap;flex:none}
-.land-vid{margin:18px 0 0;max-width:280px}.land-vid video{width:100%;aspect-ratio:9/16;border-radius:20px;background:#0b1450;display:block;object-fit:cover}.land-vid figcaption{margin-top:8px;font-size:13px;opacity:.8}
+
 .rent-fold{margin-top:20px}
 
 /* ===== v9: освежённый вид — чище, больше воздуха, один акцент ===== */
@@ -1127,9 +1127,8 @@ main{padding-top:22px}
     <div class="wm"><b>HUSTLE</b></div>
     <h1>Рабочий стол для съёмок</h1>
     <p class="land-lead">Кино, клипы и реклама: сценарий, план съёмок, смета, вызывной лист, светосхема и раскадровка в одном месте. Загрузите сценарий, и HUSTLE подготовит основу для всей производственной работы.</p>
-    <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button><button class="btn big sec" type="button" data-c="guest">Попробовать без регистрации</button></div>
-    <p class="land-note">Сейчас все инструменты бесплатны: сайт в открытом тестировании. Без регистрации проект хранится только в этом браузере, сохраняйте копию в файл.</p>
-    <figure class="land-vid"><video src="media/do-posle.mp4" poster="media/do-posle.jpg" controls playsinline preload="none" aria-label="Ролик: подготовка к съёмке до и после HUSTLE"></video><figcaption>30 секунд: как выглядит подготовка к съёмке «до» и «после»</figcaption></figure>
+    <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button></div>
+    <p class="land-note">Сейчас все инструменты бесплатны: сайт в открытом тестировании.</p>
     <p class="join-note" id="joinNote" hidden>Вас пригласили в проект команды. Войдите или создайте аккаунт, и проект откроется.</p>
    </div>
   <div class="auth-card" id="authCard">
@@ -1480,7 +1479,7 @@ function renderAuth(){
   }
   $('#authForm').innerHTML=h;
   const note=$('#authNote');
-  if(note)note.textContent=cloud?'Проект сохраняется в облаке и доступен с любого устройства после входа. Демо без аккаунта хранит данные только в этом браузере.':'Аккаунт нужен, чтобы держать несколько проектов в одном браузере. Он не защищает данные от других пользователей этого компьютера и не работает на других устройствах. Для публичного запуска и платной подписки нужна серверная авторизация.';
+  if(note)note.textContent=cloud?'Проект сохраняется в облаке и доступен с любого устройства после входа.':'Аккаунт нужен, чтобы держать несколько проектов в одном браузере. Он не защищает данные от других пользователей этого компьютера и не работает на других устройствах. Для публичного запуска и платной подписки нужна серверная авторизация.';
   $('#authMsg').textContent='';
 }
 function showAuth(keepMode){
