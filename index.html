@@ -2094,7 +2094,7 @@ function scriptCheck(){
   const out=[],M=sceneModel(),sc=S.scenes,add=(sev,id,t,d,fix)=>out.push({sev:sev,sc:id,t:t,d:d||'',fix:fix||null});
   if(!S.script.trim())return out;
   if(!sc.length){add('err',0,'Сцены не найдены','Каждая сцена должна начинаться с заголовка: «ИНТ.» или «НАТ.», место и время суток. Например: ИНТ. КВАРТИРА МАРИИ — НОЧЬ.');return out}
-  if(M.pre&&M.pre.length)add('tip',0,'Перед первой сценой есть текст','Это '+M.pre.length+' строк (титульный лист или заметки). В разбор они не попадают.');
+  if(M.pre&&M.pre.length)add('tip',0,'Перед первой сценой есть текст','Это '+M.pre.length+' '+plural(M.pre.length,'строка','строки','строк')+' (титульный лист или заметки). В разбор они не попадают.');
   const nums=M.list.map(x=>x.num).filter(Boolean);
   if(nums.length>1){for(let i=1;i<nums.length;i++){if(nums[i]!==nums[i-1]+1){add('warn',0,'Номера сцен идут не по порядку','После сцены '+nums[i-1]+' стоит '+nums[i]+'. Проверьте нумерацию.');break}}}
   sc.forEach((s,i)=>{
