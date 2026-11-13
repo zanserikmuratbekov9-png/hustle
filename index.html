@@ -1507,7 +1507,7 @@ function authError(e){
   if(m.indexOf('weak_password')>-1||(m.indexOf('password')>-1&&m.indexOf('should')>-1))return 'Пароль слишком простой: нужно не меньше 8 символов, лучше буквы и цифры.';
   if(m.indexOf('over_email_send_rate_limit')>-1||m.indexOf('over_request_rate_limit')>-1||(m.indexOf('rate')>-1&&m.indexOf('limit')>-1))return 'Слишком много попыток. Подождите немного и повторите.';
   if(m.indexOf('otp_expired')>-1||m.indexOf('token has expired')>-1||m.indexOf('invalid')>-1&&m.indexOf('token')>-1)return 'Код неверный или устарел. Проверьте цифры или запросите новый код.';
-  if(m.indexOf('failed to fetch')>-1||m.indexOf('network')>-1)return 'Нет связи с сервером. Проверьте интернет.';
+  if(m.indexOf('failed to fetch')>-1||m.indexOf('load failed')>-1||m.indexOf('network')>-1||m.indexOf('fetch')>-1&&m.indexOf('error')>-1)return 'Сервер сейчас не отвечает. Проверьте интернет и попробуйте ещё раз через пару минут.';
   const raw=String((e&&(e.message||e.code))||'').slice(0,160);
   return 'Не удалось выполнить действие. Попробуйте ещё раз чуть позже.'+(raw?' Причина: '+raw:'');
 }
