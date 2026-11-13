@@ -1148,13 +1148,7 @@ main{padding-top:22px}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tool{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 2px 0 var(--line)}:root:not([data-theme="dark"]) .tool b{color:var(--ink)}:root:not([data-theme="dark"]) .tool small{color:var(--muted)}:root:not([data-theme="dark"]) .tool:hover{border-color:var(--btn-y,#f5b700)}:root:not([data-theme="dark"]) .btn.sec,.land-cta .btn.sec{color:var(--ink)!important;box-shadow:inset 0 0 0 1.5px var(--line)!important}:root:not([data-theme="dark"]) .chip{border-color:var(--line);color:var(--ink)}:root:not([data-theme="dark"]) .chip[aria-pressed="true"]{color:var(--btn-y-ink,#141A3C);background:var(--btn-y,#FFD23F);border-color:var(--btn-y,#FFD23F)}:root:not([data-theme="dark"]) .fields input,.fields select,.fields textarea,.grid input,.grid select,.searchbox{background:var(--soft);border-color:var(--line);color:var(--ink)}:root:not([data-theme="dark"]) .scc,.ai{border-color:var(--line)}}
 /* ===== фон сайта: точечное фото облаков, лого на главной ===== */
 body::before{display:block!important;content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;image-rendering:pixelated;
-  background:linear-gradient(rgba(12,23,69,.84),rgba(12,23,69,.93)),url(media/bg-dark.png) center top/cover no-repeat #0C1745!important}
-body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,.05) 0%,rgba(12,23,69,.35) 55%,rgba(12,23,69,.88) 100%),url(media/bg-dark.png) center top/cover no-repeat #0C1745!important}
-:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.80),rgba(255,255,255,.9)),url(media/bg-light.png) center top/cover no-repeat #fff!important}
-:root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.8) 100%),url(media/bg-light.png) center top/cover no-repeat #fff!important}
-@media (prefers-color-scheme:light){
- :root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.80),rgba(255,255,255,.9)),url(media/bg-light.png) center top/cover no-repeat #fff!important}
- :root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.8) 100%),url(media/bg-light.png) center top/cover no-repeat #fff!important}}
+  }
 body,body.homebg{background:transparent}
 .yf-logo{width:min(78vw,560px);aspect-ratio:1571/637;background:#FFD23F;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat;filter:drop-shadow(0 6px 0 #0C1745) drop-shadow(0 18px 40px rgba(12,23,69,.55));transform:rotate(-3deg)}
 .homebg .yf-slogan{font-size:clamp(22px,3.4vw,42px);color:#fff;text-shadow:0 2px 0 #0C1745,0 0 24px rgba(12,23,69,.9)}
@@ -1162,39 +1156,9 @@ body,body.homebg{background:transparent}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .homebg .yf-slogan{color:#0C1745;text-shadow:0 0 18px #fff,0 0 4px #fff}}
 :root[data-theme="light"] .homebg .addp summary,:root[data-theme="light"] .homebg .site-foot,:root[data-theme="light"] .homebg .sec-h h2,:root[data-theme="light"] .homebg .sec-h p{color:#0C1745;text-shadow:0 0 10px #fff,0 0 3px #fff}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .homebg .addp summary,:root:not([data-theme="dark"]) .homebg .site-foot,:root:not([data-theme="dark"]) .homebg .sec-h h2,:root:not([data-theme="dark"]) .homebg .sec-h p{color:#0C1745;text-shadow:0 0 10px #fff,0 0 3px #fff}}
-/* ===== фон сайта: синяя миллиметровка (blueprint) ===== */
-body::before{background:linear-gradient(rgba(12,23,69,.82),rgba(12,23,69,.9)),linear-gradient(rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,linear-gradient(90deg,rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,#0664A1!important;image-rendering:auto}
-body.homebg::before{background:linear-gradient(rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,linear-gradient(90deg,rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,radial-gradient(120% 80% at 50% 30%,#0A6DB0,#0664A1 60%,#05558A),#0664A1!important}
-body.homebg::after{content:"";position:fixed;inset:14px;z-index:-1;pointer-events:none;border:2px solid rgba(196,225,241,.85);box-shadow:inset 0 0 0 16px transparent,inset 0 0 0 18px rgba(196,225,241,.55)}
-:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.9)),linear-gradient(rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,linear-gradient(90deg,rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,#0664A1!important}
-:root[data-theme="light"] body.homebg::before{background:linear-gradient(rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,linear-gradient(90deg,rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,radial-gradient(120% 80% at 50% 30%,#0A6DB0,#0664A1 60%,#05558A),#0664A1!important}
-@media (prefers-color-scheme:light){
- :root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.9)),linear-gradient(rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,linear-gradient(90deg,rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,#0664A1!important}
- :root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,linear-gradient(90deg,rgba(170,210,235,.42) 1.5px,transparent 1.5px) -1px -1px/25px 25px,radial-gradient(120% 80% at 50% 30%,#0A6DB0,#0664A1 60%,#05558A),#0664A1!important}}
 .homebg .yf-slogan,:root[data-theme="light"] .homebg .yf-slogan{color:#fff!important;text-shadow:0 2px 0 #04406a,0 0 20px rgba(4,40,80,.6)!important}
 :root[data-theme="light"] .homebg .addp summary,:root[data-theme="light"] .homebg .site-foot{color:#fff!important;text-shadow:0 1px 0 #04406a!important}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .homebg .yf-slogan,:root:not([data-theme="dark"]) .homebg .addp summary,:root:not([data-theme="dark"]) .homebg .site-foot{color:#fff!important;text-shadow:0 1px 0 #04406a!important}}
-.yf-logo{filter:drop-shadow(0 6px 0 #04406a) drop-shadow(0 18px 40px rgba(4,40,80,.5))}
-/* ===== фон сайта: синяя сетка-волна (фото повернуто горизонтально; на узких экранах — вертикальное) ===== */
-body::before{background:linear-gradient(rgba(12,23,69,.72),rgba(12,23,69,.86)),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
-body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
-:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
-:root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}:root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-h.jpg) center/cover no-repeat #1b2a6b!important}}
-@media (max-width:700px) and (orientation:portrait){
-body::before{background:linear-gradient(rgba(12,23,69,.72),rgba(12,23,69,.86)),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
-body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
-:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
-:root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}:root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.15) 55%,rgba(12,23,69,.6) 100%),url(media/bg-grid-v.jpg) center/cover no-repeat #1b2a6b!important}}
-}
-body.homebg::after{display:none}
-/* ===== фон сайта: синяя текстура с узором ===== */
-body::before{background:linear-gradient(rgba(12,23,69,.62),rgba(12,23,69,.8)),url(media/bg-tex.jpg) center/cover no-repeat #1d4f8f!important}
-body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.1) 55%,rgba(12,23,69,.5) 100%),url(media/bg-tex.jpg) center/cover no-repeat #1d4f8f!important}
-:root[data-theme="light"] body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-tex.jpg) center/cover no-repeat #1d4f8f!important}
-:root[data-theme="light"] body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.1) 55%,rgba(12,23,69,.5) 100%),url(media/bg-tex.jpg) center/cover no-repeat #1d4f8f!important}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:linear-gradient(rgba(255,255,255,.86),rgba(255,255,255,.92)),url(media/bg-tex.jpg) center/cover no-repeat #1d4f8f!important}:root:not([data-theme="dark"]) body.homebg::before{background:linear-gradient(180deg,rgba(12,23,69,0) 0%,rgba(12,23,69,.1) 55%,rgba(12,23,69,.5) 100%),url(media/bg-tex.jpg) center/cover no-repeat #1d4f8f!important}}
 /* ===== фон сайта: небо, облако и холм ===== */
 body::before{background:url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}
 body.homebg::before{background:url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}
@@ -1415,6 +1379,37 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 @media (max-width:980px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tour-main{grid-template-columns:1fr}.rolec{grid-template-columns:1fr}}
 @media (max-width:760px){.tour{grid-template-columns:1fr}.tour-steps{flex-direction:row;overflow-x:auto;padding-bottom:4px}.tour-steps li{flex:none}.tour-steps button{width:auto;padding:8px 12px;font-size:13.5px;white-space:nowrap}.tourm-card{padding:18px 14px}.tour-x{top:6px;right:6px}}
 @media (max-width:560px){.bento{grid-template-columns:1fr}.bx-script,.bx-plan{grid-column:auto;grid-row:auto}.mk-plan div{grid-template-columns:62px 1fr}.mk-plan span{display:none}.tour-main{padding:14px}.tour-dots{display:none}}
+
+/* меню по этапам */
+.tng{display:block;margin:8px 0 2px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.tng:first-child{margin-top:2px}
+.app.rail .tng{display:none}
+/* единая заглушка */
+.empty.need{display:flex;flex-direction:column;align-items:center;gap:6px;padding:34px 20px;background:var(--surface);border-style:dashed}
+.empty.need .need-ic{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:#FFD23F;color:#1E3A8A;margin-bottom:6px}
+.empty.need .need-ic .ic{width:26px;height:26px}
+.empty.need b{font-size:19px;margin:0}
+.empty.need span{max-width:520px}
+/* пульт проекта */
+.pult{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px;align-items:start}
+.pult-st{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.pst-h{display:flex;justify-content:space-between;align-items:baseline}.pst-h b{font-family:'Unbounded','Onest',system-ui,sans-serif;font-size:16px}.pst-h span{font-size:13px;color:var(--muted);font-weight:700}
+.pst-bar{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;margin:2px 0 8px}.pst-bar i{display:block;height:100%;background:#FFD23F;border-radius:3px}
+.pst-i{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:12px}
+.pst-i:hover{background:var(--soft)}.pst-i:focus-visible{outline:3px solid var(--accent)}
+.pst-ic{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--ink)}.pst-ic .ic{width:18px;height:18px}
+.pst-t{display:flex;flex-direction:column;min-width:0;flex:1}.pst-t b{font-size:14.5px}.pst-t small{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pst-s{flex:none;width:12px;height:12px;border-radius:50%}.pst-s.ok{background:#22A06B}.pst-s.no{border:2px solid #E0A400;box-sizing:border-box}.pst-s.na{background:transparent}
+.pult-shift{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;margin-top:14px;padding:16px 18px;border-radius:20px;background:var(--surface);border:1px solid var(--line);border-left:5px solid #FFD23F;color:var(--ink)}
+.ps-l{display:flex;flex-direction:column}.ps-l small{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.ps-l b{font-family:'Unbounded','Onest',system-ui,sans-serif;font-size:18px}.ps-l span{font-size:13.5px;color:var(--muted)}
+.ps-m{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+@media (max-width:980px){.pult{grid-template-columns:1fr}}
+@media (max-width:640px){.pult-shift{grid-template-columns:1fr}.pult-shift .btn{width:100%;justify-content:center}}
+
+.calcs{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))!important}.calcs>.card{min-width:0}.calcs .fields label{min-width:0}.calcs .fields input{min-width:0;width:100%;box-sizing:border-box}
+
+.phead .dd-pop .ghost{justify-content:flex-start!important;text-align:left!important;font-size:15px}
+.phead .dd-pop label.ghost{display:flex;align-items:center;gap:8px}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
@@ -1536,15 +1531,8 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
             <small>Курс Нацбанка РК на 09.10.2026. Сайт сам курс не обновляет: введите свежий ниже (₸ за единицу).</small>
             <div class="rates"><label>$<input type="number" step="any" min="0" id="rUSD" data-a="rate" data-k="USD"></label><label>€<input type="number" step="any" min="0" id="rEUR" data-a="rate" data-k="EUR"></label><label>₽<input type="number" step="any" min="0" id="rRUB" data-a="rate" data-k="RUB"></label></div>
             <hr>
-            <button class="ghost" type="button" data-c="exportProj">Сохранить проект в файл</button>
-            <button class="ghost" type="button" data-c="exportAll">Все документы одним архивом (.zip)</button>
-            <label class="ghost" for="projIn" style="cursor:pointer">Открыть проект из файла</label>
-            <input class="sr" id="projIn" type="file" accept=".json,application/json" data-a="projfile">
-            <hr>
             <button class="ghost" type="button" data-tour-open>Как пользоваться HUSTLE</button>
-            <button class="ghost" type="button" data-c="demo" data-k="1">Пример: «Последний звонок»</button>
-            
-            <button class="ghost" type="button" data-c="reset" id="resetBtn">Начать с чистого листа</button>
+            <small>Сохранить, открыть или начать проект заново — в меню названия проекта вверху страницы проекта.</small>
             <button class="ghost" type="button" data-c="delAccount" id="delAccBtn" hidden>Удалить аккаунт и все данные</button>
           </div>
         </details>
@@ -1555,6 +1543,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   <div id="roBar" role="status">Только просмотр · изменения не сохраняются</div>
   <nav class="bottom" id="botnav" aria-label="Основное меню"></nav>
 </div>
+<input class="sr" id="projIn" type="file" accept=".json,application/json" data-a="projfile" aria-label="Открыть проект из файла">
 <div class="onb" id="onb" hidden></div>
 <div class="tourm" id="tourM" hidden></div>
 <div id="toast" role="status"></div>
@@ -2120,7 +2109,7 @@ function vBudget(){
     return panel('cat:'+c,'',esc(c)+(empty?' <small class="muted" style="font-weight:500">· пусто</small>':''),body,{right:'<b data-sub="'+esc(c)+'"></b>',defClosed:empty});
   }).join('');
   return hd('Смета','Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.',
-    dd(icon('upload')+'Загрузить','<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+'<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport">'+
+    dd(icon('upload')+'Загрузить',ddi('data-c="tab" data-k="rentals"',icon('store')+'Технику из рентала')+'<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+'<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport">'+
     dd(icon('download')+'Скачать',ddi('data-c="budXlsx"','Excel (.xlsx)')+ddi('data-c="budgetPdf"','PDF')+ddi('data-c="csvBudget"','CSV')+ddi('data-c="copyBudget"','Скопировать для таблицы')+ddi('data-c="print" data-dock="1"','Распечатать'),{right:true,primary:true}))+
   '<div class="tbar noprint" style="margin-bottom:10px">'+(cats.some(budOpen)?'<button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button>':'<button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все разделы</button>')+'</div>'+
   backupBanner()+'<div class="col">'+budgetTplPanel()+groups+'</div>'+vDock();
@@ -2394,7 +2383,7 @@ function ensurePlan(){if(S.scenes.some(s=>!S.assign[s.id]))autoPlan()}
 function maxDay(){let m=0;S.scenes.forEach(s=>{m=Math.max(m,S.assign[s.id]||0)});return m}
 function vSchedule(){
   const head=hd('План съёмок','Сцены собираются по локациям и раскладываются по дням с учётом нормы страниц в смену. Любую сцену можно перенести в другой день.',S.scenes.length?dlMenu(ddi('data-c="print"','PDF через печать')):'');
-  if(!S.scenes.length)return head+'<div class="empty"><b>Нет сцен для планирования</b>Сначала разберите сценарий.<br><br><button class="btn" type="button" data-c="tab" data-k="script">'+icon('script')+'Перейти к разбору сценария</button></div>';
+  if(!S.scenes.length)return head+NEED_SCENES('План съёмок раскладывает сцены по сменам — загрузите сценарий, и план соберётся сам.');
   ensurePlan();
   const md=maxDay(),total=S.scenes.reduce((a,s)=>a+s.e,0);let days='';
   for(let d=1;d<=md;d++){
@@ -2415,7 +2404,7 @@ function vSchedule(){
 function dayInfo(d){S.cs.info[d]=S.cs.info[d]||{date:'',call:'08:00',addr:'',notes:''};return S.cs.info[d]}
 function vCall(){
   const head=hd('Вызывной лист','Документ для группы на конкретный съёмочный день: сцены, места, время вызова актёров. Заполните поля и отправьте команде.',S.scenes.length?'<button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button>'+dlMenu(ddi('data-c="csPdf"','PDF')+ddi('data-c="csDocx"','Word (.docx)')+ddi('data-c="print"','Распечатать')):'');
-  if(!S.scenes.length)return head+'<div class="empty"><b>Нет данных для вызывного листа</b>Разберите сценарий — вызывной лист соберётся из плана съёмок.<br><br><button class="btn" type="button" data-c="tab" data-k="script">'+icon('script')+'Перейти к разбору сценария</button></div>';
+  if(!S.scenes.length)return head+NEED_SCENES('Вызывной лист собирается из плана съёмок: сцены дня, актёры и время вызова.');
   ensurePlan();
   const md=maxDay();if(S.cs.day>md||S.cs.day<1)S.cs.day=1;
   const d=S.cs.day,inf=dayInfo(d),sc=S.scenes.filter(s=>S.assign[s.id]===d),cast=[];
@@ -2551,7 +2540,7 @@ function sceneOpts(sel,withNone){
   return o;
 }
 const optList=(arr,sel)=>arr.map(a=>'<option'+(a===sel?' selected':'')+'>'+esc(a)+'</option>').join('');
-const NEED_SCENES=(msg)=>'<div class="empty"><b>Нужен разобранный сценарий</b>'+msg+'<br><br><button class="btn" type="button" data-c="tab" data-k="script">'+icon('script')+'Открыть сценарий</button> <button class="btn sec" type="button" data-c="demo" data-k="1">Загрузить пример</button></div>';
+const NEED_SCENES=(msg)=>'<div class="empty need"><span class="need-ic">'+icon('script')+'</span><b>Сначала нужен сценарий</b><span>'+msg+'</span><div class="row" style="justify-content:center;margin-top:14px"><button class="btn" type="button" data-c="tab" data-k="script">'+icon('upload')+'Загрузить сценарий</button><button class="btn sec" type="button" data-c="demo" data-k="1">Открыть пример</button></div></div>';
 
 /* ---------- ренталы ---------- */
 function rentalsCards(){
@@ -2905,7 +2894,7 @@ function vLights(){
     '<div class="lt'+(PREF.lt3d?' is3d':'')+'"><div>'+(PREF.lt3d?'<div id="lt3d" class="lt3d"><p class="lt3d-hint">Загружаю 3D…</p></div><p class="muted lt3d-help">Вращайте мышью или пальцем, колёсико или два пальца — приближение, правая кнопка или два пальца — сдвиг. Предметы можно перетаскивать по полу, выбранный предмет настраивается справа.</p>':'')+'<svg id="lt-svg"'+(PREF.lt3d?' hidden':'')+' viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
     '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>';
   const notes='<label class="fields" style="display:block"><span class="muted" style="font-size:14px">Настроение и заметки к свету</span><textarea rows="3" data-a="ltnote" style="width:100%;margin-top:4px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px" placeholder="Контраст, соотношение ключ/заполнение, откуда падает свет, что нужно для практиков">'+esc(L.note||'')+'</textarea></label>'+
-    '<div class="tbar noprint" style="margin-top:12px"><button class="btn sec" type="button" data-c="ltClear">Очистить схему</button></div>';
+    '<div class="tbar noprint" style="margin-top:12px"><button class="btn sec" type="button" data-c="tab" data-k="rentals">'+icon('store')+'Подобрать технику</button><button class="btn sec" type="button" data-c="ltClear">Очистить схему</button></div>';
   return hd('Светосхема','План света сверху: камера показывает угол кадра по объективу, свет — направление и цвет луча. Перетаскивайте предметы, меняйте мощность и температуру. Схема сохраняется отдельно для каждой сцены.',
     '<button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать схему</button>'+dlMenu(ddi('data-c="ltSvg"','Картинка SVG')+ddi('data-c="print"','PDF через печать')))+
     '<div class="col">'+panel('ltcv','bulb','Схема',canvas)+panel('ltleg','list','Экспликация света','<div id="lt-legend"></div><div style="height:12px"></div>'+notes)+'</div>';
@@ -3141,7 +3130,7 @@ function ltSvgString(){
 /* ---------- калькуляторы оператора ---------- */
 function vCalc(){
   const f=(k,l,step)=>'<label>'+l+'<input type="number" step="'+(step||'any')+'" min="0" data-a="calc" data-f="'+k+'" value="'+esc(S.calc[k])+'"></label>';
-  const card=(ic,title,inputs,out)=>'<article class="card"><h2>'+icon(ic)+' '+title+'</h2><div class="fields" style="grid-template-columns:1fr 1fr">'+inputs+'</div>'+out+'</article>';
+  const card=(ic,title,inputs,out)=>'<article class="card"><h2>'+icon(ic)+' '+title+'</h2><div class="fields" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">'+inputs+'</div>'+out+'</article>';
   return '<header class="head"><div class="slate"></div><h1>Калькуляторы</h1><p>Быстрые расчёты для площадки: выдержка, ND-фильтры, объём памяти и потеря света с расстоянием. Результат обновляется сразу.</p></header>'+
     '<div class="calcs">'+
     card('camera','Выдержка по углу затвора',f('fps','Кадров в секунду')+f('angle','Угол затвора, °'),'<p class="res" id="c-shutter"></p><small class="muted">Классика для кино: 180° даёт выдержку вдвое длиннее кадра.</small>')+
@@ -3201,58 +3190,6 @@ const DEAL_URL={
 const dealUrl=d=>DEAL_URL[d[0]]||(rentalById(d[3])||{url:'#'}).url;
 
 /* ---------- статьи ---------- */
-const ART_CATS=['Все','Кино КЗ','Мир кино','Школа'];
-const ARTICLES=[
-  {cat:'Кино КЗ',date:'до 1 марта 2027',title:'Open Frame Astana: заявки до 1 марта, финал 4 апреля',
-   sum:'Фестиваль короткого метра для авторов от 15 до 21 года принимает заявки до 1 марта 2027 года. Онлайн-отбор завершится 15 марта, очный финал пройдёт в Астане 4 апреля.',
-   src:'98mag.kz',url:'https://www.98mag.kz/likbez/kinofestival-open-frame-astana-2027-obyavil-o-starte-open-kollav2/'},
-  {cat:'Кино КЗ',date:'январь–март 2027',title:'Конкурс господдержки национальных фильмов: ждём объявления',
-   sum:'По правилам отбора центр поддержки национального кино размещает объявление о конкурсе до 15 января, а приоритетные темы утверждаются до 5 января. В прошлые годы приём заявок первого этапа начинался в марте.',
-   src:'Әділет',url:'https://adilet.zan.kz/rus/docs/V1900018405'},
-  {cat:'Мир кино',date:'ноябрь 2026 — январь 2027',title:'Визуалис: ближайшие сроки подачи — 27 ноября и 27 декабря',
-   sum:'Фестиваль в Санкт-Петербурге принимает заявки с 16 сентября 2026 по 10 сентября 2027 года. Следующие сроки: 27 ноября, 27 декабря и 27 января. Чем раньше подать, тем ниже взнос.',
-   src:'Festagent',url:'https://festagent.com/ru/festivals/visualis'},
-  {cat:'Мир кино',date:'июнь 2027',title:'Фестиваль короткого метра в Гримстаде пройдёт 9–13 июня',
-   sum:'Норвежский фестиваль принимает заявки с 1 октября 2026 года: ранний срок 1 февраля, стандартный 15 марта. Результаты отбора объявят 9 апреля.',
-   src:'Festagent',url:'https://festagent.com/ru/festivals/norvwegian_short'},
-  {cat:'Мир кино',date:'до 1 марта 2027',title:'Alternativa Film Festival 2027 открыл приём заявок',
-   sum:'Бесплатные заявки принимают с 29 октября 2026 по 1 марта 2027 года. Полнометражные фильмы ждут от авторов Африки, Азии и Латинской Америки, а короткометражный конкурс открыт только для Африки. Призовой фонд 120 000 $, фестиваль пройдёт в Африке в конце 2027 года.',
-   src:'Caravan.kz',url:'https://www.caravan.kz/news/alternativa-film-festival-2027-otkryl-priem-zajavok/'},
-  {cat:'Школа',date:'советы',title:'Как сэкономить на аренде техники',tool:['rentals','Открыть ренталы и скидки'],
-   body:['Планируйте съёмки кучно: арендовать на три смены подряд часто выгоднее, чем брать технику три раза по одной смене.','Сравните минимум три рентала и спросите про пакетную цену. Сразу уточните залог — иногда его можно снизить.','Берите только то, что есть в шот-листе и светосхеме. Лишняя «на всякий случай» линза или прибор — это деньги и лишний вес на площадке.','При выдаче проверьте комплектацию и сфотографируйте состояние техники. Запас аккумуляторов и карт памяти обычно стоит дёшево, а простой съёмочной группы — дорого.']},
-  {cat:'Школа',date:'для операторов',title:'Светосхема за 10 минут: три точки света',tool:['lights','Нарисовать светосхему'],
-   body:['Начните с трёх приборов. Ключевой даёт основную форму лицу, заполняющий смягчает тени, контровой отделяет героя от фона.','Решите, с какой стороны ключ: рядом с камерой свет мягче и «ровнее», с боковой стороны — контрастнее и драматичнее.','Чем крупнее источник относительно героя и чем ближе он стоит, тем мягче тень. Дальний маленький прибор даёт жёсткую тень.','Запишите схему: мощность, температуру и насадку каждого прибора. Так гаффер соберёт свет без вопросов.']},
-  {cat:'Школа',date:'для режиссёров',title:'Шот-лист: зачем он нужен и как составить',tool:['shots','Открыть шот-лист'],
-   body:['Шот-лист — это список кадров по сценам. Для каждого кадра записывают размер, ракурс, движение камеры и коротко — что происходит.','Он экономит время на площадке: оператор заранее знает, какие объективы и крепления нужны, а вы — сколько кадров реально успеть за смену.','Начните со сцен, которые нельзя перенести, и отметьте «обязательные» кадры. Остальное снимайте, если останется время.','После съёмки отмечайте снятое галочкой: в конце дня сразу видно, что осталось.']},
-  {cat:'Школа',date:'для операторов',title:'Правило 180° и выдержка',tool:['calc','Открыть калькуляторы'],
-   body:['Угол затвора 180° означает, что выдержка равна половине длительности кадра. При 24 кадрах в секунду это 1/48 секунды.','Такая выдержка даёт привычное «киношное» размытие движения. Короче выдержка — резче, «рубленее» движение; длиннее — смазаннее.','Если на улице слишком светло, не прикрывайте диафрагму до упора и не меняйте выдержку, а поставьте ND-фильтр — он убирает свет, не меняя картинку.']},
-  {cat:'Школа',date:'для режиссёров',title:'Экспликация за один вечер',tool:['explic','Открыть экспликацию'],
-   body:['Экспликация — это ответ на вопрос «каким будет мой фильм». Начните с одного предложения: кто герой, чего он хочет и что ему мешает.','Дальше коротко опишите тему, тон, визуальный язык и работу с актёрами. Добавьте два-три референса: кадры или фильмы, на которые вы хотите быть похожими.','Хорошая экспликация умещается на одну страницу и понятна человеку, который не читал сценарий.']}
-];
-
-function posterList(){
-  const custom=(S.posters||[]).map(p=>({custom:true,id:p.id,rental:p.rental,title:p.title,price:p.price,note:'акция рентала',url:p.url||'',badge:'Акция'}));
-  const ids=['r8-fx3','r8-a7c','r8-ls600','r8-amaran60','r8-podcast','r8-gopro','r8-sm7b','r8-xt3','r8-tele','r8-visico'];
-  const deals=ids.map(dealById).filter(Boolean).map(d=>({id:d[0],rental:rentalName(d[3]),title:d[1],price:(d[5]?'от ':'')+money(d[4]),note:'за сутки, по прайсу Rental8 на 12.10.2026 (на 8 часов дешевле)',url:dealUrl(d),badge:'Прайс',deal:true}));
-  return custom.concat(deals);
-}
-function posterHtml(p,i){
-  const link=p.url?'<a class="btn" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+icon('ext')+'Открыть</a>':'';
-  const add=p.deal?'<button class="btn sec" type="button" data-c="gearAdd" data-id="'+p.id+'">'+icon('plus')+'В список</button>':'';
-  const del=p.custom?'<button class="x" type="button" data-c="posterDel" data-id="'+p.id+'" aria-label="Удалить постер">×</button>':'';
-  return '<article class="poster p1">'+del+'<span class="pbadge">'+esc(p.badge)+'</span><div class="pr">'+esc(p.rental)+'</div><h3>'+esc(p.title)+'</h3><div class="pp">'+esc(p.price)+'</div><div class="pf">'+esc(p.note)+'</div><div class="row">'+link+add+'</div></article>';
-}
-function articleHtml(a){
-  const cls={'Кино КЗ':'','Мир кино':' world','Школа':' school'}[a.cat];
-  let body='';
-  if(a.body){
-    body='<details><summary>Читать статью</summary>'+a.body.map(t=>'<p>'+esc(t)+'</p>').join('')+'</details>'+
-      (a.tool?'<div class="row"><button class="btn sec" type="button" data-c="tab" data-k="'+a.tool[0]+'">'+esc(a.tool[1])+'</button></div>':'');
-  }else{
-    body='<p>'+esc(a.sum)+'</p><div class="row"><a class="link" href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer">Читать у источника: '+esc(a.src)+'</a></div>';
-  }
-  return '<article class="art"><div class="arow"><span class="cbadge'+cls+'">'+esc(a.cat)+'</span><span class="muted">'+esc(a.date)+'</span></div><h3>'+esc(a.title)+'</h3>'+body+'</article>';
-}
 /* ---------- ренталы: одна страница с подразделами ---------- */
 const stripHead=h=>h.replace(/<header class="head">[\s\S]*?<\/header>/,'');
 function vRentalsPage(){
@@ -3478,23 +3415,23 @@ const TOOL_IDS=TOOLS.map(x=>x.id);
 const CORE=['lights','story','script','schedule','budget','callsheet','shots','notes','explic','calc','kpp'];
 const HUB_FIRST=['lights','story'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
-const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
+const PAGE_IDS=['home','proj','rentals'].concat(TOOL_IDS);
 Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
-const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект'],['rentals','store','Рентал','Рентал']];
-const secOf=tab=>TOOL_IDS.indexOf(tab)>-1?'proj':tab;
+const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект']];
+const secOf=tab=>(TOOL_IDS.indexOf(tab)>-1||tab==='rentals')?'proj':tab;
 function closeMenus(){$$('details.menu').forEach(d=>{d.open=false})}
 /* компактное меню «Ещё ▾» вместо ряда кнопок */
 function dd(label,items,o){o=o||{};return '<details class="menu dd'+(o.cls?' '+o.cls:'')+'"><summary class="btn'+(o.primary?'':' sec')+' dd-b">'+label+'<i class="caret" aria-hidden="true">▾</i></summary><div class="menu-pop dd-pop'+(o.right?'':' l')+(o.wide?' wide':'')+'">'+items+'</div></details>'}
 function ddi(attrs,txt){return '<button class="ghost" type="button" '+attrs+'>'+txt+'</button>'}
 function ddh(t){return '<small class="dd-h">'+t+'</small>'}
-document.addEventListener('click',e=>{const it=e.target.closest('details.dd .menu-pop button,details.dd .menu-pop label');if(it){const d=it.closest('details.dd');setTimeout(()=>{if(d)d.open=false},0)}});
+document.addEventListener('click',e=>{const it=e.target.closest('details.dd .menu-pop button,details.dd .menu-pop label');if(it&&!it.dataset.keep){const d=it.closest('details.dd');setTimeout(()=>{if(d)d.open=false},0)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$$('details.dd[open]').forEach(d=>{d.open=false})});
 document.addEventListener('click',e=>{if(!e.target.closest('details.menu'))closeMenus()});
 
 function renderChrome(){
   const sec=secOf(S.tab);
   $('#topnav').innerHTML=TOP.map(x=>'<button class="tn" type="button" title="'+t(x[2])+'" data-c="tab" data-k="'+x[0]+'"'+((x[0]==='proj'?S.tab==='proj':sec===x[0])?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[2])+'</span></button>'+
-    (x[0]==='proj'?'<div class="tnsub" role="group" aria-label="Инструменты проекта">'+roleTools().map(y=>'<button class="tns" type="button" title="'+t(y.n)+'" data-c="tab" data-k="'+y.id+'"'+(S.tab===y.id?' aria-current="page"':'')+'>'+icon(y.ic)+'<span>'+t(y.n)+'</span></button>').join('')+'</div>':'')).join('');
+    (x[0]==='proj'?'<div class="tnsub" role="group" aria-label="Инструменты проекта">'+navGroups().map(g=>'<small class="tng">'+g[0]+'</small>'+g[1].map(y=>'<button class="tns" type="button" title="'+t(y.n)+'" data-c="tab" data-k="'+y.id+'"'+(S.tab===y.id?' aria-current="page"':'')+'>'+icon(y.ic)+'<span>'+t(y.n)+'</span></button>').join('')).join('')+'</div>':'')).join('');
   $('#botnav').innerHTML=TOP.map(x=>'<button class="bt" type="button" data-c="tab" data-k="'+x[0]+'"'+(sec===x[0]?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[3])+'</span></button>').join('');
   
   ['#topnav','#botnav'].forEach(q=>{const el=$(q);if(PREF.lang==='kk')el.setAttribute('lang','kk');else el.removeAttribute('lang')});
@@ -3504,11 +3441,15 @@ function renderChrome(){
   $('#avBtn').innerHTML='<span class="av">'+esc(String(nm).charAt(0).toUpperCase())+'</span><span class="avn"><b>'+esc(nm)+'</b><small>'+(USER==='guest'?'демо без аккаунта':'профиль и настройки')+'</small></span>';
 }
 const FS_SVG='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
-function roleTools(){
-  return TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&x.r.indexOf(S.role)>-1).sort((a,b)=>{const ia=HUB_FIRST.indexOf(a.id),ib=HUB_FIRST.indexOf(b.id);return (ia<0?9:ia)-(ib<0?9:ib)});
+const STAGES=[['Текст',['script','story','explic','notes']],['Подготовка',['schedule','kpp','budget','shots','lights','calc','rentals']],['Съёмочный день',['callsheet']]];
+const RENT_TOOL={id:'rentals',ic:'store',n:'Техника и рентал',d:'Цены Rental8, список техники и отправка в смету'};
+function navGroups(){
+  const mine=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&x.r.indexOf(S.role)>-1);
+  return STAGES.map(g=>[g[0],g[1].map(id=>id==='rentals'?RENT_TOOL:mine.find(x=>x.id===id)).filter(Boolean)]).filter(g=>g[1].length);
 }
+function roleTools(){return [].concat.apply([],navGroups().map(g=>g[1]))}
 function toolBar(){
-  if(TOOL_IDS.indexOf(S.tab)<0)return '';
+  if(TOOL_IDS.indexOf(S.tab)<0&&S.tab!=='rentals')return '';
   const list=roleTools();if(!list.some(x=>x.id===S.tab)){const c=TOOLS.find(x=>x.id===S.tab);if(c)list.push(c)}
   return '<div class="crumbs noprint"><button class="back" type="button" data-c="tab" data-k="proj">'+icon('left')+'<span>'+t('Проект')+'</span></button><div class="tstrip" role="group" aria-label="Инструменты">'+list.map(x=>'<button class="chip" type="button" data-c="tab" data-k="'+x.id+'" aria-pressed="'+(x.id===S.tab)+'">'+t(x.n)+'</button>').join('')+'</div></div>'+
     '<button class="fsfab noprint" type="button" data-c="fs" aria-label="Свернуть полноэкранный режим">'+FS_SVG+'<span>Свернуть</span></button>';
@@ -3524,7 +3465,8 @@ function projHead(){
   }else{
     projs=ddh('Проект')+'<button class="ghost ph-pi on" type="button" data-c="tab" data-k="proj"><b>'+esc(S.name)+'</b><small>хранится в этом браузере</small></button><hr>';
   }
-  projs+=ddi('data-c="tab" data-k="proj"',icon('briefcase')+'Обзор проекта')+'<label class="ghost" for="projIn" style="cursor:pointer">'+icon('upload')+'Открыть проект из файла</label>'+ddi('data-c="exportProj"',icon('download')+'Сохранить проект в файл');
+  projs+=ddi('data-c="tab" data-k="proj"',icon('briefcase')+'Пульт проекта')+'<hr>'+ddh('Файлы')+ddi('data-c="exportProj"',icon('download')+'Сохранить проект в файл')+ddi('data-c="exportAll"',icon('download')+'Все документы одним архивом (.zip)')+'<label class="ghost" for="projIn" style="cursor:pointer">'+icon('upload')+'Открыть проект из файла</label>'+
+    '<hr>'+ddi('data-c="demo" data-k="1"',icon('script')+'Открыть пример «Последний звонок»')+'<button class="ghost" type="button" data-c="reset" id="resetBtn" data-keep="1">'+(resetArmed?'Нажмите ещё раз — данные удалятся':'Начать с чистого листа')+'</button>';
   const name=dd('<span class="ph-n"><small>'+(isShared()?'Проект команды':'Проект')+'</small><b>'+esc(S.name)+'</b></span>',projs,{cls:'ph-proj',wide:true});
   const role=dd('<span class="ph-you">Вы:</span> '+icon(ROLES[S.role].i)+t(ROLES[S.role].t),ddh(t('Я работаю как'))+Object.keys(ROLES).map(k=>'<button class="ghost opt'+(S.role===k?' on':'')+'" type="button" data-c="role" data-k="'+k+'">'+icon(ROLES[k].i)+'<span>'+t(ROLES[k].t)+'</span></button>').join(''),{right:true});
   const ppl=[userName()];if(CLOUD&&own)TEAM.members.forEach(m=>ppl.push(m.member_name||m.member_email||'?'));
@@ -3605,13 +3547,6 @@ function todayBanner(){
 }
 /* ---------- главная ---------- */
 /* лого и слоган на главной — по центру всего экрана, а не колонки справа от меню */
-function heroCenter(){const m=document.querySelector('.homebg .yf-mid');if(!m)return;m.style.transform='';
-  if(innerWidth<861)return;const r=m.getBoundingClientRect(),main=document.querySelector('main').getBoundingClientRect();
-  let dx=innerWidth/2-(r.left+r.width/2);const lg=m.querySelector('.yf-logo');const half=lg?lg.getBoundingClientRect().width/2:0;
-  const minC=main.left+half+8;dx=Math.max(dx,minC-(r.left+r.width/2));if(Math.abs(dx)>2)m.style.transform='translateX('+dx.toFixed(0)+'px)'}
-addEventListener('resize',()=>{clearTimeout(window.__hc);window.__hc=setTimeout(heroCenter,120)});
-const HERO_LOGO_D='M136.0 710.2L125.0 710.4L115.0 709.4L99.0 705.4L89.0 701.4L81.0 697.1L72.0 691.3L63.5 684.0L56.9 677.0L51.6 670.0L47.0 661.9L42.8 652.0L40.8 645.0L39.5 637.0L39.8 618.0L42.9 604.0L48.9 587.0L56.7 571.0L64.8 557.0L74.9 542.0L88.6 524.0L128.1 477.0L143.0 458.0L158.2 435.0L167.3 416.0L170.2 407.0L172.2 398.0L173.1 384.0L171.3 370.0L162.7 335.0L161.8 326.0L161.9 314.0L163.6 302.0L166.9 291.0L170.6 282.0L178.5 268.0L185.7 258.0L194.9 247.0L207.2 235.0L225.0 220.5L237.0 213.8L243.0 211.7L251.0 210.3L260.0 210.4L266.0 211.6L276.0 216.6L281.2 221.0L285.1 226.0L289.1 234.0L291.4 245.0L291.2 256.0L288.2 268.0L284.2 278.0L279.1 288.0L251.5 333.0L243.6 348.0L237.9 362.0L235.8 370.0L235.0 376.3L234.9 384.0L236.0 389.8L238.8 396.0L242.0 400.0L247.0 403.4L253.0 405.3L259.0 405.6L265.0 404.5L273.0 401.2L278.0 398.1L288.8 389.0L300.4 376.0L309.1 363.0L320.3 341.0L327.3 323.0L340.8 284.0L350.7 261.0L355.8 251.0L362.7 240.0L371.6 228.0L379.6 219.0L395.0 204.5L406.0 196.0L421.0 186.6L437.0 179.5L449.0 176.8L461.0 176.5L472.0 178.6L482.0 183.6L488.6 189.0L494.3 196.0L498.3 204.0L500.5 212.0L501.2 222.0L500.4 230.0L498.4 238.0L495.1 246.0L491.2 253.0L484.3 263.0L473.0 275.6L450.0 296.5L415.0 325.0L404.7 335.0L396.9 344.0L387.0 358.0L378.9 374.0L374.8 386.0L372.1 401.0L371.6 416.0L372.7 427.0L377.9 449.0L385.9 469.0L416.4 534.0L429.4 568.0L435.4 590.0L438.2 610.0L437.2 629.0L433.2 645.0L430.3 652.0L425.2 661.0L414.7 674.0L405.0 682.3L399.0 686.3L392.0 690.2L384.0 693.3L376.0 695.4L367.0 696.7L350.0 696.2L338.0 693.3L330.0 690.1L321.0 685.2L316.0 681.6L307.6 674.0L302.6 668.0L297.8 661.0L293.7 653.0L288.7 639.0L285.5 624.0L283.9 602.0L285.6 572.0L297.3 495.0L298.2 482.0L297.2 470.0L295.3 463.0L292.3 457.0L289.0 453.0L285.0 449.8L281.0 447.7L275.0 445.9L269.0 445.4L261.0 445.8L253.1 448.0L245.0 451.7L237.3 457.0L231.8 462.0L225.9 469.0L220.8 477.0L216.9 485.0L212.7 497.0L207.8 519.0L203.6 552.0L202.6 569.0L202.6 588.0L205.5 626.0L205.6 643.0L203.4 657.0L199.3 668.0L194.3 677.0L188.2 685.0L182.0 691.2L174.0 697.2L167.0 701.5L155.0 706.5L149.0 708.2L136.0 710.2ZM1060.0 710.1L1047.0 710.2L1028.0 707.4L1013.0 702.4L1001.0 696.4L989.0 688.0L980.7 680.0L973.5 670.0L967.7 657.0L965.7 648.0L964.7 639.0L965.7 620.0L967.7 609.0L978.4 567.0L984.3 539.0L988.2 514.0L990.1 491.0L990.1 479.0L988.2 458.0L985.4 445.0L980.2 432.0L976.3 426.0L971.0 420.6L965.0 416.8L959.0 414.9L953.0 414.2L946.0 414.5L927.0 417.4L917.0 418.0L908.0 417.1L902.0 415.3L893.0 410.2L886.6 404.0L881.6 395.0L879.6 386.0L880.3 377.0L883.7 368.0L888.6 361.0L897.0 353.9L905.0 349.5L915.0 345.7L948.0 339.0L957.0 336.4L969.0 330.3L973.0 327.4L978.2 322.0L982.2 316.0L984.3 311.0L986.5 300.0L985.2 285.0L978.7 260.0L976.8 247.0L977.6 233.0L979.8 225.0L985.6 214.0L990.7 208.0L997.0 202.7L1004.0 198.8L1012.0 195.8L1024.0 193.8L1032.0 193.9L1042.0 195.7L1052.0 199.6L1060.0 204.6L1068.0 212.3L1074.0 221.1L1077.2 228.0L1079.5 238.0L1080.2 246.0L1079.5 254.0L1078.0 262.0L1075.3 270.0L1067.6 286.0L1045.9 321.0L1042.0 330.0L1040.7 335.0L1040.3 341.0L1040.9 345.0L1043.0 349.5L1046.0 352.9L1049.0 355.0L1054.0 357.0L1061.0 357.9L1073.0 356.1L1091.0 350.7L1101.0 348.6L1113.0 348.3L1121.0 349.7L1131.0 354.8L1136.5 360.0L1140.4 366.0L1143.3 376.0L1143.3 384.0L1140.5 394.0L1135.2 402.0L1127.0 409.3L1117.0 414.5L1111.0 416.5L1102.0 418.3L1074.0 421.8L1062.0 426.7L1056.2 431.0L1051.0 437.1L1046.9 444.0L1043.8 453.0L1041.4 468.0L1041.8 486.0L1045.9 506.0L1051.7 523.0L1058.6 538.0L1069.8 557.0L1081.9 574.0L1101.4 599.0L1113.3 616.0L1121.1 631.0L1124.1 640.0L1125.5 649.0L1125.2 660.0L1122.4 671.0L1117.3 681.0L1109.0 690.4L1100.0 697.3L1086.0 704.4L1077.0 707.4L1060.0 710.1ZM1318.0 696.2L1309.0 696.8L1298.0 696.3L1284.0 693.2L1270.0 688.3L1256.0 682.3L1232.0 670.3L1183.0 643.3L1152.0 624.2L1135.3 611.0L1127.6 603.0L1121.8 595.0L1117.8 588.0L1113.6 578.0L1111.7 570.0L1110.6 558.0L1111.7 544.0L1113.7 535.0L1120.7 515.0L1142.3 467.0L1153.3 439.0L1158.4 418.0L1159.8 400.0L1159.4 386.0L1158.4 378.0L1156.4 368.0L1153.2 357.0L1147.1 341.0L1126.7 298.0L1119.6 278.0L1117.6 268.0L1116.9 259.0L1117.6 246.0L1119.7 236.0L1122.7 228.0L1127.6 219.0L1130.5 215.0L1136.0 208.8L1143.0 203.0L1150.0 198.8L1157.0 195.9L1169.0 193.8L1181.0 194.4L1193.0 197.9L1204.0 203.8L1215.3 214.0L1223.3 225.0L1229.1 237.0L1233.3 252.0L1235.1 272.0L1233.2 295.0L1229.5 312.0L1215.9 358.0L1208.8 385.0L1204.9 405.0L1202.7 424.0L1202.3 452.0L1204.0 471.0L1209.0 494.0L1215.9 513.0L1222.0 524.7L1228.7 534.0L1238.0 543.4L1247.0 549.3L1259.0 554.3L1289.0 559.8L1299.0 562.6L1312.0 567.9L1325.0 575.9L1335.0 584.0L1346.3 596.0L1355.5 610.0L1360.5 622.0L1362.6 631.0L1362.6 648.0L1360.5 658.0L1356.4 668.0L1350.4 677.0L1341.0 686.4L1331.0 692.3L1326.0 694.3L1318.0 696.2ZM748.0 798.1L725.0 797.2L704.0 793.6L684.0 787.4L665.0 778.2L651.0 768.4L644.9 763.0L637.8 755.0L629.6 742.0L625.6 732.0L623.7 725.0L622.4 715.0L622.7 703.0L624.6 695.0L628.5 686.0L633.3 679.0L641.0 671.7L648.0 667.7L656.0 664.9L669.0 663.9L682.0 665.6L696.0 670.6L724.0 684.3L740.0 691.1L754.0 695.5L766.0 697.6L780.0 697.4L788.0 695.5L794.0 693.0L799.0 689.5L803.2 685.0L806.3 680.0L808.1 675.0L809.0 667.0L807.3 657.0L803.0 647.0L796.2 637.0L780.0 619.4L743.0 585.2L726.9 569.0L712.6 552.0L702.7 537.0L693.8 519.0L689.8 505.0L688.8 490.0L689.7 483.0L691.9 475.0L694.9 469.0L699.5 463.0L704.0 458.9L709.0 455.7L714.0 453.6L722.0 452.1L728.0 452.0L734.0 452.8L740.0 454.6L747.0 457.7L754.0 462.0L760.0 466.7L771.0 477.4L801.0 511.0L813.0 521.4L824.0 528.2L831.0 531.1L836.0 532.3L841.0 532.4L846.0 531.3L850.0 529.0L853.4 525.0L855.4 520.0L856.1 514.0L854.5 505.0L850.3 494.0L842.1 480.0L830.4 464.0L809.4 441.0L757.0 392.4L742.6 376.0L735.7 366.0L727.9 351.0L722.3 333.0L721.3 317.0L722.4 306.0L723.6 301.0L726.6 292.0L731.5 282.0L736.8 274.0L744.2 265.0L753.0 256.7L761.0 250.6L773.0 243.5L785.0 237.8L796.0 233.8L812.0 229.5L830.0 226.7L842.0 225.7L858.0 225.5L874.0 226.6L883.0 227.6L898.0 230.7L914.0 236.7L925.0 243.9L933.1 252.0L937.2 258.0L940.1 264.0L942.3 271.0L943.3 278.0L943.2 284.0L942.2 291.0L940.2 298.0L938.0 302.9L933.3 311.0L929.3 316.0L923.0 322.2L912.0 329.6L899.0 334.2L890.0 334.9L882.0 334.4L870.0 331.5L842.0 319.8L832.0 316.6L826.0 315.6L816.0 315.8L808.0 319.0L802.4 324.0L799.7 330.0L799.2 337.0L800.8 344.0L804.6 352.0L816.8 368.0L835.0 386.1L873.0 419.6L891.2 437.0L905.4 453.0L913.2 463.0L923.2 478.0L930.3 491.0L935.3 502.0L940.1 516.0L944.2 533.0L946.2 548.0L946.8 566.0L946.1 584.0L944.2 599.0L940.0 620.0L935.4 636.0L927.3 658.0L920.5 673.0L911.3 690.0L906.4 698.0L892.3 718.0L880.4 732.0L865.0 747.4L852.0 758.4L835.0 770.6L820.0 779.2L811.0 783.5L797.0 789.2L779.0 794.3L762.0 797.2L748.0 798.1ZM1480.0 636.1L1465.0 635.9L1449.0 634.2L1436.0 631.5L1423.0 627.5L1406.0 620.3L1390.0 611.4L1377.0 602.3L1363.3 591.0L1348.0 575.9L1334.8 561.0L1321.7 544.0L1311.7 529.0L1303.7 515.0L1295.8 498.0L1289.7 480.0L1285.7 462.0L1284.6 453.0L1283.9 432.0L1284.7 417.0L1287.8 397.0L1291.6 382.0L1297.7 365.0L1305.6 348.0L1313.6 335.0L1324.8 320.0L1336.0 308.1L1349.0 296.7L1362.0 287.6L1378.0 278.7L1392.0 272.7L1408.0 267.7L1422.0 264.8L1437.0 263.4L1448.0 263.5L1461.0 264.7L1476.0 267.8L1485.0 270.6L1499.0 276.5L1512.0 283.6L1522.0 290.7L1533.8 301.0L1542.1 310.0L1550.4 321.0L1558.0 334.1L1563.2 346.0L1567.1 359.0L1568.6 371.0L1568.3 382.0L1565.4 395.0L1562.0 402.9L1557.4 411.0L1548.6 422.0L1535.0 434.3L1520.0 444.3L1494.0 457.4L1463.0 469.3L1412.0 485.7L1404.0 489.5L1397.0 495.0L1393.4 501.0L1392.5 506.0L1392.8 510.0L1393.6 513.0L1396.5 518.0L1402.0 524.8L1409.0 531.2L1416.0 536.1L1424.0 540.4L1432.0 543.4L1440.0 545.3L1449.0 545.9L1457.0 545.3L1462.0 544.1L1469.8 541.0L1479.5 535.0L1488.0 528.1L1514.0 502.7L1528.0 492.7L1534.0 489.6L1542.0 486.6L1550.0 484.9L1557.0 484.6L1563.0 485.4L1571.0 487.9L1576.0 490.7L1582.0 495.7L1586.2 501.0L1590.0 508.0L1592.3 514.0L1593.9 522.0L1594.6 532.0L1594.0 541.0L1592.2 551.0L1588.1 563.0L1584.0 572.0L1576.1 585.0L1568.1 595.0L1561.0 602.3L1552.0 610.0L1543.0 616.3L1535.0 621.1L1522.0 627.2L1502.0 633.3L1491.0 635.1L1480.0 636.1ZM528.0 687.1L513.0 686.3L505.0 684.3L494.0 679.3L485.0 673.2L477.9 666.0L471.8 658.0L465.7 647.0L460.5 634.0L455.7 615.0L452.6 590.0L452.5 560.0L454.4 527.0L454.4 513.0L453.4 501.0L450.1 484.0L445.2 469.0L441.3 460.0L426.7 432.0L422.7 423.0L419.6 413.0L418.0 403.0L417.9 395.0L418.8 387.0L421.7 377.0L428.6 363.0L434.5 355.0L442.0 346.7L450.0 339.8L459.0 333.6L473.0 326.9L481.0 324.6L488.0 323.5L497.0 323.5L504.0 324.7L510.0 326.7L517.0 330.6L522.0 334.7L526.6 340.0L531.3 348.0L534.4 357.0L535.7 366.0L535.6 377.0L533.3 391.0L519.9 439.0L514.7 462.0L510.8 491.0L510.4 506.0L510.9 516.0L511.8 522.0L514.8 532.0L518.8 540.0L524.0 546.2L530.0 550.4L538.0 553.3L546.0 553.6L553.0 552.1L561.0 548.3L568.0 543.0L576.3 534.0L580.3 528.0L586.0 517.8L591.0 505.7L594.3 495.0L597.2 482.0L599.3 464.0L599.1 436.0L597.1 418.0L589.5 371.0L588.8 358.0L590.4 340.0L592.7 331.0L595.7 323.0L601.6 312.0L610.6 300.0L620.0 291.3L631.0 283.9L642.0 278.8L651.0 276.4L665.0 275.7L676.0 277.9L687.0 283.7L694.5 291.0L697.4 295.0L700.5 301.0L702.4 307.0L703.9 317.0L703.8 324.0L701.5 337.0L697.3 348.0L691.3 360.0L670.9 396.0L661.7 418.0L657.7 433.0L655.7 445.0L654.8 459.0L655.6 475.0L659.7 497.0L662.7 507.0L668.8 522.0L677.8 539.0L686.9 553.0L703.5 576.0L709.3 587.0L712.2 596.0L712.9 602.0L712.9 609.0L711.2 616.0L708.2 622.0L704.1 627.0L699.0 631.1L693.0 634.3L686.0 636.2L679.0 636.9L656.0 635.5L645.0 635.7L637.0 636.7L628.0 639.0L619.0 642.6L606.0 649.6L578.0 668.3L566.0 675.3L553.0 681.2L544.0 684.4L528.0 687.1ZM1387.7 448.0L1395.0 446.3L1406.0 442.3L1424.0 433.3L1440.5 422.0L1446.1 417.0L1452.0 409.8L1454.3 406.0L1456.4 400.0L1457.2 394.0L1456.3 387.0L1454.0 381.0L1451.2 377.0L1447.0 372.4L1442.0 368.6L1432.0 363.7L1422.0 361.2L1409.0 360.8L1399.0 362.7L1389.0 366.5L1379.0 372.6L1369.8 381.0L1363.8 389.0L1357.9 401.0L1354.8 414.0L1354.8 422.0L1357.8 434.0L1363.0 441.7L1369.0 446.1L1378.0 448.5L1387.7 448.0Z';
-function heroLogo(){return '<svg class="yf-logo2" viewBox="6 144 1621 720" role="img" aria-label="HUSTLE"><path d="'+HERO_LOGO_D+'" fill-rule="evenodd" fill="#FFD23F" stroke="#0B2E63" stroke-width="30" stroke-linejoin="round" paint-order="stroke"/></svg>'}
 function heroHtml(){
   const bg=S.heroImg||PHOTO_BG;
   const flt=(id,sc)=>'<filter id="'+id+'" x="-6%" y="-25%" width="112%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.016 0.03" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="'+sc+'" xChannelSelector="R" yChannelSelector="G" result="d"/><feDropShadow in="d" dx="0" dy="4" stdDeviation="0" style="flood-color:var(--brand-dark);flood-opacity:.35"/></filter>';
@@ -3639,6 +3574,18 @@ function quickActions(){
   }[S.role];
   return m.map((x,i)=>'<button class="btn'+(i?' sec':'')+'" type="button" data-c="tab" data-k="'+x[0]+'">'+icon(x[1])+x[2]+'</button>').join('');
 }
+function posterList(){
+  const custom=(S.posters||[]).map(p=>({custom:true,id:p.id,rental:p.rental,title:p.title,price:p.price,note:'акция рентала',url:p.url||'',badge:'Акция'}));
+  const ids=['r8-fx3','r8-a7c','r8-ls600','r8-amaran60','r8-podcast','r8-gopro','r8-sm7b','r8-xt3','r8-tele','r8-visico'];
+  const deals=ids.map(dealById).filter(Boolean).map(d=>({id:d[0],rental:rentalName(d[3]),title:d[1],price:(d[5]?'от ':'')+money(d[4]),note:'за сутки, по прайсу Rental8 на 12.10.2026 (на 8 часов дешевле)',url:dealUrl(d),badge:'Прайс',deal:true}));
+  return custom.concat(deals);
+}
+function posterHtml(p,i){
+  const link=p.url?'<a class="btn" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+icon('ext')+'Открыть</a>':'';
+  const add=p.deal?'<button class="btn sec" type="button" data-c="gearAdd" data-id="'+p.id+'">'+icon('plus')+'В список</button>':'';
+  const del=p.custom?'<button class="x" type="button" data-c="posterDel" data-id="'+p.id+'" aria-label="Удалить постер">×</button>':'';
+  return '<article class="poster p1">'+del+'<span class="pbadge">'+esc(p.badge)+'</span><div class="pr">'+esc(p.rental)+'</div><h3>'+esc(p.title)+'</h3><div class="pp">'+esc(p.price)+'</div><div class="pf">'+esc(p.note)+'</div><div class="row">'+link+add+'</div></article>';
+}
 function showHero(){return !USER||USER==='guest'}
 function vHome(){
   const cat=S.artCat||'Все';
@@ -3652,8 +3599,6 @@ function vHome(){
     '<div class="row" style="margin-top:14px">'+quickActions()+'</div>'+demo+'</section>';
   const posters=posterList().map(posterHtml).join('');
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
-  const chips='<div class="artcats" role="group" aria-label="Рубрики">'+ART_CATS.map(c=>'<button class="chip" type="button" data-c="artcat" data-k="'+c+'" aria-pressed="'+(cat===c)+'">'+c+'</button>').join('')+'</div>';
-  const arts=ARTICLES.filter(a=>cat==='Все'||a.cat===cat).map(articleHtml).join('');
   return todayBanner()+proj+backupBanner()+
     '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+'</details>'+
     (showHero()?heroHtml():'')+'<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
@@ -3807,90 +3752,53 @@ function teamHtml(){
 function toolCard(x){
   return '<button class="tool'+(x.r.indexOf(S.role)>-1?' rel':'')+'" type="button" data-c="tab" data-k="'+x.id+'"><span class="ti">'+icon(x.ic)+'</span><span><b>'+t(x.n)+'</b><small>'+t(x.d)+'</small></span>'+(stepDone(x.id)?'<i class="ok" aria-label="готово">✓</i>':'')+'</button>';
 }
+/* пульт проекта: готовность по этапам, ближайшая смена, главные цифры */
+function toolStatus(id){
+  const n=S.scenes.length;
+  let md=0;if(n){ensurePlan();md=maxDay()}
+  switch(id){
+    case 'script':return n?{ok:true,t:n+' '+plural(n,'сцена','сцены','сцен')}:{ok:false,t:'текст не загружен'};
+    case 'story':{const f=Object.keys(S.story||{}).reduce((a,k)=>a+(S.story[k]||[]).length,0);return f?{ok:true,t:f+' '+plural(f,'кадр','кадра','кадров')}:{ok:false,t:'кадров нет'}}
+    case 'explic':{const f=EX_FIELDS.filter(x=>(S.explic[x[0]]||'').trim()).length;return f?{ok:f>=3,t:'заполнено '+f+' из '+EX_FIELDS.length}:{ok:false,t:'пусто'}}
+    case 'notes':{const ok=S.scenes.filter(s=>(S.notes[s.id]||{}).status==='ok').length;return n?{ok:ok===n,t:'утверждено '+ok+' из '+n}:{ok:false,t:'нет сцен'}}
+    case 'schedule':return n?{ok:!!S.seen.schedule,t:md+' '+plural(md,'смена','смены','смен')}:{ok:false,t:'нет сцен'};
+    case 'kpp':{if(!n)return {ok:false,t:'нет сцен'};const d=Object.keys(S.cs.info).filter(k=>S.cs.info[k]&&S.cs.info[k].date).length;return {ok:d>=md,t:'даты: '+Math.min(d,md)+' из '+md}}
+    case 'budget':{const c=calc();return c.sub>0?{ok:true,t:money(c.total)}:{ok:false,t:'ставки не введены'}}
+    case 'shots':{const k=S.shots.length,dn=S.shots.filter(x=>x.done).length;return k?{ok:true,t:'снято '+dn+' из '+k}:{ok:false,t:'кадров нет'}}
+    case 'lights':{const k=Object.keys(S.light).filter(i=>S.light[i].items&&S.light[i].items.length).length;return k?{ok:true,t:k+' '+plural(k,'схема','схемы','схем')}:{ok:false,t:'схем нет'}}
+    case 'calc':return {ok:null,t:'выдержка, ND, глубина резкости'};
+    case 'rentals':return S.gear.length?{ok:true,t:S.gear.length+' '+plural(S.gear.length,'позиция','позиции','позиций')}:{ok:null,t:'список пуст'};
+    case 'callsheet':{if(!n)return {ok:false,t:'нет сцен'};const d=Object.keys(S.cs.info).filter(k=>S.cs.info[k]&&S.cs.info[k].addr).length;return {ok:d>=md,t:'адрес указан: '+Math.min(d,md)+' из '+md}}
+  }
+  return {ok:null,t:''};
+}
+function nextShift(){
+  if(!S.scenes.length)return null;ensurePlan();const md=maxDay(),iso=localISO();let best=null;
+  for(let d=1;d<=md;d++){const i=S.cs.info[d]||{};if(i.date&&i.date>=iso&&(!best||i.date<best.date))best={d,date:i.date}}
+  const d=best?best.d:1,i=S.cs.info[d]||{},sc=S.scenes.filter(s=>S.assign[s.id]===d),locs=[];sc.forEach(s=>{const k=s.loc||'—';if(locs.indexOf(k)<0)locs.push(k)});
+  return {d,md,date:i.date||'',call:i.call||'',addr:i.addr||'',sc,locs};
+}
 function vProj(){
-  const steps=homeSteps();let next=-1;steps.forEach((x,i)=>{if(next<0&&!stepDone(x[0]))next=i});
   const head='<section class="hub-head"><div><span class="lbl">'+t('Название проекта')+'</span><input id="pname" data-a="pname" value="'+esc(S.name)+'" autocomplete="off" aria-label="Название проекта"></div>'+statsOrHint()+'</section>';
-  const nextCard=next>-1?
-    '<div class="cont"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span><div class="prog">'+steps.map(x=>'<i class="'+(stepDone(x[0])?'on':'')+'"></i>').join('')+'</div></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
-    '<div class="cont"><div><b>Все шаги выполнены</b><span>Вы готовы к съёмкам. Всё главное заполнено.</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[steps.length-1][0]+'">'+icon(TAB_DEF[steps[steps.length-1][0]][2])+steps[steps.length-1][3]+'</button></div>';
-  const chips='<div class="chips" style="margin-top:16px" role="group" aria-label="Фильтр инструментов"><button class="chip" type="button" data-c="hubfilter" data-k="mine" aria-pressed="'+!S.hubAll+'">'+t('Для моей роли')+'</button><button class="chip" type="button" data-c="hubfilter" data-k="all" aria-pressed="'+!!S.hubAll+'">'+t('Все инструменты')+'</button></div>';
-  const mine=x=>x.r.indexOf(S.role)>-1;
-  const main=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&mine(x)).sort((a,b)=>{const ia=HUB_FIRST.indexOf(a.id),ib=HUB_FIRST.indexOf(b.id);return (ia<0?9:ia)-(ib<0?9:ib)}),more=TOOLS.filter(x=>CORE.indexOf(x.id)<0&&mine(x));
-  const groups='<div class="tools" style="margin-top:16px">'+main.map(toolCard).join('')+'</div>';
+  const groups=navGroups();
+  let next=null;groups.forEach(g=>g[1].forEach(x=>{if(!next&&toolStatus(x.id).ok===false)next=x}));
+  const nx=next?'<div class="cont"><div><b>Следующий шаг: '+t(next.n)+'</b><span>'+esc(toolStatus(next.id).t)+'. '+esc(next.d||'')+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+next.id+'">'+icon(next.ic)+'Открыть</button></div>':
+    '<div class="cont"><div><b>Всё главное заполнено</b><span>Проверьте вызывной лист ближайшей смены и отправьте его команде.</span></div><button class="btn" type="button" data-c="tab" data-k="callsheet">'+icon('callsheet')+'Вызывной лист</button></div>';
+  const sh=nextShift();
+  const shift=sh?'<section class="pult-shift"><div class="ps-l"><small>Ближайшая смена</small><b>Смена '+sh.d+' из '+sh.md+'</b><span>'+(sh.date?esc(kppDate(sh.date)):'дата не указана')+(sh.call?' · сбор '+esc(sh.call):'')+'</span></div>'+
+    '<div class="ps-m"><span>'+sh.sc.length+' '+plural(sh.sc.length,'сцена','сцены','сцен')+'</span>'+sh.locs.map(l=>'<span class="tag">'+esc(l)+'</span>').join('')+(sh.addr?'<span class="muted">'+esc(sh.addr)+'</span>':'')+'</div>'+
+    '<button class="btn sec" type="button" data-c="openDay" data-k="'+sh.d+'">'+icon('callsheet')+'Вызывной лист дня</button></section>':'';
+  const stages='<div class="pult">'+groups.map(g=>{
+    const st=g[1].map(x=>[x,toolStatus(x.id)]),cnt=st.filter(y=>y[1].ok!==null),done=cnt.filter(y=>y[1].ok).length;
+    return '<section class="pult-st"><div class="pst-h"><b>'+g[0]+'</b><span>'+(cnt.length?done+' из '+cnt.length:'')+'</span></div>'+(cnt.length?'<div class="pst-bar"><i style="width:'+Math.round(done/cnt.length*100)+'%"></i></div>':'')+
+      st.map(y=>'<button class="pst-i" type="button" data-c="tab" data-k="'+y[0].id+'"><span class="pst-ic">'+icon(y[0].ic)+'</span><span class="pst-t"><b>'+t(y[0].n)+'</b><small>'+esc(y[1].t)+'</small></span><i class="pst-s '+(y[1].ok===true?'ok':y[1].ok===false?'no':'na')+'" aria-label="'+(y[1].ok===true?'готово':y[1].ok===false?'не готово':'')+'"></i></button>').join('')+'</section>'}).join('')+'</div>';
   const team=teamHtml();
-  return head+nextCard+backupBanner()+groups+(team?'<div class="hub-team">'+team+'</div>':'');
+  return head+nx+shift+backupBanner()+stages+(team?'<div class="hub-team">'+team+'</div>':'');
 }
 
 /* ---------- фестивали и гранты ---------- */
-const EVENTS=[
- {id:'openframe',kind:'Фестиваль',title:'Open Frame Astana 2027',who:'Фестиваль короткого метра для молодых кинематографистов от 15 до 21 года.',deadline:'2027-03-01',dtext:'Заявки до 1 марта 2027',note:'Онлайн-отбор, итоги 15 марта 2027. Финал очно в Астане 4 апреля 2027.',src:'98mag.kz',url:'https://www.98mag.kz/likbez/kinofestival-open-frame-astana-2027-obyavil-o-starte-open-kollav2/'},
- {id:'visualis',kind:'Фестиваль',title:'Визуалис',who:'Международный фестиваль в Санкт-Петербурге: короткие фильмы до 40 минут, полнометражные от 60 минут.',deadline:'2026-11-27',dtext:'Ближайший срок 27 ноября 2026, дальше сроки до 10 сентября 2027',note:'Взнос за короткометражный фильм — 650 рублей. Заявки подаются через платформу фестиваля.',src:'Festagent',url:'https://festagent.com/ru/festivals/visualis'},
- {id:'uralshorts',kind:'Фестиваль',title:'Ural Shorts',who:'Международный фестиваль короткого и дебютного кино на границе Европы и Азии, Нижний Тагил.',deadline:'2026-11-25',dtext:'Ближайший срок 25 ноября 2026 (по каталогу Festagent)',note:'Фестиваль 5–8 августа 2027. Условия и взнос смотрите на сайте фестиваля, я их не проверял.',src:'Festagent',url:'https://festagent.com/ru/festivals?search=short&country%5B%5D=1'},
- {id:'gelos',kind:'Фестиваль',title:'Гелос',who:'Международный фестиваль комедийных фильмов, есть конкурс студенческой короткометражной комедии до 30 минут.',deadline:'2026-12-31',dtext:'Декабрьский срок 31 декабря 2026, дальше 31 января и 22 марта 2027',note:'Фестиваль 2–4 апреля 2027. Заявки онлайн, взнос растёт от раннего срока к позднему.',src:'Festagent',url:'https://festagent.com/ru/festivals/gelosfilmfest'},
- {id:'kortfilm',kind:'Фестиваль',title:'Norwegian Short Film Festival',who:'Международный фестиваль короткого метра в Гримстаде (Норвегия): игровые до 35 минут, документальные до 40, фильмы из любой страны.',deadline:'2027-02-01',dtext:'Заявки до 1 февраля 2027, позже до 15 марта',note:'Взнос 20 $ до 1 февраля и 30 $ до 15 марта. Премьерность не нужна. Фестиваль 9–13 июня 2027, результаты 9 апреля. Заявки через FilmFreeway.',src:'Festagent',url:'https://festagent.com/ru/festivals/norvwegian_short'},
- {id:'gosts',kind:'Поддержка',title:'Господдержка национальных фильмов, конкурс 2027',who:'Государственный центр поддержки национального кино отбирает кинопроекты (игровые, документальные, анимацию) для финансирования.',deadline:null,dtext:'Объявление о конкурсе — до 15 января 2027',state:'Ждём объявления',note:'По правилам отбора центр размещает объявление до 15 января. В 2025 году заявки первого этапа принимали 5–13 марта, в 2026 году конкурс стартовал 1 марта.',src:'Әділет',url:'https://adilet.zan.kz/rus/docs/V1900018405'}
-];
-function evStatus(e){
-  if(!e.deadline)return {cls:'info',txt:e.state||'Следите за набором',left:99999};
-  const left=Math.ceil((new Date(e.deadline+'T23:59:59')-new Date())/864e5);
-  if(left<0)return {cls:'past',txt:'Срок прошёл',left:100000+Math.abs(left)};
-  return {cls:left<=30?'soon':'open',txt:'Осталось '+left+' дн.',left:left};
-}
-function evCard(e){
-  const st=evStatus(e);
-  return '<article class="ev"><div class="arow"><span class="st '+st.cls+'">'+esc(st.txt)+'</span><span class="muted">'+esc(e.kind)+'</span></div><h3>'+esc(e.title)+'</h3><p>'+esc(e.who)+'</p><p><b>'+esc(e.dtext)+'</b></p><p>'+esc(e.note)+'</p>'+
-    '<div class="row"><a class="link" href="'+esc(e.url)+'" target="_blank" rel="noopener noreferrer">Источник: '+esc(e.src)+'</a><button class="btn sec" type="button" data-c="evTask" data-id="'+e.id+'" style="padding:8px 14px">'+icon('plus')+'В задачи</button></div></article>';
-}
-function vEvents(){
-  const grp=kind=>EVENTS.filter(e=>e.kind===kind).map(e=>({e:e,s:evStatus(e)})).filter(x=>x.s.cls!=='past').sort((a,b)=>a.s.left-b.s.left).map(x=>evCard(x.e)).join('');
-  return '<header class="head"><div class="slate"></div><h1>'+t('Фестивали и гранты')+'</h1><p>Куда подать фильм и где искать поддержку на производство. Сроки обновлены 01.11.2026, всегда сверяйтесь с сайтом организаторов. Прошедшие сроки скрываются сами.</p></header>'+
-    '<div class="note">Нажмите «В задачи», чтобы не забыть подать заявку. Условия и взносы проверяйте на сайте организаторов.</div>'+
-    '<div class="col">'+panel('evf','trophy','Фестивали и показы','<div class="evs">'+grp('Фестиваль')+'</div>')+panel('evg','budget','Гранты и государственная поддержка','<div class="evs">'+grp('Поддержка')+'</div>')+'</div>';
-}
 
 /* ---------- школа и словарь ---------- */
-const GLOSS=[
- ['Логлайн','Описание фильма в одном-двух предложениях: кто герой, чего он хочет и что ему мешает.'],
- ['Экспликация','Режиссёрский документ: замысел, тема, тон, визуальный язык и работа с актёрами.'],
- ['Сцена','Часть фильма в одном месте и времени. В сценарии начинается с заголовка «ИНТ./НАТ. ЛОКАЦИЯ — ВРЕМЯ».'],
- ['ИНТ. и НАТ.','Интерьер (съёмка внутри помещения) и натура (съёмка на улице).'],
- ['Мизансцена','Расположение и движение героев в кадре и пространстве сцены.'],
- ['Подтекст','Скрытый смысл реплики или поступка: герой говорит одно, а имеет в виду другое.'],
- ['Бит','Небольшое событие или поворот внутри сцены или сюжета.'],
- ['Календарно-постановочный план (КПП)','График съёмок: какие сцены снимаем в какие дни и в каких местах.'],
- ['Смена','Один съёмочный день работы группы.'],
- ['Вызывной лист','Документ на съёмочный день: время сбора, место, сцены и время вызова актёров.'],
- ['Шот-лист','Список кадров по сценам с размером, ракурсом и движением камеры.'],
- ['Раскадровка','Рисунки кадров по сценам, как комикс. Помогает заранее увидеть фильм.'],
- ['План (крупность)','Размер объекта в кадре: общий, средний, крупный, деталь.'],
- ['Ракурс','Точка, с которой снимает камера: сверху, снизу, на уровне глаз.'],
- ['Дубль','Одно исполнение сцены или кадра на камеру. Обычно снимают несколько дублей.'],
- ['Хлопушка','Табличка с номером сцены, кадра и дубля. Помогает не запутаться в материале и синхронизировать звук.'],
- ['Ключевой свет','Главный источник света, который лепит форму лица.'],
- ['Заполняющий свет','Мягкий свет, который осветляет тени от ключевого.'],
- ['Контровой свет','Свет сзади, который отделяет героя от фона и рисует контур.'],
- ['Практикал','Источник света, видимый в кадре: лампа, телевизор, фонарь.'],
- ['Цветовая температура (K)','Оттенок света: около 3200 K тёплый, около 5600 K дневной, выше — холоднее.'],
- ['Диафрагма','Отверстие в объективе. Чем меньше число f, тем больше света и тем меньше глубина резкости.'],
- ['Выдержка','Время, в течение которого матрица принимает свет. Для кино обычно 1/(2×fps).'],
- ['ISO','Чувствительность матрицы. Чем выше, тем ярче картинка и тем больше шума.'],
- ['ND-фильтр','«Тёмные очки» для объектива: убирает свет, не меняя цвета.'],
- ['Кадровая частота (fps)','Число кадров в секунду. Для кино чаще всего 24.'],
- ['Угол затвора','Способ записать выдержку через долю кадра: 180° — выдержка в половину длительности кадра.'],
- ['Гаффер','Главный по свету в группе: отвечает за установку осветительных приборов.'],
- ['Кей грип','Главный по грип-оборудованию: стойкам, тележкам, креплениям камеры.'],
- ['Механик камеры','Помощник оператора: следит за фокусом, сменой объективов и картами памяти.'],
- ['Второй режиссёр','Помощник режиссёра, который следит за графиком на площадке и работой с массовкой.'],
- ['Перебивка','Короткий вставной кадр, который помогает смонтировать сцену.'],
- ['Рибейт','Возврат части затрат на производство при съёмках в стране. Условия смотрите у местных киноорганизаций.']
-];
-function vSchool(){
-  const start='<ol class="steps">'+[['Выберите роль','Продюсер, режиссёр или оператор — от роли зависят инструменты в проекте.','proj','Открыть проект'],['Загрузите сценарий','Сайт найдёт сцены, локации и персонажей.','script','Открыть сценарий'],['Составьте план и смету','Дни, локации и бюджет под ваш тип проекта.','schedule','Открыть план'],['Найдите технику','Сравните цены ренталов Алматы и соберите список.','rentals','Открыть ренталы'],['Снимайте по вызывному листу и шот-листу','Отмечайте снятое — сразу видно, что осталось.','callsheet','Открыть лист']].map((x,i)=>'<li class="step"><span class="dot">'+(i+1)+'</span><div><b>'+x[0]+'</b><p>'+x[1]+'</p></div><button class="btn sec" type="button" data-c="tab" data-k="'+x[2]+'">'+x[3]+'</button></li>').join('')+'</ol>';
-  const arts='<div class="arts">'+ARTICLES.filter(a=>a.cat==='Школа').map(articleHtml).join('')+'</div>';
-  const gl='<input class="searchbox" type="search" placeholder="Найти термин, например: диафрагма" data-a="gloss" aria-label="Поиск по словарю"><div class="gl">'+GLOSS.map(g=>'<div class="gl-item" data-q="'+esc((g[0]+' '+g[1]).toLowerCase())+'"><b>'+esc(g[0])+'</b><span>'+esc(g[1])+'</span></div>').join('')+'</div>';
-  return '<header class="head"><div class="slate"></div><h1>'+t('Школа')+'</h1><p>Короткие статьи для кинематографистов и словарь терминов, которые часто звучат на площадке.</p></header>'+
-    '<div class="col">'+panel('sstart','check','С чего начать за пять шагов',start)+panel('sart','book','Статьи',arts,{defClosed:true})+panel('snews','megaphone','Новости кино','<div class="arts">'+ARTICLES.filter(a=>a.cat!=='Школа').map(articleHtml).join('')+'</div>')+panel('sgl','list','Словарь кинотерминов',gl,{defClosed:true})+'</div>';
-}
 
 /* ---------- документы ---------- */
 const DOC_TYPES=[['actor','Договор с актёром'],['consent','Согласие на съёмку'],['location','Разрешение на локацию'],['gear','Акт приёма техники']];
@@ -4128,7 +4036,7 @@ function render(){
   {const pn=$('#pname');if(pn&&document.activeElement!==pn)pn.value=S.name}
   $('#cur').value=S.cur;
   ['USD','EUR','RUB'].forEach(k=>{const el=$('#r'+k);if(el&&document.activeElement!==el)el.value=S.rates[k]});
-  const views={home:vHome,proj:vProj,script:vScript,kpp:vKpp,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,events:vEvents,school:vSchool,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
+  const views={home:vHome,proj:vProj,script:vScript,kpp:vKpp,schedule:vSchedule,budget:vBudget,callsheet:vCall,today:vToday,rentals:vRentalsPage,tasks:vTasks,notes:vNotes,explic:vExplic,shots:vShots,lights:vLights,calc:vCalc,breakdown:vBreakdown,locations:vLocations,docs:vDocs,story:vStory};
   let page;try{page=(views[S.tab]||views.home)()}catch(err){console.error(err);page='<div class="empty"><b>Раздел не открылся</b>Произошла ошибка: '+esc(String((err&&err.message)||err))+'. Обновите страницу. Если повторится, пришлите этот текст.</div>'}
   const ph=(secOf(S.tab)==='proj'||(S.tab==='home'&&!showHero()))?projHead():'';
   $('#main').innerHTML=ph+toolBar()+page+sloganHtml();
@@ -4802,7 +4710,6 @@ document.addEventListener('click',e=>{
   else if(c==='lang'){PREF.lang=PREF.lang==='kk'?'ru':'kk';savePref();render()}
   else if(c==='fs'){setFS(!document.body.classList.contains('fs'))}
   else if(c==='hubfilter'){S.hubAll=b.dataset.k==='all';render()}
-  else if(c==='evTask'){const e=EVENTS.find(x=>x.id===b.dataset.id);if(e){S.tasks.push({id:uid(),text:'Подать заявку: '+e.title+' ('+e.dtext+')',role:'producer',status:'todo',scene:''});save();toast('Задача добавлена в раздел «Задачи»')}}
   else if(c==='btApply'){const n=applyBT($('#bt-type').value,$('#bt-days').value);toast('Добавлено строк: '+n);render()}
   else if(c==='docType'){S.doc.type=b.dataset.k;render()}
   else if(c==='docCopy'){copyText(docText(),'Текст скопирован')}
@@ -4830,6 +4737,7 @@ document.addEventListener('click',e=>{
   else if(c==='budXlsx'){saveFile('smeta.xlsx',budgetXlsx())}
   else if(c==='dlScriptDocx'){saveFile('scenariy.docx',makeDocx(scriptBlocks()))}
   else if(c==='switchProj'){switchProject(b.dataset.id)}
+  else if(c==='openDay'){S.cs.day=+b.dataset.k||1;S.tab='callsheet';render();window.scrollTo(0,0)}
   else if(c==='teamInvite'){teamInvite(b,b.dataset.k)}
   else if(c==='teamRole'){teamRole(b.dataset.id,b.dataset.k)}
   else if(c==='teamKick'){showDialog({title:'Убрать участника?',text:'Он больше не сможет открыть этот проект.',actions:[{label:'Убрать',run:()=>teamKick(b.dataset.id)},{label:'Отмена',sec:true}]})}
@@ -4855,7 +4763,6 @@ document.addEventListener('click',e=>{
   else if(c==='onbSkip'){S.onboarded=true;showOnb();render();if(!tourSeen())openTour()}
 
   else if(c==='rtab'){S.rtab=b.dataset.k;render()}
-  else if(c==='artcat'){S.artCat=b.dataset.k;render()}
   else if(c==='posterAdd'){
     const g=id=>($(id).value||'').trim(),rental=g('#pk-rental'),title=g('#pk-title'),price=g('#pk-price');let url=g('#pk-url');
     if(!rental||!title||!price){toast('Заполните рентал, название акции и цену или скидку');return}
