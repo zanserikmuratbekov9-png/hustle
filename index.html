@@ -1323,6 +1323,98 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 :root:not([data-theme="dark"]) body textarea.script.script{background:#141A33!important;color:#FFFFFF!important;caret-color:#FFD23F;border:1px solid #141A33!important}
 :root:not([data-theme="dark"]) body textarea.script.script::placeholder{color:#9AA3C2!important}
 :root:not([data-theme="dark"]) body textarea.script.script::selection{background:#FFD23F;color:#141A33}}
+
+/* ===== лендинг: бенто, обучение, роли ===== */
+.ls-head{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;max-width:720px}
+.ls-head h2{margin:0!important}
+.ls-head p{margin:0;font-size:16px;line-height:1.5;color:rgba(255,255,255,.78)}
+.ls-kick{align-self:flex-start;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#1E3A8A;background:#FFD23F;padding:5px 10px;border-radius:999px}
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.bx{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:20px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.11),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);transition:transform .25s ease,border-color .25s ease}
+.bx:hover{transform:translateY(-3px);border-color:rgba(255,210,63,.6)}
+.bx-script{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,rgba(255,210,63,.16),rgba(255,255,255,.04) 55%)}
+.bx-plan{grid-column:span 2}
+.bx-t{display:flex;flex-direction:column;gap:10px}
+.bx h3{margin:0 0 4px;font-size:17px;color:#fff}
+.bx p{margin:0;font-size:14px;line-height:1.5;color:rgba(255,255,255,.78)}
+.bx-script h3{font-size:22px}.bx-script p{font-size:15px;max-width:440px}
+.lf-ic{background:#FFD23F!important;color:#1E3A8A!important}
+.mk{border-radius:14px;background:rgba(6,14,48,.55);border:1px solid rgba(255,255,255,.12);padding:12px 14px;color:#fff;font-size:13px}
+.mk-scr{font:13px/1.55 'Courier New',Courier,monospace;padding:16px 18px}
+.mk-l.h{font-weight:700}.mk-l.c{padding-left:34%;margin-top:6px}.mk-l.d{padding-left:16%;padding-right:10%}
+.mk mark{background:rgba(255,99,99,.25);color:#FFB3B3;border-bottom:2px wavy #FF7A7A;text-decoration:underline wavy #FF7A7A;border-radius:3px;padding:0 2px}
+.mk-tips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-family:Onest,system-ui,sans-serif}
+.mk-chip{font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,210,63,.45);color:#FFE08A}
+.mk-chip.y{background:#FFD23F;color:#1E3A8A;border-color:#FFD23F}
+.mk-bud small,.mk-cs small,.mk-rent small,.mk-team small{display:block;color:rgba(255,255,255,.65);font-size:12px}
+.mk-bud b{display:block;font:800 24px/1.2 Onest,system-ui,sans-serif;color:#FFD23F;margin:2px 0 8px}
+.mk-bars{display:flex;flex-direction:column;gap:5px}.mk-bars i{display:block;height:6px;width:var(--w);border-radius:3px;background:linear-gradient(90deg,#FFD23F,#8FB8FF)}
+.mk-lt{padding:6px}.mk-lt svg{display:block;width:100%;height:auto}
+.mk-plan{display:flex;flex-direction:column;gap:8px}
+.mk-plan div{display:grid;grid-template-columns:70px 1fr 130px;align-items:center;gap:10px}
+.mk-plan b{font-size:12.5px}.mk-plan span{font-size:12px;color:rgba(255,255,255,.7)}
+.mk-plan i{display:block;height:10px;width:var(--w);border-radius:5px;background:var(--c)}
+.mk-cs b{display:block;font:800 22px/1.2 Onest,system-ui,sans-serif;color:#fff;margin:2px 0}.mk-cs span{font-size:12.5px;color:#FFE08A}
+.mk-cs{border-left:4px solid #FFD23F}
+.mk-sb{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px}.mk-sb svg{width:100%;height:auto}
+.mk-team{display:flex;flex-direction:column;gap:8px}.mk-team .ph-avs{padding-left:8px}.mk-team .ph-avs i{border-color:#0b1440}
+.mk-rent{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.mk-rent span{font-weight:700}.mk-rent b{color:#FFD23F;font-size:18px}
+.rolec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.rolec article{display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-top:4px solid var(--rc)}
+.rolec .lf-ic{background:var(--rc)!important}
+.rolec h3{margin:6px 0 0;font-size:20px;color:#fff}.rolec p{margin:0;color:rgba(255,255,255,.75);font-size:14px}
+.rc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.rc-tags span{font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.1);color:#fff}
+/* обучение */
+.tour{display:grid;grid-template-columns:minmax(220px,300px) minmax(0,1fr);gap:18px;color:#fff}
+.tour-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.tour-steps button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:14px;font-weight:700;font-size:15px;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+.tour-steps button span{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);font-size:13px}
+.tour-steps button:hover{border-color:rgba(255,210,63,.6)}
+.tour-steps button:focus-visible{outline:3px solid #FFD23F}
+.tour-steps button[aria-current="step"]{background:#FFD23F;color:#1E3A8A;border-color:#FFD23F}
+.tour-steps button[aria-current="step"] span{background:#1E3A8A;color:#FFD23F}
+.tour-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:center;padding:22px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.16)}
+.tour-txt small{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#FFD23F}
+.tour-txt h3{margin:6px 0 8px;font:800 24px/1.2 Onest,system-ui,sans-serif;color:#fff}
+.tour-txt p{margin:0 0 10px;font-size:15px;line-height:1.55;color:rgba(255,255,255,.85)}
+.tour-w{padding:10px 12px;border-radius:12px;background:rgba(255,210,63,.12);border:1px dashed rgba(255,210,63,.55);font-size:14px!important}
+.tour-w b{color:#FFD23F}
+.tour-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.tour-nav .btn{width:auto!important;padding:10px 18px}
+.tour-nav .btn[disabled]{opacity:.4;cursor:default}
+.tour-dots{display:flex;gap:6px;margin-left:auto}.tour-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.tour-dots i.on{background:#FFD23F;width:22px;border-radius:4px}
+.tour-mk{border-radius:16px;background:#0A1440;border:1px solid rgba(255,255,255,.14);padding:16px;min-height:200px;display:flex;flex-direction:column;justify-content:center;gap:10px;font-size:13px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.tm-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:12px;background:#fff;color:#1E3A8A}
+.tm-proj{display:flex;flex-direction:column;line-height:1.15}.tm-proj small{font-size:10px;color:#6B7AA8;font-weight:700}.tm-proj b{font-size:13px}
+.tm-pill{padding:6px 10px;border-radius:999px;border:1px solid #C9D2EA;font-weight:700;font-size:12px;white-space:nowrap}
+.tm-pill.on{box-shadow:0 0 0 3px #FFD23F;border-color:#1E3A8A;animation:tmpulse 1.6s ease-in-out infinite}
+@keyframes tmpulse{50%{box-shadow:0 0 0 6px rgba(255,210,63,.45)}}
+@media (prefers-reduced-motion:reduce){.tm-pill.on,.tm-y{animation:none!important}}
+.tm-menu{display:flex;gap:6px;flex-wrap:wrap}.tm-menu.col{flex-direction:column}
+.tm-menu span{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.08);color:#fff}.tm-menu span.on{background:rgba(255,210,63,.2);color:#FFE08A;font-weight:700}
+.tm-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.tm-h b{font:800 18px/1 Onest,system-ui,sans-serif;margin-right:auto;color:#fff}
+.tm-y{padding:7px 12px;border-radius:999px;background:#FFD23F;color:#1E3A8A;font-weight:800;font-size:12.5px;box-shadow:0 0 0 0 rgba(255,210,63,.6);animation:tmpulse2 1.6s ease-in-out infinite}
+.tm-y.sm{padding:4px 9px;font-size:11.5px;margin-left:auto;animation:none}
+@keyframes tmpulse2{50%{box-shadow:0 0 0 6px rgba(255,210,63,.3)}}
+.tm-o{padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.4);font-weight:700;font-size:12px}
+.tm-paper{display:flex;flex-direction:column;gap:7px;padding:12px;border-radius:10px;background:#F4F1E8}
+.tm-paper i{display:block;height:6px;border-radius:3px;background:#9AA0B8}.tm-paper i.c{margin-left:35%;background:#1E3A8A}.tm-paper i.d{margin-left:18%}
+.tm-paper .w9{width:90%}.tm-paper .w8{width:80%}.tm-paper .w7{width:62%}.tm-paper .w6{width:60%}.tm-paper .w3{width:22%}
+.tm-card{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.tm-card b{font-size:12.5px;color:#fff}
+.tm-tag{flex:none;font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px}
+.tm-tag.r{background:rgba(255,99,99,.2);color:#FF9C9C}.tm-tag.y{background:rgba(255,210,63,.2);color:#FFD23F}.tm-tag.b{background:rgba(143,184,255,.2);color:#B9D0FF}
+.tour-mk .ph-avs i{border-color:#fff}
+/* окно обучения в приложении */
+.tourm{position:fixed;inset:0;z-index:9990;display:grid;place-items:center;padding:16px}
+.tourm[hidden]{display:none}
+.tourm-bg{position:absolute;inset:0;background:rgba(5,10,35,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.tourm-card{position:relative;width:min(1040px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:26px;border-radius:26px;background:linear-gradient(160deg,#1E3A8A,#0B1440);border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.tour-x{position:absolute;top:-12px;right:-8px;width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:#1E3A8A;font-size:22px;font-weight:700;cursor:pointer}
+.tour.modal{position:relative}
+@media (max-width:980px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tour-main{grid-template-columns:1fr}.rolec{grid-template-columns:1fr}}
+@media (max-width:760px){.tour{grid-template-columns:1fr}.tour-steps{flex-direction:row;overflow-x:auto;padding-bottom:4px}.tour-steps li{flex:none}.tour-steps button{width:auto;padding:8px 12px;font-size:13.5px;white-space:nowrap}.tourm-card{padding:18px 14px}.tour-x{top:6px;right:6px}}
+@media (max-width:560px){.bento{grid-template-columns:1fr}.bx-script,.bx-plan{grid-column:auto;grid-row:auto}.mk-plan div{grid-template-columns:62px 1fr}.mk-plan span{display:none}.tour-main{padding:14px}.tour-dots{display:none}}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
@@ -1374,23 +1466,37 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   </div>
   </section>
   <section class="land-sec">
-   <h2>Что умеет HUSTLE</h2>
-   <div class="lf-grid"><article class="lf"><span class="lf-ic" data-ic="script"></span><h3>Разбор сценария</h3><p>Загрузите текст (.txt, .docx, .fdx): HUSTLE сам найдёт сцены, локации и персонажей.</p></article><article class="lf"><span class="lf-ic" data-ic="schedule"></span><h3>План съёмок</h3><p>Сцены раскладываются по съёмочным дням с учётом локаций и объёма страниц.</p></article><article class="lf"><span class="lf-ic" data-ic="budget"></span><h3>Смета</h3><p>Шаблон под тип проекта, ставки и итоги со страховкой и налогом. Выгрузка в Excel.</p></article><article class="lf"><span class="lf-ic" data-ic="callsheet"></span><h3>Вызывной лист</h3><p>Дата, сбор, сцены дня и контакты команды в одном документе для печати.</p></article><article class="lf"><span class="lf-ic" data-ic="frame"></span><h3>Шот-лист и светосхема</h3><p>Список кадров с отметками «снято» и схема света для оператора.</p></article><article class="lf"><span class="lf-ic" data-ic="note"></span><h3>Документы</h3><p>Готовые договоры с актёром и разрешение на съёмку на локации.</p></article><article class="lf"><span class="lf-ic" data-ic="store"></span><h3>Рентал</h3><p>Цены Rental8 и готовое письмо, чтобы попросить скидку.</p></article><article class="lf"><span class="lf-ic" data-ic="megaphone"></span><h3>Фестивали и гранты</h3><p>Куда подать фильм и где искать поддержку, со сроками.</p></article></div>
+   <div class="ls-head"><span class="ls-kick">Инструменты</span><h2>Что умеет HUSTLE</h2><p>Один проект — все документы съёмки. Вы загружаете сценарий, остальное собирается из него.</p></div>
+   <div class="bento">
+    <article class="bx bx-script"><div class="bx-t"><span class="lf-ic" data-ic="script"></span><div><h3>Сценарий и помощник</h3><p>Загрузите .docx, PDF или Final Draft. HUSTLE найдёт сцены, персонажей и локации, а помощник покажет опечатки и несостыковки.</p></div></div>
+     <div class="mk mk-scr"><div class="mk-l h">4. ИНТ. КОФЕЙНЯ НА АБАЯ — <mark>ВЕЧР</mark></div><div class="mk-l">Тёплый свет, за окном пробки. Айгерим за ноутбуком.</div><div class="mk-l c"><mark>АЙГЕРМ</mark></div><div class="mk-l d">Четыре часа. И пустое поле «Режиссёрское видение».</div>
+      <div class="mk-tips"><span class="mk-chip w">Проверьте · Может быть, «ВЕЧЕР»?</span><span class="mk-chip w">Один ли это персонаж: АЙГЕРИМ и АЙГЕРМ?</span><span class="mk-chip y">Объединить</span></div></div></article>
+    <article class="bx bx-bud"><div class="bx-t"><span class="lf-ic" data-ic="budget"></span><div><h3>Смета</h3><p>Шаблон под тип проекта, итоги сами.</p></div></div>
+     <div class="mk mk-bud"><small>Бюджет проекта</small><b>803 000 ₸</b><div class="mk-bars"><i style="--w:72%"></i><i style="--w:48%"></i><i style="--w:30%"></i><i style="--w:18%"></i></div></div></article>
+    <article class="bx bx-light"><div class="bx-t"><span class="lf-ic" data-ic="bulb"></span><div><h3>Светосхема</h3><p>План света сверху и в 3D.</p></div></div>
+     <div class="mk mk-lt"><svg viewBox="0 0 200 110" aria-hidden="true"><defs><radialGradient id="lg1"><stop offset="0" stop-color="#FFD23F" stop-opacity=".55"/><stop offset="1" stop-color="#FFD23F" stop-opacity="0"/></radialGradient></defs><path d="M30 20 L95 55 L30 90Z" fill="url(#lg1)"/><path d="M170 18 L110 55 L170 92Z" fill="rgba(143,184,255,.28)"/><circle cx="26" cy="55" r="9" fill="#FFD23F"/><circle cx="174" cy="55" r="8" fill="#8FB8FF"/><circle cx="100" cy="55" r="7" fill="#fff"/><rect x="92" y="88" width="16" height="11" rx="2" fill="#fff"/><path d="M100 88 L80 62 M100 88 L120 62" stroke="rgba(255,255,255,.5)" stroke-dasharray="3 3"/></svg></div></article>
+    <article class="bx bx-plan"><div class="bx-t"><span class="lf-ic" data-ic="schedule"></span><div><h3>План съёмок и КПП</h3><p>Сцены раскладываются по сменам и объектам. КПП скачивается в Excel, PDF и Word.</p></div></div>
+     <div class="mk mk-plan"><div><b>Смена 1</b><i style="--w:62%;--c:#FFD23F"></i><span>Квартира · 3 сц.</span></div><div><b>Смена 2</b><i style="--w:44%;--c:#8FB8FF"></i><span>Двор школы · 2 сц.</span></div><div><b>Смена 3</b><i style="--w:80%;--c:#9BE3B5"></i><span>Остановка · ночь</span></div></div></article>
+    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="callsheet"></span><div><h3>Вызывной лист</h3><p>Сбор, сцены и актёры дня — и сразу команде.</p></div></div>
+     <div class="mk mk-cs"><small>День 2 из 4</small><b>Сбор 08:00</b><span>Двор школы · сц. 2, 3</span></div></article>
+    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="pencil"></span><div><h3>Раскадровка</h3><p>Рисуйте кадры пальцем или мышью.</p></div></div>
+     <div class="mk mk-sb"><svg viewBox="0 0 60 34" aria-hidden="true"><rect x="1" y="1" width="58" height="32" rx="3" fill="none" stroke="rgba(255,255,255,.5)"/><path d="M8 26 Q18 10 28 22 T52 14" fill="none" stroke="#FFD23F" stroke-width="2"/><circle cx="44" cy="10" r="4" fill="none" stroke="#fff"/></svg><svg viewBox="0 0 60 34" aria-hidden="true"><rect x="1" y="1" width="58" height="32" rx="3" fill="none" stroke="rgba(255,255,255,.5)"/><circle cx="30" cy="14" r="6" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M18 32 Q30 18 42 32" fill="none" stroke="#fff" stroke-width="1.6"/></svg><svg viewBox="0 0 60 34" aria-hidden="true"><rect x="1" y="1" width="58" height="32" rx="3" fill="none" stroke="rgba(255,255,255,.5)"/><path d="M6 28 H54 M14 28 V12 H30 V28 M36 28 V18 H48 V28" fill="none" stroke="#8FB8FF" stroke-width="1.6"/></svg></div></article>
+    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="users"></span><div><h3>Команда</h3><p>Пригласите по ссылке: правки видны всем почти сразу.</p></div></div>
+     <div class="mk mk-team"><span class="ph-avs"><i>А</i><i>Д</i><i>И</i><i>М</i></span><small>Редактор · Только просмотр</small></div></article>
+    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="store"></span><div><h3>Рентал</h3><p>Цены на технику Алматы и список для сметы.</p></div></div>
+     <div class="mk mk-rent"><span>Sony FX3</span><b>28 000 ₸</b><small>за сутки</small></div></article>
+   </div>
+  </section>
+  <section class="land-sec" id="learn">
+   <div class="ls-head"><span class="ls-kick">Обучение за 2 минуты</span><h2>Как пользоваться HUSTLE</h2><p>Пять шагов от сценария до съёмочного дня. Нажимайте на шаги или листайте кнопками.</p></div>
+   <div class="tour-in" id="landTour"></div>
   </section>
   <section class="land-sec">
-   <h2>Как это работает</h2>
-   <ol class="land-steps">
-    <li><b>Загрузите сценарий</b><span>Файл или просто вставьте текст.</span></li>
-    <li><b>Проверьте разбор</b><span>Сцены, локации и персонажи появятся сами.</span></li>
-    <li><b>Готовьте съёмки</b><span>План, смета и вызывной лист собираются из разобранного сценария.</span></li>
-   </ol>
-  </section>
-  <section class="land-sec">
-   <h2>Для кого</h2>
-   <div class="land-roles">
-    <div><b>Продюсер</b><span>Смета, план съёмок, вызывной лист, договоры.</span></div>
-    <div><b>Режиссёр</b><span>Сценарий, заметки по сценам, экспликация, кадры.</span></div>
-    <div><b>Оператор</b><span>Светосхемы, шот-лист, подбор техники и калькулятор.</span></div>
+   <div class="ls-head"><span class="ls-kick">Роли</span><h2>Для кого</h2><p>Роль меняет набор инструментов в меню. Сменить её можно в любой момент.</p></div>
+   <div class="rolec">
+    <article style="--rc:#FFD23F"><span class="lf-ic" data-ic="briefcase"></span><h3>Продюсер</h3><p>Деньги, сроки и документы.</p><div class="rc-tags"><span>Смета</span><span>План съёмок</span><span>Вызывной лист</span><span>КПП</span><span>Сценарий</span></div></article>
+    <article style="--rc:#8FB8FF"><span class="lf-ic" data-ic="megaphone"></span><h3>Режиссёр</h3><p>Видение, сцены и кадры.</p><div class="rc-tags"><span>Сценарий</span><span>КПП</span><span>Заметки по сценам</span><span>Экспликация</span><span>Шот-лист</span><span>Раскадровка</span></div></article>
+    <article style="--rc:#9BE3B5"><span class="lf-ic" data-ic="camera"></span><h3>Оператор</h3><p>Свет, кадр и техника.</p><div class="rc-tags"><span>Светосхема</span><span>Шот-лист</span><span>Раскадровка</span><span>Калькуляторы</span><span>Рентал</span></div></article>
    </div>
   </section>
   <section class="land-sec"><h2>Статьи</h2><div class="land-roles"><a class="land-art" href="stati/smeta-korotkogo-metra.html"><b>Как составить смету короткого метра</b><span>Пошаговая инструкция: из каких разделов состоит смета фильма, как считать смены, сколько заклады…</span></a><a class="land-art" href="stati/vyzyvnoy-list.html"><b>Вызывной лист: что это и как его составить</b><span>Что такое вызывной лист на съёмках, какие поля в нём нужны, когда его рассылать группе и как избежать путаницы…</span></a><a class="land-art" href="stati/plan-syomok.html"><b>Как составить план съёмок</b><span>Как разбить сценарий на сцены и распределить их по съёмочным дням: группировка по локациям, расчёт страниц, вр…</span></a></div></section>
@@ -1435,6 +1541,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
             <label class="ghost" for="projIn" style="cursor:pointer">Открыть проект из файла</label>
             <input class="sr" id="projIn" type="file" accept=".json,application/json" data-a="projfile">
             <hr>
+            <button class="ghost" type="button" data-tour-open>Как пользоваться HUSTLE</button>
             <button class="ghost" type="button" data-c="demo" data-k="1">Пример: «Последний звонок»</button>
             
             <button class="ghost" type="button" data-c="reset" id="resetBtn">Начать с чистого листа</button>
@@ -1449,6 +1556,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   <nav class="bottom" id="botnav" aria-label="Основное меню"></nav>
 </div>
 <div class="onb" id="onb" hidden></div>
+<div class="tourm" id="tourM" hidden></div>
 <div id="toast" role="status"></div>
 
 <script src="config.js?v=20261101"></script>
@@ -1721,7 +1829,7 @@ function showAuth(keepMode){
   $('#onb').hidden=true;$('#app').hidden=true;$('#auth').hidden=false;
   document.body.classList.remove('homebg');
   if(!keepMode)authMode='login';
-  renderAuth();$$('.logo').forEach(b=>b.innerHTML=LOGO);$$('.lf-ic').forEach(s=>{if(!s.firstChild)s.innerHTML=icon(s.dataset.ic)});applyTheme();
+  renderAuth();paintLandTour();$$('.logo').forEach(b=>b.innerHTML=LOGO);$$('.lf-ic').forEach(s=>{if(!s.firstChild)s.innerHTML=icon(s.dataset.ic)});applyTheme();
 }
 function enter(user){
   CLOUD=null;USER=user;S=loadData();
@@ -3956,6 +4064,45 @@ function matrixHtml(){
 
 /* ---------- знакомство ---------- */
 const OB_TYPES={'Короткая съёмка':'etude','Короткий метр':'diploma','Клип':'clip','Другое':''};
+
+/* ---------- обучение: 5 шагов (на главной для гостей и в приложении) ---------- */
+const TOUR=[
+ {t:'Выберите роль',d:'Продюсер, режиссёр или оператор. От роли зависит, какие инструменты будут в меню слева под «Проектом».',w:'Шапка проекта → «Вы: Продюсер ▾»',
+  mk:'<div class="tm-bar"><span class="tm-proj"><small>ПРОЕКТ</small><b>Последний автобус ▾</b></span><span class="tm-pill on">Вы: Продюсер ▾</span></div><div class="tm-menu"><span class="on">Продюсер</span><span>Режиссёр</span><span>Оператор</span></div>'},
+ {t:'Загрузите сценарий',d:'Откройте «Сценарий» и загрузите файл (Word, PDF, Final Draft) или просто вставьте текст. Сцены, персонажи и локации найдутся сами.',w:'Проект → Сценарий → жёлтая кнопка «Загрузить файл»',
+  mk:'<div class="tm-h"><b>Сценарий</b><span class="tm-y">Загрузить файл</span><span class="tm-o">Скачать ▾</span></div><div class="tm-paper"><i class="w9"></i><i class="w6"></i><i class="w3 c"></i><i class="w7 d"></i><i class="w8"></i></div>'},
+ {t:'Исправьте ошибки с помощником',d:'Под текстом помощник покажет ошибки, места «проверьте» и советы: опечатки в именах и времени суток, пустые сцены, незакрытые скобки. Кнопка «Объединить» исправит опечатку сама.',w:'Сценарий → блок «Помощник: ошибки и несостыковки»',
+  mk:'<div class="tm-card"><span class="tm-tag r">Ошибка</span><b>Пустая сцена</b></div><div class="tm-card"><span class="tm-tag y">Проверьте</span><b>«АЙГЕРИМ» и «АЙГЕРМ»?</b><span class="tm-y sm">Объединить</span></div><div class="tm-card"><span class="tm-tag b">Совет</span><b>Ночных съёмок на улице: 2</b></div>'},
+ {t:'Соберите план, КПП и смету',d:'План съёмок разложит сцены по сменам, КПП соберётся сам, смета посчитает итоги. Главная кнопка каждого экрана — жёлтая, файлы — в «Скачать ▾» справа от заголовка.',w:'Проект → План съёмок · КПП · Смета → «Скачать ▾»',
+  mk:'<div class="tm-h"><b>КПП</b><span class="tm-y">Скачать КПП ▾</span></div><div class="tm-menu col"><span>Excel (.xlsx)</span><span>PDF (альбомный лист)</span><span>Word (.docx)</span></div>'},
+ {t:'Отправьте команде',d:'Пригласите людей в проект по ссылке: редактор меняет, «только просмотр» смотрит. Вызывной лист на день отправляется кнопкой «Отправить команде».',w:'Шапка проекта → «Пригласить ▾» · Вызывной лист → «Отправить команде»',
+  mk:'<div class="tm-bar"><span class="ph-avs"><i>А</i><i>Д</i><i>И</i></span><span class="tm-pill on">+ Пригласить ▾</span></div><div class="tm-menu col"><span><b>Редактор</b> — может менять проект</span><span><b>Только просмотр</b> — смотрит без правок</span></div><div class="tm-h" style="margin-top:10px"><span class="tm-y">Отправить команде</span></div>'}
+];
+let TOUR_I=0;
+function tourHtml(i,modal){
+  const x=TOUR[i],n=TOUR.length;
+  return '<div class="tour'+(modal?' modal':'')+'">'+
+    '<ol class="tour-steps">'+TOUR.map((s,k)=>'<li><button type="button" data-tour="'+k+'"'+(k===i?' aria-current="step"':'')+'><span>'+(k+1)+'</span>'+s.t+'</button></li>').join('')+'</ol>'+
+    '<div class="tour-main"><div class="tour-mk" aria-hidden="true">'+x.mk+'</div>'+
+    '<div class="tour-txt"><small>Шаг '+(i+1)+' из '+n+'</small><h3>'+x.t+'</h3><p>'+x.d+'</p><p class="tour-w"><b>Где:</b> '+x.w+'</p>'+
+    '<div class="tour-nav"><button type="button" class="btn sec" data-tour="'+(i-1)+'"'+(i?'':' disabled')+'>Назад</button>'+
+    (i<n-1?'<button type="button" class="btn" data-tour="'+(i+1)+'">Далее</button>':(modal?'<button type="button" class="btn" data-tour-close>Начать работу</button>':'<button type="button" class="btn" data-c="landReg">Создать аккаунт</button>'))+
+    '<span class="tour-dots">'+TOUR.map((s,k)=>'<i'+(k===i?' class="on"':'')+'></i>').join('')+'</span></div></div></div>'+
+    (modal?'<button type="button" class="tour-x" data-tour-close aria-label="Закрыть обучение">×</button>':'')+'</div>';
+}
+function paintLandTour(){const el=$('#landTour');if(el)el.innerHTML=tourHtml(TOUR_I,false)}
+function openTour(){const m=$('#tourM');if(!m)return;TOUR_I=0;m.hidden=false;m.innerHTML='<div class="tourm-bg" data-tour-close></div><div class="tourm-card" role="dialog" aria-modal="true" aria-label="Как пользоваться HUSTLE">'+tourHtml(0,true)+'</div>';try{localStorage.setItem('zp.tour','1')}catch(e){}}
+function closeTour(){const m=$('#tourM');if(m){m.hidden=true;m.innerHTML=''}}
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-tour-open]')){e.preventDefault();openTour();return}
+  if(e.target.closest('[data-tour-close]')){closeTour();return}
+  const b=e.target.closest('[data-tour]');if(!b||b.disabled)return;
+  const k=+b.dataset.tour;if(!(k>=0&&k<TOUR.length))return;TOUR_I=k;
+  const m=b.closest('.tourm-card');if(m)m.innerHTML=tourHtml(k,true);else paintLandTour();
+  $$('.tour-steps').forEach(ol=>{const c=ol.querySelector('[aria-current="step"]');if(c&&ol.scrollWidth>ol.clientWidth)ol.scrollLeft=c.parentNode.offsetLeft-16});
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#tourM').hidden)closeTour()});
+const tourSeen=()=>{try{return localStorage.getItem('zp.tour')==='1'}catch(e){return true}};
 function showOnb(){
   const el=$('#onb');if(!el)return;
   if(!S||S.onboarded){el.hidden=true;el.innerHTML='';return}
@@ -4704,8 +4851,8 @@ document.addEventListener('click',e=>{
     const nm=($('#ob-name').value||'').trim(),ty=$('#ob-type').value;
     if(nm)S.name=nm;S.ptype=ty;
     if($('#ob-tpl').checked&&OB_TYPES[ty])applyBT(OB_TYPES[ty],null);
-    S.onboarded=true;showOnb();render();toast('Готово! Начните с выделенного шага.')}
-  else if(c==='onbSkip'){S.onboarded=true;showOnb();render()}
+    S.onboarded=true;showOnb();render();if(!tourSeen())openTour();else toast('Готово! Начните с выделенного шага.')}
+  else if(c==='onbSkip'){S.onboarded=true;showOnb();render();if(!tourSeen())openTour()}
 
   else if(c==='rtab'){S.rtab=b.dataset.k;render()}
   else if(c==='artcat'){S.artCat=b.dataset.k;render()}
