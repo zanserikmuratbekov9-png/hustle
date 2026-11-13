@@ -1203,10 +1203,10 @@ body.homebg::before{background:url(media/bg-sky.jpg) center 65%/cover no-repeat 
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{background:url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}:root:not([data-theme="dark"]) body.homebg::before{background:url(media/bg-sky.jpg) center 65%/cover no-repeat #0f5aa3!important}}
 .homebg .yf-slogan,:root[data-theme="light"] .homebg .yf-slogan{text-shadow:0 2px 0 #0b3c75,0 0 22px rgba(5,35,80,.75)!important}
 /* главная: лого и слоган в центре первого экрана, карточка проекта ниже */
-.homebg .yf{min-height:calc(100vh - 60px)!important;min-height:calc(100svh - 60px)!important;justify-content:center!important;padding-top:0!important;padding-bottom:0!important}
+
 .homebg .yf-mid{gap:clamp(14px,2.4vw,28px)}
 .homebg .yf-logo{width:min(80vw,680px)}
-@media (max-width:860px){.homebg .yf{min-height:calc(100svh - 150px)!important}}
+
 .yf-logo2{display:block;width:min(80vw,680px);height:auto;transform:rotate(-3deg);overflow:visible}
 
 /* ===== v20: структура — инструменты в меню, шапка проекта, единое место действий ===== */
@@ -1280,6 +1280,9 @@ body:not(.homebg) main .head,body:not(.homebg) main .hub-head{background:color-m
 body:not(.homebg) main>.tbar,body:not(.homebg) main>.row,body:not(.homebg) main .col>.row.noprint{background:color-mix(in srgb,var(--surface) 90%,transparent);border-radius:14px;padding:6px 12px;width:fit-content;max-width:100%}
 body:not(.homebg) .hub-team{border-top:0}
 @media print{main .head,main .hub-head{background:none!important;border:0!important;padding:0!important}}
+
+.homebg main>details.addp>summary,.homebg .site-foot{background:color-mix(in srgb,var(--surface) 90%,transparent);color:var(--ink)!important;text-shadow:none!important;border-radius:12px;padding:8px 14px;width:fit-content;max-width:100%;box-sizing:border-box}
+.homebg .site-foot{margin-inline:auto}
 </style>
 </head>
 <body>
@@ -3378,7 +3381,7 @@ function heroLogo(){return '<svg class="yf-logo2" viewBox="6 144 1621 720" role=
 function heroHtml(){
   const bg=S.heroImg||PHOTO_BG;
   const flt=(id,sc)=>'<filter id="'+id+'" x="-6%" y="-25%" width="112%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.016 0.03" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="'+sc+'" xChannelSelector="R" yChannelSelector="G" result="d"/><feDropShadow in="d" dx="0" dy="4" stdDeviation="0" style="flood-color:var(--brand-dark);flood-opacity:.35"/></filter>';
-  const big=heroLogo();
+  const big='';
   const sub='<p class="yf-slogan">Снимай красивое кино, вместе с HUSTLE</p>';
   return '<section class="yf" aria-label="HUSTLE"'+(bg?' style="--yf-img:url(\''+bg+'\')"':'')+'>'+
     '<div aria-hidden="true"></div>'+
