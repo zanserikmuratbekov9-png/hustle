@@ -382,6 +382,24 @@ main{max-width:1240px;margin:0 auto;padding:28px clamp(14px,3vw,32px) 48px}
 .avbtn .av{width:40px;height:40px}
 .menu-pop{position:absolute;right:0;top:calc(100% + 10px);width:240px;max-height:78vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 60px rgba(20,16,50,.22);padding:12px;z-index:40;display:flex;flex-direction:column;gap:10px}
 .menu-pop.wide{width:310px}
+.dd{display:inline-block}
+.dd-b{display:inline-flex;align-items:center;gap:8px}
+.dd-b .caret{font-style:normal;font-size:11px;opacity:.7}
+.menu-pop.l{left:0;right:auto}
+.dd-pop{width:260px;max-width:calc(100vw - 32px);gap:6px}
+.dd-pop.wide{width:340px}
+.dd-pop .ghost{padding:10px 12px;font-weight:600}
+.dd-pop .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.dd-h{display:block;font-size:12px;color:var(--muted);padding:6px 4px 0}
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:4px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
+.seg .chip{border-color:transparent;background:transparent;padding:7px 14px}
+.seg .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+details.dd .dd-pop,details.dd .dd-pop.wide{position:absolute;top:calc(100% + 8px);bottom:auto;left:auto;right:0;width:260px}
+details.dd .dd-pop.l{left:0;right:auto}
+details.dd .dd-pop.wide{width:340px}
+@media (max-width:640px){details.dd .dd-pop,details.dd .dd-pop.wide,details.dd .dd-pop.l{position:fixed;left:12px;right:12px;top:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:auto;max-height:62vh;box-shadow:0 -10px 60px rgba(0,0,0,.45)}}
+@media (hover:hover) and (pointer:fine){tr .x{opacity:0;transition:opacity .15s}tr:hover .x,tr:focus-within .x,tr .x:focus-visible{opacity:1}}
 .menu-pop hr{border:0;border-top:1px solid var(--line);margin:2px 0;width:100%}
 .menu-pop label{font-size:13px;color:var(--muted);display:block}
 .menu-pop select{width:100%;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
@@ -1766,11 +1784,12 @@ function vDock(){
     '<div class="line"><span class="pct">Налог (НДС) <input type="number" min="0" step="any" data-a="pct" data-f="taxPct" value="'+esc(S.taxPct)+'" aria-label="Налог, %">%</span><span id="t-tax"></span></div>'+
     '<div class="total"><span>Бюджет проекта</span><b id="t-total"></b></div>'+
     '<div class="line"><span>Потрачено (факт)</span><b id="t-fact"></b></div><div class="line"><span>Остаток бюджета</span><b id="t-left"></b></div>'+
-    '<div class="row noprint"><button class="btn" type="button" data-c="copyBudget">'+icon('copy')+'Копировать для таблицы</button>'+'<button class="btn sec" type="button" data-c="budgetPdf">'+icon('download')+'Скачать PDF</button><button class="btn sec" type="button" data-c="csvBudget">'+icon('download')+'Скачать CSV</button>'+'<button class="btn sec" type="button" data-c="budXlsx">'+icon('download')+'Скачать .xlsx</button>'+'<button class="btn sec" type="button" data-c="print" data-dock="1">'+icon('print')+'Печать / PDF</button>'+'</div>'+
+    '<div class="tbar noprint"><button class="btn" type="button" data-c="budXlsx">'+icon('download')+'Скачать .xlsx</button>'+dd('Ещё',ddi('data-c="budgetPdf"',icon('download')+'Скачать PDF')+ddi('data-c="csvBudget"',icon('download')+'Скачать CSV')+ddi('data-c="copyBudget"',icon('copy')+'Копировать для таблицы')+ddi('data-c="print" data-dock="1"',icon('print')+'Печать'))+'</div>'+
   '</div><div><h2 style="margin-bottom:10px">Структура расходов</h2><div id="bars"></div></div></div>':'')+'</div>';
 }
 function vBudget(){
   const cats=[];S.budget.forEach(r=>{if(cats.indexOf(r.cat)<0)cats.push(r.cat)});
+  const budOpen=c=>{const k='cat:'+c;if(k in S.pc)return !S.pc[k];return !S.budget.filter(r=>r.cat===c).every(r=>!String(r.name||'').trim()&&!num(r.kzt)&&!num(r.fact))};
   const groups=cats.map(c=>{
     const rows=S.budget.filter(r=>r.cat===c).map(r=>
       '<tr><td data-l="Статья"><input data-a="bud" data-id="'+r.id+'" data-f="name" value="'+esc(r.name)+'" placeholder="Например, оператор-постановщик" aria-label="Статья">'+(r.src?'<small class="src'+(r.src.indexOf('прайс')===0?' m':'')+'">'+esc(r.src)+'</small>':'')+'</td>'+
@@ -1785,8 +1804,9 @@ function vBudget(){
     return panel('cat:'+c,'',esc(c)+(empty?' <small class="muted" style="font-weight:500">· пусто</small>':''),body,{right:'<b data-sub="'+esc(c)+'"></b>',defClosed:empty});
   }).join('');
   return '<header class="head"><div class="slate"></div><h1>Смета</h1><p>Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.</p></header>'+
-  '<div class="row noprint" style="margin-bottom:6px"><button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button><button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все</button></div>'+
-  '<div class="row noprint" style="margin-bottom:10px"><label class="btn sec" for="budIn" style="cursor:pointer">'+icon('upload')+'Загрузить смету (.xlsx, .csv)</label><input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport"><span class="muted" style="font-size:14px">Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</span></div>'+
+  '<div class="tbar noprint" style="margin-bottom:10px;justify-content:space-between">'+(cats.some(budOpen)?'<button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button>':'<button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все разделы</button>')+
+  dd(icon('upload')+'Загрузить из файла','<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+
+  '<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport"></div>'+
   backupBanner()+'<div class="col">'+budgetTplPanel()+groups+'</div>'+vDock();
 }
 
@@ -2044,7 +2064,7 @@ function vScript(){
   const text='<textarea class="script" data-a="script" placeholder="ИНТ. КВАРТИРА МАРИИ — НОЧЬ&#10;&#10;Мария сидит у окна.&#10;&#10;МАРИЯ&#10;Позвони. Просто позвони." aria-label="Текст сценария">'+esc(S.script)+'</textarea>'+
     '<div class="row" style="margin-top:12px">'+
     '<label class="btn" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл сценария</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+
-    (S.script.trim()?'<button class="btn sec" type="button" data-c="dlScript">'+icon('download')+'Скачать .txt</button><button class="btn sec" type="button" data-c="dlScriptDocx">'+icon('download')+'Скачать .docx</button>':'')+
+    (S.script.trim()?dd(icon('download')+'Скачать',ddi('data-c="dlScriptDocx"','Word (.docx)')+ddi('data-c="dlScript"','Текст (.txt)')):'')+
     '</div>'+
     '<p class="muted" style="margin:10px 0 0;font-size:14px">Сцены находятся сами, когда вы вставляете или правите текст. Загружаются PDF, Word (.docx), Final Draft (.fdx), .txt, .md и .fountain. PDF-скан без текстового слоя прочитать не получится.</p>';
   return '<header class="head"><div class="slate"></div><h1>Сценарий</h1><p>Вставьте текст или загрузите файл. Сайт сам найдёт сцены, локации и персонажей, посчитает хронометраж и подскажет, что проверить. Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам заглавными буквами.</p></header>'+
@@ -2076,7 +2096,7 @@ function vSchedule(){
   const top='<div class="row"><label>Норма, страниц в смену <input type="number" min="0.125" step="0.125" data-a="perDay" value="'+esc(S.perDay)+'" style="width:90px;margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"></label><button class="btn" type="button" data-c="plan">Составить план заново</button></div>'+
     '<div class="stats" style="margin-top:12px"><div><b>'+md+'</b><span>съёмочных дней</span></div><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+eighths(total)+'</b><span>страниц</span></div></div>';
   return head+'<div class="col">'+panel('plan','list','Параметры плана',top)+panel('matrix','users','Занятость актёров по дням',matrixHtml())+
-    '<div class="row noprint"><button class="link" type="button" data-c="collapseAll" data-pre="day">Свернуть все дни</button><button class="link" type="button" data-c="expandAll" data-pre="day">Развернуть все</button></div>'+days+'</div>';
+    '<div class="row noprint">'+(Array.from({length:md},(_,i)=>'day'+(i+1)).some(k=>!(k in S.pc)||!S.pc[k])?'<button class="link" type="button" data-c="collapseAll" data-pre="day">Свернуть все дни</button>':'<button class="link" type="button" data-c="expandAll" data-pre="day">Развернуть все дни</button>')+'</div>'+days+'</div>';
 }
 
 /* ---------- вызывной лист ---------- */
@@ -2099,7 +2119,7 @@ function vCall(){
     '<label>Телефон продюсера<input type="tel" data-a="cs" data-f="phone" value="'+esc(S.cs.phone)+'"></label>'+
     cityFieldHtml()+'<label class="wide">Адрес съёмочной площадки<input data-a="csinfo" data-f="addr" value="'+esc(inf.addr)+'" placeholder="Город, улица, дом, ориентиры для парковки"></label>'+
     '<label class="wide">Примечания для группы<textarea rows="3" data-a="csinfo" data-f="notes" placeholder="Погода, транспорт, питание, требования по безопасности">'+esc(inf.notes)+'</textarea></label>'+
-    '<div class="wide row"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать</button><button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button><button class="btn sec" type="button" data-c="csPdf">'+icon('download')+'Скачать PDF</button><button class="btn sec" type="button" data-c="csDocx">'+icon('download')+'Скачать .docx</button></div></div>';
+    '<div class="wide tbar"><button class="btn" type="button" data-c="csShare">'+icon('ext')+'Отправить команде</button>'+dd(icon('download')+'Скачать',ddi('data-c="csPdf"','PDF')+ddi('data-c="csDocx"','Word (.docx)')+ddi('data-c="print"',icon('print')+'Распечатать'))+'</div></div>';
   return head+'<div class="col"><div class="noprint">'+panel('csform','callsheet','Данные дня',form)+'</div>'+
   '<section class="panel"><div class="sheet-title"><h1>Вызывной лист</h1></div>'+
     '<div class="ph"><h2>'+esc(S.name)+'</h2><b>День '+d+' из '+md+'</b></div>'+
@@ -2458,19 +2478,19 @@ function paintInspector(){const el=$('#lt-insp');if(el)el.innerHTML=inspector()}
 function vLights(){
   const sid=S.lightScene||0,L=curLight(),sc=S.scenes.find(s=>s.id===sid);
   const opts='<option value="0"'+(!sid?' selected':'')+'>Без сцены (черновик)</option>'+sceneOpts(sid,false);
-  const adds=Object.keys(LT_NAMES).map(k=>'<button class="btn sec" type="button" data-c="ltAdd" data-k="'+k+'" style="padding:8px 12px">'+icon('plus')+LT_NAMES[k]+'</button>').join('')+'<button class="btn sec" type="button" data-c="ltTop" style="padding:8px 12px">'+icon('plus')+'Топлайт</button>';
-  const pres=[['three','Классика: 3 точки'],['window','Окно + отражатель'],['night','Ночь: контровой + лампа']].map(p=>'<button class="chip" type="button" data-c="ltPreset" data-k="'+p[0]+'">'+p[1]+'</button>').join('');
+  const quick=['camera','light','actor'].map(k=>'<button class="btn sec" type="button" data-c="ltAdd" data-k="'+k+'" style="padding:8px 14px">'+icon('plus')+LT_NAMES[k]+'</button>').join('');
+  const more=dd(icon('plus')+'Ещё',ddh('Свет и предметы')+'<div class="two">'+Object.keys(LT_NAMES).filter(k=>['camera','light','actor'].indexOf(k)<0).map(k=>ddi('data-c="ltAdd" data-k="'+k+'"',LT_NAMES[k])).join('')+ddi('data-c="ltTop"','Топлайт')+'</div>'+
+    ddh('Мебель и объекты')+'<div class="two">'+Object.keys(PROP_K).filter(k=>k!=='box').map(k=>ddi('data-c="ltProp" data-k="'+k+'"',PROP_K[k].n)).join('')+'</div>',{wide:true});
+  const pres=dd('Шаблон света',[['three','Классика: 3 точки'],['window','Окно + отражатель'],['night','Ночь: контровой + лампа']].map(p=>ddi('data-c="ltPreset" data-k="'+p[0]+'"',p[1])).join(''));
   const info=sc?'<p class="muted" style="margin:0 0 10px">'+esc(sc.type)+'. '+esc(sc.loc)+(sc.time?', '+esc(sc.time):'')+(sc.chars.length?'. В кадре: '+esc(sc.chars.join(', ')):'')+'</p>':'';
   const canvas=info+'<div class="row noprint" style="margin-bottom:10px"><label>Сцена <select data-a="ltscene" data-r="1" style="margin-left:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px;max-width:60vw">'+opts+'</select></label></div>'+
-    '<div class="row noprint" style="margin-bottom:10px">'+adds+'</div>'+
-    '<div class="row noprint lt-props" style="margin-bottom:10px"><span class="muted" style="font-size:14px">Мебель и объекты:</span>'+Object.keys(PROP_K).filter(k=>k!=='box').map(k=>'<button class="chip" type="button" data-c="ltProp" data-k="'+k+'">'+PROP_K[k].n+'</button>').join('')+'</div>'+
-    '<div class="chips noprint" role="group" aria-label="Время суток" style="margin-bottom:10px"><span class="muted" style="font-size:14px;align-self:center">Время суток:</span>'+[['','Студия'],['day','День'],['eve','Вечер'],['night','Ночь']].map(o=>'<button class="chip" type="button" data-c="ltTod" data-k="'+o[0]+'" aria-pressed="'+((L.tod||'')===o[0])+'">'+o[1]+'</button>').join('')+'</div>'+
-    '<div class="chips noprint lt-mode" role="group" aria-label="Вид схемы" style="margin-bottom:10px"><button class="chip" type="button" data-c="ltView" data-k="2d" aria-pressed="'+!PREF.lt3d+'">План сверху</button><button class="chip" type="button" data-c="ltView" data-k="3d" aria-pressed="'+!!PREF.lt3d+'">3D-вид</button></div>'+
+    '<div class="tbar noprint" style="margin-bottom:10px">'+quick+more+pres+'</div>'+
+    '<div class="tbar noprint" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Время суток">'+[['','Студия'],['day','День'],['eve','Вечер'],['night','Ночь']].map(o=>'<button class="chip" type="button" data-c="ltTod" data-k="'+o[0]+'" aria-pressed="'+((L.tod||'')===o[0])+'">'+o[1]+'</button>').join('')+'</div>'+
+    '<div class="seg lt-mode" role="group" aria-label="Вид схемы"><button class="chip" type="button" data-c="ltView" data-k="2d" aria-pressed="'+!PREF.lt3d+'">План</button><button class="chip" type="button" data-c="ltView" data-k="3d" aria-pressed="'+!!PREF.lt3d+'">3D</button></div></div>'+
     '<div class="lt'+(PREF.lt3d?' is3d':'')+'"><div>'+(PREF.lt3d?'<div id="lt3d" class="lt3d"><p class="lt3d-hint">Загружаю 3D…</p></div><p class="muted lt3d-help">Вращайте мышью или пальцем, колёсико или два пальца — приближение, правая кнопка или два пальца — сдвиг. Предметы можно перетаскивать по полу, выбранный предмет настраивается справа.</p>':'')+'<svg id="lt-svg"'+(PREF.lt3d?' hidden':'')+' viewBox="0 0 800 520" role="img" aria-label="План света: вид сверху"><style>'+LT_CSS+'</style><defs><pattern id="lt-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/></pattern></defs><rect id="lt-bg" width="800" height="520" fill="url(#lt-grid)"/><text x="400" y="22" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">ДАЛЬНЯЯ СТЕНА</text><text x="400" y="510" text-anchor="middle" style="fill:rgba(255,255,255,.35);font:600 13px sans-serif">БЛИЖНЯЯ СТОРОНА</text><g id="lt-items"></g></svg></div>'+
-    '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>'+
-    '<div class="row noprint" style="margin-top:12px"><span class="muted">Шаблоны:</span>'+pres+'</div>';
+    '<aside class="note-box noprint"><h2>Свойства</h2><div id="lt-insp"></div></aside></div>';
   const notes='<label class="fields" style="display:block"><span class="muted" style="font-size:14px">Настроение и заметки к свету</span><textarea rows="3" data-a="ltnote" style="width:100%;margin-top:4px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px" placeholder="Контраст, соотношение ключ/заполнение, откуда падает свет, что нужно для практиков">'+esc(L.note||'')+'</textarea></label>'+
-    '<div class="row noprint" style="margin-top:12px"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать схему</button>'+'<button class="btn sec" type="button" data-c="ltSvg">'+icon('download')+'Скачать SVG</button>'+'<button class="btn sec" type="button" data-c="ltClear">Очистить схему</button></div>';
+    '<div class="tbar noprint" style="margin-top:12px"><button class="btn" type="button" data-c="print">'+icon('print')+'Распечатать схему</button>'+dd('Ещё',ddi('data-c="ltSvg"',icon('download')+'Скачать SVG')+ddi('data-c="ltClear"','Очистить схему'))+'</div>';
   return '<header class="head"><div class="slate"></div><h1>Светосхема</h1><p>План света сверху: камера показывает угол кадра по объективу, свет — направление и цвет луча. Перетаскивайте предметы, меняйте мощность и температуру. Схема сохраняется отдельно для каждой сцены.</p></header>'+
     '<div class="col">'+panel('ltcv','bulb','Схема',canvas)+panel('ltleg','list','Экспликация света','<div id="lt-legend"></div><div style="height:12px"></div>'+notes)+'</div>';
 }
@@ -3044,6 +3064,12 @@ Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
 const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект'],['rentals','store','Рентал','Рентал'],['events','trophy','Фестивали и гранты','Фестивали'],['school','book','Школа','Школа']];
 const secOf=tab=>TOOL_IDS.indexOf(tab)>-1?'proj':tab;
 function closeMenus(){$$('details.menu').forEach(d=>{d.open=false})}
+/* компактное меню «Ещё ▾» вместо ряда кнопок */
+function dd(label,items,o){o=o||{};return '<details class="menu dd"><summary class="btn sec dd-b">'+label+'<i class="caret" aria-hidden="true">▾</i></summary><div class="menu-pop dd-pop'+(o.right?'':' l')+(o.wide?' wide':'')+'">'+items+'</div></details>'}
+function ddi(attrs,txt){return '<button class="ghost" type="button" '+attrs+'>'+txt+'</button>'}
+function ddh(t){return '<small class="dd-h">'+t+'</small>'}
+document.addEventListener('click',e=>{const it=e.target.closest('details.dd .menu-pop button,details.dd .menu-pop label');if(it){const d=it.closest('details.dd');setTimeout(()=>{if(d)d.open=false},0)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$$('details.dd[open]').forEach(d=>{d.open=false})});
 document.addEventListener('click',e=>{if(!e.target.closest('details.menu'))closeMenus()});
 
 function renderChrome(){
