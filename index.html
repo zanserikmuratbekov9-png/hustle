@@ -1313,6 +1313,24 @@ table.kpp-t td:nth-child(7) input{min-width:110px}table.kpp-t td:nth-child(8) in
 table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 @media print{table.kpp-t{min-width:0;font-size:10px}.kpp-bar input{border:0;background:none;padding:0}}
 </style>
+<script>
+/* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
+(function(){
+  var ok=false;try{ok=window.CSS&&CSS.supports&&CSS.supports('color','color-mix(in srgb, red 50%, blue)')}catch(e){}
+  if(ok&&!/[?&]nocm\b/.test(location.search))return;
+  function split(t){var a=[],d=0,c='';for(var i=0;i<t.length;i++){var ch=t[i];if(ch==='(')d++;else if(ch===')')d--;if(ch===','&&d===0){a.push(c);c=''}else c+=ch}a.push(c);return a}
+  function pct(x){var m=/\s(\d+(?:\.\d+)?)%\s*$/.exec(' '+x);return m?{c:x.replace(/\s*\d+(?:\.\d+)?%\s*$/,'').trim(),p:parseFloat(m[1])}:{c:x.trim(),p:null}}
+  function fix(t){var k,out='',from=0;
+    while((k=t.indexOf('color-mix(',from))>-1){var d=0,j=k+9;for(;j<t.length;j++){if(t[j]==='(')d++;else if(t[j]===')'){d--;if(d===0)break}}
+      var parts=split(t.slice(k+10,j));var A=pct(parts[1]||''),B=pct(parts[2]||'');
+      var pa=A.p!=null?A.p:(B.p!=null?100-B.p:50);var pick=pa>=50?A.c:B.c;if(pick==='transparent')pick=pa>=50?B.c:A.c;
+      out+=t.slice(from,k)+fix(pick);from=j+1}
+    return out+t.slice(from)}
+  window.__cmfix=fix;
+  var st=document.querySelectorAll('style');for(var i=0;i<st.length;i++){if(st[i].textContent.indexOf('color-mix(')>-1)st[i].textContent=fix(st[i].textContent)}
+})();
+</script>
+
 </head>
 <body>
 <noscript><p style="padding:24px;font:16px sans-serif">HUSTLE работает только с включённым JavaScript. Включите его в настройках браузера.</p></noscript>
@@ -2085,7 +2103,7 @@ function scriptCheck(){
     else{const w=s.time.split(/[\s,]+/)[0];if(w&&!TIME_WORDS.some(x=>s.time.indexOf(x)===0)){
       const best=TIME_WORDS.map(x=>[x,lev(w,x)]).sort((a,b)=>a[1]-b[1])[0];
       if(best&&best[1]<=2)add('warn',s.id,'Возможно, опечатка во времени суток','Написано «'+s.time+'». Может быть, «'+best[0]+'»?')}}
-    if(i>0&&M.list[i-1].head.toUpperCase()===m.head.toUpperCase())add('warn',s.id,'Заголовок повторяет предыдущую сцену','Если действие в том же месте непрерывно, это одна сцена.');
+    if(i>0&&m&&M.list[i-1]&&String(M.list[i-1].head||'').toUpperCase()===String(m.head||'').toUpperCase())add('warn',s.id,'Заголовок повторяет предыдущую сцену','Если действие в том же месте непрерывно, это одна сцена.');
     if(m){
       if(!m.hasBody&&!Object.keys(m.replies).length)add('err',s.id,'Пустая сцена','Под заголовком нет ни действия, ни реплик.');
       m.empty.forEach(n=>add('warn',s.id,'«'+n+'»: нет текста под именем','Строка выглядит как имя персонажа, но реплики под ней нет. Если это не персонаж, напишите её строчными буквами.'));
