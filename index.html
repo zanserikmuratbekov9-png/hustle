@@ -3372,7 +3372,7 @@ const HUB_FIRST=['lights','story'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals','events','school'].concat(TOOL_IDS);
 Object.keys(ROLE_TABS).forEach(r=>{ROLE_TABS[r]=PAGE_IDS.slice()});
-const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект'],['rentals','store','Рентал','Рентал'],['events','trophy','Фестивали и гранты','Фестивали'],['school','book','Школа','Школа']];
+const TOP=[['home','home','Главная','Главная'],['proj','briefcase','Проект','Проект'],['rentals','store','Рентал','Рентал']];
 const secOf=tab=>TOOL_IDS.indexOf(tab)>-1?'proj':tab;
 function closeMenus(){$$('details.menu').forEach(d=>{d.open=false})}
 /* компактное меню «Ещё ▾» вместо ряда кнопок */
@@ -3971,6 +3971,7 @@ function showOnb(){
 function render(){
   if(!S)return;
   if(ROLE_TABS[S.role].indexOf(S.tab)<0)S.tab='home';
+  if(S.tab==='events'||S.tab==='school')S.tab='home';
   S.seen[S.tab]=true;
   applyTheme();renderAcct();
   document.body.classList.toggle('homebg',S.tab==='home'&&showHero());
