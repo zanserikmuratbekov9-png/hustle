@@ -1293,6 +1293,25 @@ body:not(.homebg) .hub-team{border-top:0}
 :root body.homebg.homebg main>details.rent-fold details.addp>summary{color:var(--ink)!important;text-shadow:none!important}
 :root body main .poster.poster.p1 .btn.btn.sec{color:#fff!important;-webkit-text-fill-color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.6)!important;background:rgba(255,255,255,.08)!important;opacity:1!important}
 :root body main .poster.poster.p1 .btn.btn.sec:hover{background:rgba(255,255,255,.18)!important}
+
+/* КПП как документ */
+.kpp-title{display:flex;flex-direction:column;gap:2px;margin-bottom:14px}
+.kpp-title small{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpp-title b{font-family:'Unbounded','Onest',system-ui,sans-serif;font-size:22px}
+.kpp-meta{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.kpp-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:10px}
+.kpp-bar label{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+.kpp-bar input{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:7px 10px;color:var(--ink)}
+.kpp-night{background:#1E2A5A!important;color:#FFE08A!important}
+table.kpp-t{min-width:1280px;font-size:13.5px}
+table.kpp-t th{font-size:12px;white-space:normal;vertical-align:bottom;line-height:1.25}
+table.kpp-t td{vertical-align:top}
+table.kpp-t td.c{text-align:center}
+table.kpp-t .kpp-sum{min-width:240px;font-size:13px;line-height:1.4}
+table.kpp-t td:nth-child(2){min-width:140px}table.kpp-t td:nth-child(6){min-width:120px}
+table.kpp-t td:nth-child(7) input{min-width:110px}table.kpp-t td:nth-child(8) input{min-width:170px}table.kpp-t td:nth-child(11) input{min-width:150px}
+table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
+@media print{table.kpp-t{min-width:0;font-size:10px}.kpp-bar input{border:0;background:none;padding:0}}
 </style>
 </head>
 <body>
@@ -1487,7 +1506,7 @@ const fresh=()=>({v:2,name:'Новый проект',cur:'₸',tab:'home',
   contPct:10,feePct:0,taxPct:0,script:'',scenes:[],perDay:4,assign:{},
   cs:{day:1,info:{},castCalls:{},director:'',producer:'',phone:''},
   pc:{},dockOpen:false,seen:{},lastExport:0,bnDismiss:0,heroImg:'',
-  role:'producer',shots:[],shotScene:'',notes:{},explic:{},kpp:{},tasks:[],tasksAll:false,
+  role:'producer',shots:[],shotScene:'',notes:{},explic:{},kpp:{},kppMeta:{},tasks:[],tasksAll:false,
   light:{},lightScene:0,lightSel:'',gear:[],disc:0,dealCat:'Все',rtab:'deals',posters:[],artCat:'Все',city:'Алматы',onboarded:false,ptype:'',hubAll:false,doc:{type:'actor',vals:{}},bd:{},locs:[],story:{},storyScene:0,pen:'pen',
   calc:{fps:24,angle:180,ndFrom:8,ndTo:2,mbps:400,mins:30,card:512,d1:2,d2:3},
   });
@@ -1505,6 +1524,7 @@ function normalize(d){
   if(!d.assign||typeof d.assign!=='object'||Array.isArray(d.assign))d.assign={};
   if(!d.pc||typeof d.pc!=='object'||Array.isArray(d.pc))d.pc={};
   if(!d.kpp||typeof d.kpp!=='object'||Array.isArray(d.kpp))d.kpp={};
+  if(!d.kppMeta||typeof d.kppMeta!=='object'||Array.isArray(d.kppMeta))d.kppMeta={};
   if(!(d.cur==='₸'||CURN[d.cur]))d.cur='₸';
   if(d.v!==2){d.budget.forEach(r=>{if(r.kzt==null){r.kzt=num(r.rate)*perOf(d,d.cur);delete r.rate}if(r.src==null)r.src=''});d.v=2}
   d.calc=Object.assign(f.calc,d.calc||{});
@@ -2516,37 +2536,104 @@ function vExplic(){
 /* ---------- КПП: календарно-постановочный план ---------- */
 function kppSummary(i){try{const m=sceneModel().list[i];if(!m)return '';const a=m.blocks.find(b=>b.k==='act');const t=a?a.t:'';return t.length>110?t.slice(0,108).replace(/\s+\S*$/,'')+'…':t}catch(e){return ''}}
 function kppDate(v){if(!v)return '';const d=new Date(v+'T12:00:00');return isNaN(d)?v:d.toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long'})}
-function kppRows(){ensurePlan();const out=[['День','Дата','Сцена','Объект','Режим','Содержание','Персонажи','Страниц','Кадров','Примечания']];
-  for(let d=1;d<=maxDay();d++)S.scenes.forEach((s,i)=>{if(S.assign[s.id]!==d)return;const sh=S.shots.filter(x=>String(x.scene)===String(s.id)).length;
-    out.push([d,(S.cs.info[d]||{}).date||'',s.id,s.loc,s.type+(s.time?' · '+s.time:''),kppSummary(i),s.chars.join(', '),eighths(s.e),sh,S.kpp[s.id]||''])});return out}
+/* поля сцены в КПП: массовка, реквизит/транспорт/спецэффекты, примечание (старые записи — строка-примечание) */
+function kppF(id,f){const v=S.kpp[id];if(typeof v==='string')return f==='n'?v:'';return (v&&typeof v==='object'&&v[f])||''}
+function kppSet(id,f,val){let v=S.kpp[id];if(!v||typeof v!=='object')v={n:typeof v==='string'?v:''};v[f]=val;S.kpp[id]=v}
+function kppIO(s){const t=String(s.type||'').toUpperCase();return /ИНТ/.test(t)&&/НАТ/.test(t)?'Инт./Нат.':/НАТ/.test(t)?'Нат.':/ИНТ/.test(t)?'Инт.':(s.type||'')}
+function kppMode(s){const t=String(s.time||'').trim();return t?t.charAt(0).toUpperCase()+t.slice(1).toLowerCase():'—'}
+function kppMin(e){return Math.max(0.1,Math.round(e/8*10)/10)}
+function kppDays(){ensurePlan();const idx={};S.scenes.forEach((s,i)=>idx[s.id]=i);const out=[];
+  for(let d=1;d<=maxDay();d++){const sc=S.scenes.filter(s=>S.assign[s.id]===d);if(!sc.length)continue;
+    sc.sort((a,b)=>locKey(a)<locKey(b)?-1:locKey(a)>locKey(b)?1:0);
+    const inf=S.cs.info[d]||{},e=sc.reduce((a,s)=>a+s.e,0),locs=[];sc.forEach(s=>{const k=s.loc||'—';if(locs.indexOf(k)<0)locs.push(k)});
+    out.push({d,date:inf.date||'',call:inf.call||'',addr:inf.addr||'',sc,e,locs,night:sc.some(s=>/НОЧ/i.test(s.time)),idx})}
+  return out}
+function kppPeriod(days){const ds=days.map(x=>x.date).filter(Boolean).sort();if(!ds.length)return 'даты не указаны';const f=v=>{const d=new Date(v+'T12:00:00');return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'})};return ds.length>1?f(ds[0])+' — '+f(ds[ds.length-1]):f(ds[0])}
+const KPP_COLS=['№ сц.','Объект (место съёмки)','Инт./Нат.','Режим','Краткое содержание','Персонажи','Массовка, групповка','Реквизит, транспорт, спецэффекты','Стр.','Хрон., мин','Примечание'];
+function kppDayTitle(x){return 'СМЕНА '+x.d+(x.date?' · '+kppDate(x.date):' · дата не указана')+(x.call?' · сбор '+x.call:'')+(x.addr?' · '+x.addr:'')+(x.night?' · НОЧНАЯ СМЕНА':'')}
+function kppSceneRow(s,x){return [String(s.id),s.loc||'—',kppIO(s),kppMode(s),kppSummary(x.idx[s.id])||'',s.chars.join(', '),kppF(s.id,'m'),kppF(s.id,'r'),eighths(s.e),kppMin(s.e),kppF(s.id,'n')]}
+function kppMetaLines(days){const tot=S.scenes.reduce((a,s)=>a+s.e,0);return [
+  ['Фильм',S.name],['Режиссёр-постановщик',S.cs.director||'—'],['Оператор-постановщик',(S.kppMeta&&S.kppMeta.dop)||'—'],['Продюсер',S.cs.producer||'—'],
+  ['Период съёмок',kppPeriod(days)],['Всего',days.length+' '+plural(days.length,'смена','смены','смен')+' · '+S.scenes.length+' '+plural(S.scenes.length,'сцена','сцены','сцен')+' · '+eighths(tot)+' стр. · ≈ '+kppMin(tot)+' мин экранного времени']]}
+function kppRows(){const days=kppDays(),out=[KPP_COLS.slice()];days.forEach(x=>{out.push([kppDayTitle(x)]);x.sc.forEach(s=>out.push(kppSceneRow(s,x)));out.push(['','Итого за смену: '+x.sc.length+' сц.','','','','','','',eighths(x.e),kppMin(x.e),''])});return out}
+/* документ для PDF и Word */
+function kppBlocks(){
+  const days=kppDays(),b=[{t:'КАЛЕНДАРНО-ПОСТАНОВОЧНЫЙ ПЛАН',b:true,size:16,center:true},{t:'«'+S.name+'»',b:true,center:true,after:160}];
+  b.push({table:kppMetaLines(days).map(r=>[r[0],r[1]]),meta:true,widths:[3600,11800]});
+  const body=[KPP_COLS.slice()];
+  days.forEach(x=>{body.push([{content:kppDayTitle(x),colSpan:11,day:true}]);x.sc.forEach(s=>body.push(kppSceneRow(s,x).map(String)));
+    body.push([{content:'Итого за смену '+x.d+': '+x.sc.length+' сц.',colSpan:8,total:true},{content:eighths(x.e),total:true},{content:String(kppMin(x.e)),total:true},{content:'',total:true}])});
+  b.push({table:body,head:true,kpp:true,widths:[520,1700,820,820,3500,1500,1300,1700,600,740,2000]});
+  b.push({t:'Утверждаю: продюсер ______________________ / '+(S.cs.producer||'')+'          Режиссёр-постановщик ______________________ / '+(S.cs.director||''),after:200});
+  return b}
+/* Excel с оформлением: шапка, строки смен, итоги, перенос текста, альбомная печать */
+function kppXlsx(){
+  const days=kppDays(),R=[],st=[],mg=[];const add=(r,s)=>{R.push(r);st.push(s)};
+  add(['КАЛЕНДАРНО-ПОСТАНОВОЧНЫЙ ПЛАН'],4);mg.push('A1:K1');
+  kppMetaLines(days).forEach(r=>{add([r[0],'','',r[1]],5);mg.push('A'+R.length+':C'+R.length,'D'+R.length+':K'+R.length)});
+  add([],0);add(KPP_COLS.slice(),1);const hr=R.length;
+  days.forEach(x=>{add([kppDayTitle(x)],2);mg.push('A'+R.length+':K'+R.length);
+    x.sc.forEach(s=>add(kppSceneRow(s,x),0));
+    add(['','Итого за смену: '+x.sc.length+' сц.','','','','','','',eighths(x.e),kppMin(x.e),''],3)});
+  add([],0);add(['Утверждаю: продюсер ____________ / '+(S.cs.producer||'')+'      Режиссёр-постановщик ____________ / '+(S.cs.director||'')],0);mg.push('A'+R.length+':K'+R.length);
+  const W=[7,26,9,10,46,24,18,28,7,9,26];
+  const sd=R.map((r,ri)=>'<row r="'+(ri+1)+'"'+(st[ri]===4?' ht="26" customHeight="1"':st[ri]===2?' ht="22" customHeight="1"':'')+'>'+r.map((c,ci)=>{const ref=colL(ci)+(ri+1),sa=' s="'+(st[ri]===5?(ci?6:5):st[ri])+'"';
+    if(c==null||c==='')return st[ri]===2||st[ri]===3||st[ri]===1?'<c r="'+ref+'"'+sa+'/>':'';
+    if(typeof c==='number')return '<c r="'+ref+'"'+sa+'><v>'+c+'</v></c>';
+    return '<c r="'+ref+'" t="inlineStr"'+sa+'><is><t xml:space="preserve">'+xe(c)+'</t></is></c>'}).join('')+'</row>').join('');
+  const M='http://schemas.openxmlformats.org/spreadsheetml/2006/main',RL='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  const B='<border><left style="thin"><color rgb="FF9AA3B8"/></left><right style="thin"><color rgb="FF9AA3B8"/></right><top style="thin"><color rgb="FF9AA3B8"/></top><bottom style="thin"><color rgb="FF9AA3B8"/></bottom><diagonal/></border>';
+  const styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="'+M+'">'+
+    '<fonts count="4"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font><font><b/><sz val="15"/><name val="Arial"/></font></fonts>'+
+    '<fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1E3A8A"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFE08A"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEEF1F8"/></patternFill></fill></fills>'+
+    '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>'+B+'</borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'+
+    '<cellXfs count="7">'+
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>'+
+    '<xf numFmtId="0" fontId="1" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'+
+    '<xf numFmtId="0" fontId="2" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf>'+
+    '<xf numFmtId="0" fontId="2" fillId="4" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>'+
+    '<xf numFmtId="0" fontId="3" fillId="0" borderId="0" applyFont="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'+
+    '<xf numFmtId="0" fontId="2" fillId="0" borderId="0" applyFont="1"/>'+
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>'+
+    '</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+  const sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="'+M+'" xmlns:r="'+RL+'"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><sheetViews><sheetView workbookViewId="0"><pane ySplit="'+hr+'" topLeftCell="A'+(hr+1)+'" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'+
+    '<cols>'+W.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join('')+'</cols><sheetData>'+sd+'</sheetData>'+
+    '<mergeCells count="'+mg.length+'">'+mg.map(m=>'<mergeCell ref="'+m+'"/>').join('')+'</mergeCells>'+
+    '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>';
+  const wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="'+M+'" xmlns:r="'+RL+'"><sheets><sheet name="КПП" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm.Print_Titles" localSheetId="0">\'КПП\'!$'+hr+':$'+hr+'</definedName></definedNames></workbook>';
+  return makeZip([
+    {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
+    {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="'+RL+'/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+    {name:'xl/workbook.xml',data:wb},
+    {name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="'+RL+'/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="'+RL+'/styles" Target="styles.xml"/></Relationships>'},
+    {name:'xl/styles.xml',data:styles},
+    {name:'xl/worksheets/sheet1.xml',data:sheet}])}
+function kppFile(){return 'kpp-'+String(S.name||'proekt').toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-|-$/g,'').slice(0,40)}
 function vKpp(){
-  const head=hd('КПП','Календарно-постановочный план: по съёмочным дням — объекты, режим, сцены, персонажи, объём и кадры. Собирается сам из сценария, плана съёмок и шот-листа. Даты общие с вызывным листом.',S.scenes.length?dlMenu(ddi('data-c="kppCopy"','Скопировать для таблицы')+ddi('data-c="print"','PDF через печать')):'');
-  if(!S.scenes.length)return head+NEED_SCENES('КПП строится по сценам — сначала вставьте сценарий.');
-  ensurePlan();const md=maxDay(),total=S.scenes.reduce((a,s)=>a+s.e,0);
-  const idx={};S.scenes.forEach((s,i)=>idx[s.id]=i);
-  let days='';
-  for(let d=1;d<=md;d++){
-    const sc=S.scenes.filter(s=>S.assign[s.id]===d);if(!sc.length)continue;
-    const tot=sc.reduce((a,s)=>a+s.e,0),locs=[];sc.forEach(s=>{const k=locKey(s);if(locs.indexOf(k)<0)locs.push(k)});
-    const night=sc.some(s=>/НОЧ/.test(s.time)),date=(S.cs.info[d]||{}).date||'';
-    const rows=sc.map(s=>{const sh=S.shots.filter(x=>String(x.scene)===String(s.id)),dn=sh.filter(x=>x.done).length,st=(S.notes[s.id]||{}).status;
-      return '<tr><td style="width:60px"><b>'+s.id+'</b></td>'+
-        '<td style="min-width:170px"><b>'+esc(s.loc||'—')+'</b><br><span class="muted" style="font-size:13px">'+esc(s.type)+(s.time?' · '+esc(s.time):'')+'</span></td>'+
-        '<td style="min-width:220px;font-size:14px">'+esc(kppSummary(idx[s.id])||'—')+(st==='ok'?' <span class="tag">утверждена</span>':st==='fix'?' <span class="tag">доработать</span>':'')+'</td>'+
-        '<td style="min-width:130px;font-size:14px">'+(s.chars.length?esc(s.chars.join(', ')):'<span class="muted">—</span>')+'</td>'+
-        '<td class="r" style="width:70px">'+eighths(s.e)+'</td>'+
-        '<td class="r" style="width:80px">'+(sh.length?dn+'/'+sh.length:'<span class="muted">0</span>')+'</td>'+
-        '<td style="min-width:200px"><input data-a="kppnote" data-id="'+s.id+'" value="'+esc(S.kpp[s.id]||'')+'" placeholder="Реквизит, массовка, трюки…" aria-label="Примечание к сцене '+s.id+'"></td></tr>'}).join('');
-    const body='<div class="row" style="margin-bottom:10px;gap:14px;align-items:center"><label class="muted" style="font-size:14px">Дата <input type="date" data-a="kppdate" data-d="'+d+'" value="'+esc(date)+'" style="margin-left:6px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:7px 10px"></label>'+
-      locs.map(l=>'<span class="tag">'+esc(l)+'</span>').join('')+(night?'<span class="tag">ночная смена</span>':'')+'</div>'+
-      '<div class="tw"><table class="grid" style="min-width:900px"><thead><tr><th>Сц.</th><th>Объект и режим</th><th>Содержание</th><th>Персонажи</th><th class="r">Стр.</th><th class="r">Кадры</th><th>Примечания</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-    days+=panel('kpp'+d,'schedule','День '+d+(date?' · '+esc(kppDate(date)):''),body,{right:'<span class="muted">'+sc.length+' сц. · '+eighths(tot)+' стр.</span>'});
-  }
-  const shotsN=S.shots.length;
-  const stats='<section class="panel"><div class="stats"><div><b>'+md+'</b><span>съёмочных дней</span></div><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+eighths(total)+'</b><span>страниц</span></div><div><b>'+shotsN+'</b><span>кадров в шот-листе</span></div></div>'+
-
-    '<p class="muted noprint" style="margin:12px 0 0;font-size:14px">Сцены между днями переставляет продюсер в «Плане съёмок» — здесь они обновятся сами.</p></section>';
-  return head+'<div class="col">'+stats+days+'</div>';
+  const can=S.scenes.length;
+  const dl=can?dd(icon('download')+'Скачать КПП',ddi('data-c="kppXlsx"','Excel (.xlsx)')+ddi('data-c="kppPdf"','PDF (альбомный лист)')+ddi('data-c="kppDocx"','Word (.docx)')+ddi('data-c="kppCopy"','Скопировать для таблицы')+ddi('data-c="print"','Распечатать'),{right:true,primary:true}):'';
+  const head=hd('КПП','Календарно-постановочный план — как на площадке: по сменам — объекты, интерьер или натура, режим, сцены, персонажи, массовка, реквизит, объём и хронометраж. Собирается сам из сценария и плана съёмок; даты и время сбора общие с вызывным листом.',dl);
+  if(!can)return head+NEED_SCENES('КПП строится по сценам — сначала вставьте сценарий.');
+  const days=kppDays(),tot=S.scenes.reduce((a,s)=>a+s.e,0);
+  const inp=(a,f,v,ph,extra)=>'<input data-a="'+a+'"'+(f?' data-f="'+f+'"':'')+(extra||'')+' value="'+esc(v)+'" placeholder="'+ph+'">';
+  const meta='<section class="panel kpp-doc"><div class="kpp-title"><small>Календарно-постановочный план</small><b>«'+esc(S.name)+'»</b></div>'+
+    '<div class="fields kpp-meta"><label>Режиссёр-постановщик'+inp('cs','director',S.cs.director||'','Имя и фамилия')+'</label><label>Оператор-постановщик'+inp('kppmeta','dop',(S.kppMeta&&S.kppMeta.dop)||'','Имя и фамилия')+'</label><label>Продюсер'+inp('cs','producer',S.cs.producer||'','Имя и фамилия')+'</label></div>'+
+    '<div class="stats" style="margin-top:14px"><div><b>'+days.length+'</b><span>смен</span></div><div><b>'+S.scenes.length+'</b><span>сцен</span></div><div><b>'+eighths(tot)+'</b><span>страниц</span></div><div><b>≈ '+kppMin(tot)+'</b><span>мин экранного времени</span></div><div><b style="font-size:16px;line-height:1.3">'+esc(kppPeriod(days))+'</b><span>период съёмок</span></div></div>'+
+    '<p class="muted noprint" style="margin:12px 0 0;font-size:14px">Порядок сцен внутри смены — по объектам, чтобы не переезжать лишний раз. Переставить сцену в другую смену можно в «Плане съёмок».</p></section>';
+  const daysHtml=days.map(x=>{
+    const rows=x.sc.map(s=>'<tr><td class="c"><b>'+s.id+'</b></td><td><b>'+esc(s.loc||'—')+'</b></td><td class="c">'+esc(kppIO(s))+'</td><td class="c">'+esc(kppMode(s))+'</td>'+
+      '<td class="kpp-sum">'+esc(kppSummary(x.idx[s.id])||'—')+'</td><td>'+(s.chars.length?esc(s.chars.join(', ')):'<span class="muted">—</span>')+'</td>'+
+      '<td>'+inp('kppf','m',kppF(s.id,'m'),'Нет',' data-id="'+s.id+'" aria-label="Массовка, сцена '+s.id+'"')+'</td>'+
+      '<td>'+inp('kppf','r',kppF(s.id,'r'),'Машина, дождь…',' data-id="'+s.id+'" aria-label="Реквизит, транспорт, спецэффекты, сцена '+s.id+'"')+'</td>'+
+      '<td class="r">'+eighths(s.e)+'</td><td class="r">'+kppMin(s.e)+'</td>'+
+      '<td>'+inp('kppf','n',kppF(s.id,'n'),'',' data-id="'+s.id+'" aria-label="Примечание, сцена '+s.id+'"')+'</td></tr>').join('');
+    const bar='<div class="kpp-bar"><label>Дата <input type="date" data-a="kppdate" data-d="'+x.d+'" value="'+esc(x.date)+'"></label><label>Сбор <input type="time" data-a="kppcall" data-d="'+x.d+'" value="'+esc(x.call)+'"></label>'+
+      x.locs.map(l=>'<span class="tag">'+esc(l)+'</span>').join('')+(x.night?'<span class="tag kpp-night">ночная смена</span>':'')+'</div>';
+    const table='<div class="tw"><table class="grid kpp-t"><thead><tr>'+KPP_COLS.map((c,i)=>'<th'+(i>=8&&i<=9?' class="r"':'')+'>'+c+'</th>').join('')+'</tr></thead><tbody>'+rows+
+      '<tr class="kpp-tot"><td colspan="8">Итого за смену: '+x.sc.length+' сц.</td><td class="r">'+eighths(x.e)+'</td><td class="r">'+kppMin(x.e)+'</td><td></td></tr></tbody></table></div>';
+    return panel('kpp'+x.d,'schedule','Смена '+x.d+(x.date?' · '+esc(kppDate(x.date)):''),bar+table,{right:'<span class="muted">'+x.sc.length+' сц. · '+eighths(x.e)+' стр.</span>'});
+  }).join('');
+  return head+'<div class="col">'+meta+daysHtml+'</div>';
 }
 
 /* ---------- шот-лист ---------- */
@@ -4120,19 +4207,21 @@ function docxPara(t,o){
   const runs=String(t).split('\n').map((l,i)=>(i?'<w:r>'+rpr+'<w:br/></w:r>':'')+'<w:r>'+rpr+'<w:t xml:space="preserve">'+xe(l)+'</w:t></w:r>').join('');
   return '<w:p><w:pPr><w:spacing w:after="'+(o.after==null?100:o.after)+'"/>'+(o.center?'<w:jc w:val="center"/>':'')+'</w:pPr>'+runs+'</w:p>';
 }
-function docxTable(rows,head){
+function docxTable(rows,head,widths){
+  const cell=c=>{if(c&&typeof c==='object'){const fill=c.day?'FFE08A':c.total?'EEF1F8':'';return '<w:tc><w:tcPr>'+(c.colSpan>1?'<w:gridSpan w:val="'+c.colSpan+'"/>':'')+(fill?'<w:shd w:val="clear" w:color="auto" w:fill="'+fill+'"/>':'')+'</w:tcPr>'+docxPara(c.content,{b:true,after:40})+'</w:tc>'}return null};
   const bd=['top','left','bottom','right','insideH','insideV'].map(k=>'<w:'+k+' w:val="single" w:sz="4" w:space="0" w:color="888888"/>').join('');
-  return '<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblBorders>'+bd+'</w:tblBorders></w:tblPr>'+rows.map((r,i)=>'<w:tr>'+r.map(c=>'<w:tc><w:tcPr/>'+docxPara(c,{b:head&&i===0,after:40})+'</w:tc>').join('')+'</w:tr>').join('')+'</w:tbl>'+docxPara('',{after:60});
+  return '<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblBorders>'+bd+'</w:tblBorders>'+(widths?'<w:tblLayout w:type="fixed"/>':'')+'</w:tblPr>'+(widths?'<w:tblGrid>'+widths.map(w=>'<w:gridCol w:w="'+w+'"/>').join('')+'</w:tblGrid>':'')+rows.map((r,i)=>'<w:tr>'+r.map(c=>cell(c)||('<w:tc><w:tcPr/>'+docxPara(c,{b:head&&i===0,after:40})+'</w:tc>')).join('')+'</w:tr>').join('')+'</w:tbl>'+docxPara('',{after:60});
 }
-function makeDocx(blocks){
-  const body=blocks.map(b=>typeof b==='string'?docxPara(b):(b.table?docxTable(b.table,b.head):docxPara(b.t,b))).join('');
+function makeDocx(blocks,opt){
+  opt=opt||{};
+  const body=blocks.map(b=>typeof b==='string'?docxPara(b):(b.table?docxTable(b.table,b.head,b.widths):docxPara(b.t,b))).join('');
   const ns='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
   return makeZip([
     {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>'},
     {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'},
     {name:'word/_rels/document.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
     {name:'word/styles.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles '+ns+'><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri" w:eastAsia="Calibri"/><w:sz w:val="22"/><w:lang w:val="ru-RU"/></w:rPr></w:rPrDefault></w:docDefaults></w:styles>'},
-    {name:'word/document.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document '+ns+'><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>'}
+    {name:'word/document.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document '+ns+'><w:body>'+body+''+(opt.landscape?'<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/><w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="500" w:footer="500" w:gutter="0"/></w:sectPr>':'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr>')+'</w:body></w:document>'}
   ]);
 }
 const colL=i=>{let r='';i++;while(i>0){const m=(i-1)%26;r=String.fromCharCode(65+m)+r;i=Math.floor((i-1)/26)}return r};
@@ -4282,8 +4371,8 @@ function pdfLib(){
   })().catch(e=>{PDF_READY=null;throw e});
   return PDF_READY;
 }
-async function makePdf(blocks,title){
-  const fonts=await pdfLib(),doc=new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+async function makePdf(blocks,title,opt){
+  opt=opt||{};const fonts=await pdfLib(),doc=new window.jspdf.jsPDF({unit:'pt',format:'a4',orientation:opt.landscape?'landscape':'portrait'});
   doc.addFileToVFS('pts.ttf',fonts.r);doc.addFont('pts.ttf','PTS','normal');doc.addFileToVFS('ptsb.ttf',fonts.b);doc.addFont('ptsb.ttf','PTS','bold');
   const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=40,BLUE=[30,58,138],YEL=[255,210,63];
   let y=64;
@@ -4291,10 +4380,12 @@ async function makePdf(blocks,title){
   const room=h=>{if(y+h>H-46){doc.addPage();y=56}};
   blocks.forEach(b=>{
     if(b&&b.table){
-      const rows=b.table.filter(r=>r&&r.length).map(r=>r.map(fix));if(!rows.length)return;
+      const rows=b.table.filter(r=>r&&r.length).map(r=>r.map(c=>c&&typeof c==='object'?{content:fix(c.content),colSpan:c.colSpan||1,styles:c.day?{fontStyle:'bold',fillColor:[255,224,138],textColor:[20,25,40]}:c.total?{fontStyle:'bold',fillColor:[238,241,248]}:{}}:fix(c)));if(!rows.length)return;
+      if(b.meta){doc.autoTable({startY:y,body:rows,theme:'plain',margin:{left:M,right:M},styles:{font:'PTS',fontSize:10,cellPadding:2.5,textColor:[25,25,35]},columnStyles:{0:{fontStyle:'bold',cellWidth:150}}});y=doc.lastAutoTable.finalY+14;return}
       doc.autoTable({startY:y,head:b.head?[rows[0]]:undefined,body:b.head?rows.slice(1):rows,margin:{left:M,right:M,top:56,bottom:46},
-        styles:{font:'PTS',fontSize:9.5,cellPadding:5,textColor:[25,25,35],lineColor:[210,216,232],lineWidth:.5},
-        headStyles:{font:'PTS',fontStyle:'bold',fillColor:BLUE,textColor:[255,255,255]},alternateRowStyles:{fillColor:[244,246,252]},
+        styles:{font:'PTS',fontSize:b.kpp?8:9.5,cellPadding:b.kpp?3.5:5,textColor:[25,25,35],lineColor:[190,198,218],lineWidth:.5,valign:'top'},
+        columnStyles:b.kpp?{0:{cellWidth:30,halign:'center'},1:{cellWidth:88},2:{cellWidth:40},3:{cellWidth:44},4:{cellWidth:150},5:{cellWidth:80},6:{cellWidth:62},7:{cellWidth:82},8:{cellWidth:30,halign:'right'},9:{cellWidth:36,halign:'right'}}:{},
+        headStyles:{font:'PTS',fontStyle:'bold',fillColor:BLUE,textColor:[255,255,255],valign:'middle'},alternateRowStyles:b.kpp?{}:{fillColor:[244,246,252]},
         didParseCell:d=>{if(b.boldLast&&d.section==='body'&&d.row.index===d.table.body.length-1)d.cell.styles.fontStyle='bold'}});
       y=doc.lastAutoTable.finalY+16;return;
     }
@@ -4314,9 +4405,9 @@ async function makePdf(blocks,title){
   }
   return doc.output('blob');
 }
-async function savePdf(name,blocks,title,btn){
+async function savePdf(name,blocks,title,btn,opt){
   if(btn)btn.disabled=true;toast('Готовлю PDF…');
-  try{const blob=await makePdf(blocks,title);await saveFile(name,blob,'application/pdf')}
+  try{const blob=await makePdf(blocks,title,opt);await saveFile(name,blob,'application/pdf')}
   catch(e){console.warn(e);toast('Не удалось собрать PDF. Проверьте интернет и попробуйте ещё раз.')}
   finally{if(btn)btn.disabled=false}
 }
@@ -4432,7 +4523,10 @@ const A={
     gearUpdate();save()},
   nstatus:t=>{const id=t.dataset.id;S.notes[id]=Object.assign({text:'',status:'draft'},S.notes[id]);S.notes[id].status=t.value;save()},
   kppdate:t=>{dayInfo(+t.dataset.d).date=t.value;save()},
-  kppnote:t=>{S.kpp[t.dataset.id]=t.value;save()},
+  kppnote:t=>{kppSet(t.dataset.id,'n',t.value);save()},
+  kppf:t=>{kppSet(t.dataset.id,t.dataset.f,t.value);save()},
+  kppcall:t=>{dayInfo(+t.dataset.d).call=t.value;save()},
+  kppmeta:t=>{S.kppMeta=S.kppMeta||{};S.kppMeta[t.dataset.f]=t.value;save()},
   ntext:t=>{const id=t.dataset.id;S.notes[id]=Object.assign({text:'',status:'draft'},S.notes[id]);S.notes[id].text=t.value;save()},
   ex:t=>{S.explic[t.dataset.f]=t.value;save()},
   sh:t=>{const x=S.shots.find(i=>i.id===t.dataset.id);if(!x)return;const f=t.dataset.f;x[f]=f==='done'?t.checked:t.value;save()},
@@ -4645,6 +4739,9 @@ document.addEventListener('click',e=>{
     const sc=S.shotScene||(S.scenes[0]?S.scenes[0].id:'');const n=S.shots.filter(x=>String(x.scene)===String(sc)).length+1;
     S.shots.push({id:uid(),scene:sc,no:String(n),size:'Средний',angle:'Прямо',move:'Статика',mm:35,desc:'',done:false});render()}
   else if(c==='shotDel'){S.shots=S.shots.filter(x=>x.id!==b.dataset.id);render()}
+  else if(c==='kppXlsx'){saveFile(kppFile()+'.xlsx',kppXlsx())}
+  else if(c==='kppPdf'){savePdf(kppFile()+'.pdf',kppBlocks(),'КПП · '+S.name,b,{landscape:true})}
+  else if(c==='kppDocx'){saveFile(kppFile()+'.docx',makeDocx(kppBlocks(),{landscape:true}))}
   else if(c==='kppCopy'){copyText(kppRows().map(r=>r.join('\t')).join('\n'),'КПП скопирован — вставьте в таблицу')}
   else if(c==='shotCopy'){
     const rows=[['Сцена','№','Размер','Ракурс','Движение','мм','Описание','Снято']];
