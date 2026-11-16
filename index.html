@@ -1427,6 +1427,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 .promo8{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .promo8 b{font-family:'Unbounded','Onest',system-ui,sans-serif}.promo8 p{margin:4px 0 0}
 @media(max-width:720px){.td-roles{grid-template-columns:1fr}.rolec{grid-template-columns:1fr}.land-foot span{margin-left:0;width:100%}}
+@media (max-width:640px){.head p{font-size:15px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}#pname{font-size:20px}}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
@@ -4746,7 +4747,7 @@ document.addEventListener('click',e=>{
   }
   if(c==='authTab'){authMode=b.dataset.k;renderAuth();return}
   if(c==='guest'){enter('guest');return}
-  if(c==='landDemo'){enter('guest');if(!hasData())loadDemo('2');return}
+  if(c==='landDemo'){enter('guest');if(!hasData())loadDemo('2');showOnb();return}
   if(c==='landReg'){const d=$('.auth-more');if(d){d.hidden=false;d.open=true}const tb=$('#tab-register');if(tb)tb.click();const cd=$('#authCard');if(cd)cd.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const f=$('#authForm input');if(f)f.focus({preventScroll:true})},350);return}
   if(!S)return;
   if(c==='logout'){doLogout();return}
