@@ -2122,7 +2122,8 @@ function isCue(line){
   if(!line||line.length>38)return false;
   if(/[a-zа-яё]/.test(line.replace(/\(.*?\)/g,'')))return false;
   const name=line.replace(/\(.*?\)/g,'').trim();
-  if(!name||/[\d\.:!?]$/.test(name)||/\d/.test(name))return false;
+  const numbered=/^[А-ЯЁA-Z][А-ЯЁA-Z'\-]+(?: [А-ЯЁA-Z'\-]+)? \d{1,2}$/.test(name)&&!/^(СЦЕНА|ДЕНЬ|НОЧЬ|ЧАСТЬ|СЕРИЯ|ГЛАВА|ЭПИЗОД|SCENE|DAY|PART)\b/.test(name);
+  if(!name||(!numbered&&(/[\d\.:!?]$/.test(name)||/\d/.test(name))))return false;
   if(!/[А-ЯЁA-Z]/.test(name))return false;
   if(/^(ЗТМ|ЗАТЕМНЕНИЕ|КОНЕЦ|ТИТР|СМЕНА|ПЕРЕХОД|CUT|FADE|THE END|ПРОДОЛЖЕНИЕ)/.test(name))return false;
   return true;
@@ -2368,7 +2369,7 @@ function vScript(){
   if(S.script.trim()&&!S.scenes.length){S.scenes=parseScript(S.script);if(S.scenes.length){S.assign={};autoPlan()}}
   const text='<textarea class="script" data-a="script" placeholder="ИНТ. КВАРТИРА МАРИИ — НОЧЬ&#10;&#10;Мария сидит у окна.&#10;&#10;МАРИЯ&#10;Позвони. Просто позвони." aria-label="Текст сценария">'+esc(S.script)+'</textarea>'+
     '<p class="muted" style="margin:10px 0 0;font-size:14px">Сцены находятся сами, когда вы вставляете или правите текст. Загружаются PDF, Word (.docx), Final Draft (.fdx), .txt, .md и .fountain. PDF-скан без текстового слоя прочитать не получится.</p>';
-  return hd('Сценарий','Вставьте текст или загрузите файл. Сайт сам найдёт сцены, локации и персонажей, посчитает хронометраж и подскажет, что проверить. Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам заглавными буквами.','<label class="btn" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+(S.script.trim()?dlMenu(ddi('data-c="dlScriptDocx"','Word (.docx)')+ddi('data-c="dlScript"','Текст (.txt)')):''))+
+  return hd('Сценарий','Вставьте текст или загрузите файл. Сайт сам найдёт сцены, локации и персонажей, посчитает хронометраж и подскажет, что проверить. Сцены ищутся по заголовкам вида «ИНТ. КВАРТИРА — НОЧЬ», персонажи — по репликам заглавными буквами.','<label class="btn" for="fileIn" style="cursor:pointer">'+icon('upload')+'Загрузить файл</label><input class="sr" id="fileIn" type="file" accept=".pdf,.txt,.md,.fountain,.text,.docx,.fdx,application/pdf,text/plain" data-a="upload">'+(S.script.trim()?dlMenu(ddi('data-c="dlScriptDocx"','Word (.docx)')+(S.scenes.length?ddi('data-c="dlScriptBd"','Сценарий и разбор (.docx)'):'')+ddi('data-c="dlScript"','Текст (.txt)')):''))+
     '<div class="col">'+panel('stext','script','Текст сценария',text)+'<div id="scDer" style="display:contents">'+scriptDerived()+'</div></div>';
 }
 
@@ -3865,7 +3866,7 @@ function vBreakdown(){
   const rows=S.scenes.map(s=>{const b=S.bd[s.id]||{};
     return '<tr><td style="width:150px"><b>Сц. '+s.id+'</b><small class="src" style="padding:0">'+esc(s.type)+'. '+esc(s.loc)+'</small></td>'+BD_CATS.map(c=>'<td style="min-width:130px"><input data-a="bd" data-id="'+s.id+'" data-f="'+c[0]+'" value="'+esc(b[c[0]]||'')+'" aria-label="'+c[1]+', сцена '+s.id+'"></td>').join('')+'</tr>'}).join('');
   const table='<div class="tw"><table class="grid" style="min-width:900px"><thead><tr><th>Сцена</th>'+BD_CATS.map(c=>'<th>'+c[1]+'</th>').join('')+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
-  const sum='<div id="bd-sum">'+bdSummary()+'</div><div class="row noprint" style="margin-top:12px"><button class="btn sec" type="button" data-c="bdCopy">'+icon('copy')+'Скопировать списки</button><button class="btn sec" type="button" data-c="print">'+icon('print')+'Печать / PDF</button></div>';
+  const sum='<div id="bd-sum">'+bdSummary()+'</div><div class="row noprint" style="margin-top:12px"><button class="btn sec" type="button" data-c="dlScriptBd">'+icon('download')+'Сценарий и разбор (Word)</button><button class="btn sec" type="button" data-c="bdCopy">'+icon('copy')+'Скопировать списки</button><button class="btn sec" type="button" data-c="print">'+icon('print')+'Печать / PDF</button></div>';
   return head+'<div class="col">'+panel('bdt','grid','Элементы по сценам',table)+panel('bds','list','Общие списки',sum)+'</div>';
 }
 
@@ -4290,10 +4291,10 @@ function makeZip(files){
 function docxPara(t,o){
   o=o||{};const sz=o.size?'<w:sz w:val="'+(o.size*2)+'"/>':'',rpr=(o.b||sz)?'<w:rPr>'+(o.b?'<w:b/>':'')+sz+'</w:rPr>':'';
   const runs=String(t).split('\n').map((l,i)=>(i?'<w:r>'+rpr+'<w:br/></w:r>':'')+'<w:r>'+rpr+'<w:t xml:space="preserve">'+xe(l)+'</w:t></w:r>').join('');
-  return '<w:p><w:pPr><w:spacing w:after="'+(o.after==null?100:o.after)+'"/>'+(o.center?'<w:jc w:val="center"/>':'')+'</w:pPr>'+runs+'</w:p>';
+  return '<w:p><w:pPr>'+(o.pb?'<w:pageBreakBefore/>':'')+(o.keep?'<w:keepNext/>':'')+'<w:spacing w:before="'+(o.before||0)+'" w:after="'+(o.after==null?100:o.after)+'"/>'+(o.center?'<w:jc w:val="center"/>':'')+'</w:pPr>'+runs+'</w:p>';
 }
 function docxTable(rows,head,widths){
-  const cell=c=>{if(c&&typeof c==='object'){const fill=c.day?'FFE08A':c.total?'EEF1F8':'';return '<w:tc><w:tcPr>'+(c.colSpan>1?'<w:gridSpan w:val="'+c.colSpan+'"/>':'')+(fill?'<w:shd w:val="clear" w:color="auto" w:fill="'+fill+'"/>':'')+'</w:tcPr>'+docxPara(c.content,{b:true,after:40})+'</w:tc>'}return null};
+  const cell=c=>{if(c&&typeof c==='object'){const fill=c.fill||(c.day?'FFE08A':c.total?'EEF1F8':'');return '<w:tc><w:tcPr>'+(c.colSpan>1?'<w:gridSpan w:val="'+c.colSpan+'"/>':'')+(fill?'<w:shd w:val="clear" w:color="auto" w:fill="'+fill+'"/>':'')+'</w:tcPr>'+docxPara(c.content,{b:true,after:40})+'</w:tc>'}return null};
   const bd=['top','left','bottom','right','insideH','insideV'].map(k=>'<w:'+k+' w:val="single" w:sz="4" w:space="0" w:color="888888"/>').join('');
   return '<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblBorders>'+bd+'</w:tblBorders>'+(widths?'<w:tblLayout w:type="fixed"/>':'')+'</w:tblPr>'+(widths?'<w:tblGrid>'+widths.map(w=>'<w:gridCol w:w="'+w+'"/>').join('')+'</w:tblGrid>':'')+rows.map((r,i)=>'<w:tr>'+r.map(c=>cell(c)||('<w:tc><w:tcPr/>'+docxPara(c,{b:head&&i===0,after:40})+'</w:tc>')).join('')+'</w:tr>').join('')+'</w:tbl>'+docxPara('',{after:60});
 }
@@ -4413,6 +4414,43 @@ function scriptBlocks(){
   });
   return out;
 }
+function scriptBdBlocks(){
+  const out=[{t:S.name||'Сценарий',b:true,size:16,center:true,after:60},{t:'Сценарий и разбор по сценам',center:true,after:280}];
+  const W=[2700,6900],cell=(t,f)=>({content:t,fill:f});
+  /* персонажи сцены: реплики + герои, представленные в ремарках как «ИМЯ (возраст)», и их упоминания */
+  const lines=S.script.replace(/\r/g,'').split('\n'),roster=[],seen={};
+  const addR=n=>{n=n.replace(/\s+/g,' ').trim();const k=n.toLowerCase();if(n&&!seen[k]){seen[k]=1;roster.push(n)}};
+  S.scenes.forEach(sc=>sc.chars.forEach(addR));
+  lines.forEach(l=>{if(HEAD.test(l.trim()))return;const re=/(^|[^А-ЯЁA-Z])([А-ЯЁ][А-ЯЁ\-]+(?: [А-ЯЁ][А-ЯЁ\-]+| \d{1,2}){0,2})\s*\(\d{1,3}\)/g;let m;while((m=re.exec(l)))addR(m[2])});
+  const rx={};roster.forEach(n=>{rx[n]=new RegExp('(^|[^а-яёa-z])'+n.toLowerCase().split(' ').map(w=>/^\d+$/.test(w)?w+'(?!\\d)':(w.length>4?w.slice(0,-2):w).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[а-яё]*').join('\\s+'),'i')});
+  const sceneText=[];let si=-1;lines.forEach(l=>{if(HEAD.test(l.trim())){si++;sceneText[si]='';return}if(si>=0)sceneText[si]+=l+'\n'});
+  const castOf=(sc,i)=>{const t=(sceneText[i]||'').toLowerCase();const out=roster.filter(n=>sc.chars.indexOf(n)>-1||rx[n].test(t));return out.filter(n=>!out.some(o=>o!==n&&o.length>n.length&&o.toLowerCase().indexOf(n.toLowerCase())>-1&&!rx[n].test(t.replace(new RegExp(rx[o].source,'gi'),' '))))};
+  const box=(sc,i)=>{
+    const b=S.bd[sc.id]||{},rows=[[Object.assign(cell('Разбор сцены '+sc.id+' · '+sc.type+'. '+sc.loc+(sc.time?' — '+sc.time:''),'C9D4FB'),{colSpan:2})]];
+    const add=(k,v)=>{v=String(v||'').trim();if(v)rows.push([cell(k,'EEF1F8'),v])};
+    const cast=castOf(sc,i);sc._cast=cast;add('Персонажи',cast.join(', '));add('Объём',eighths(sc.e)+' стр. (оценка)');
+    const n=rows.length;BD_CATS.forEach(c=>add(c[1],b[c[0]]));
+    if(rows.length===n)rows.push([cell('Разбивка','EEF1F8'),'Не заполнена — впишите реквизит, костюмы и грим в разделе «Разбивка по элементам».']);
+    out.push({table:rows,widths:W},{t:'',after:120});
+  };
+  let idx=0,cur=null;
+  S.script.replace(/\r/g,'').split('\n').forEach(l=>{
+    const t=l.trim();if(!t)return;
+    if(HEAD.test(t)){if(cur)box(cur,idx-1);cur=S.scenes[idx++]||null;out.push({t:t,b:true,keep:true,before:200,after:80});return}
+    out.push(isCue(t)?{t:t,b:true,keep:true,after:40}:{t:t,after:80});
+  });
+  if(cur)box(cur,idx-1);
+  out.push({t:'Сводный разбор',b:true,size:14,pb:true,after:160});
+  const ch={},chO=[];S.scenes.forEach(sc=>(sc._cast||sc.chars).forEach(n=>{if(!ch[n]){ch[n]=[];chO.push(n)}ch[n].push(sc.id)}));S.scenes.forEach(sc=>{delete sc._cast});
+  if(chO.length)out.push({t:'Персонажи',b:true,after:60},{table:[['Персонаж','Сцены','Всего']].concat(chO.map(n=>[n,ch[n].join(', '),String(ch[n].length)])),head:true,widths:[4200,4200,1200]},{t:'',after:160});
+  const lc={},lO=[];S.scenes.forEach(sc=>{const k=locKey(sc);if(!lc[k]){lc[k]={t:sc.type,sc:[]};lO.push(k)}lc[k].sc.push(sc.id)});
+  if(lO.length)out.push({t:'Локации',b:true,after:60},{table:[['Локация','Инт./Нат.','Сцены']].concat(lO.map(k=>[k,lc[k].t,lc[k].sc.join(', ')])),head:true,widths:[5000,1800,2800]},{t:'',after:160});
+  const lists=[];BD_CATS.slice(0,5).forEach(c=>{const map={},order=[];
+    S.scenes.forEach(sc=>{splitItems((S.bd[sc.id]||{})[c[0]]).forEach(it=>{const k=it.toLowerCase();if(!map[k]){map[k]={n:it,sc:[]};order.push(k)}if(map[k].sc.indexOf(sc.id)<0)map[k].sc.push(sc.id)})});
+    if(order.length)lists.push([cell(c[1],'EEF1F8'),order.map(k=>map[k].n+' (сц. '+map[k].sc.join(', ')+')').join('\n')])});
+  if(lists.length)out.push({t:'Что подготовить',b:true,after:60},{table:lists,widths:W});
+  return out;
+}
 function textBlocks(text){
   const lines=String(text).replace(/\r/g,'').split('\n'),out=[];
   lines.forEach((l,i)=>{if(!l.trim()){out.push({t:'',after:40});return}out.push(i===0?{t:l,b:true,size:14,center:true,after:160}:l)});
@@ -4522,7 +4560,7 @@ function locsXlsx(){const r=[['Название','Адрес','Контакт','
 function explicBlocks(){const b=[{t:'ЭКСПЛИКАЦИЯ — '+S.name,b:true,size:16,center:true,after:200}];EX_FIELDS.forEach(f=>{b.push({t:f[1],b:true,after:40},((S.explic[f[0]]||'').trim()||'—'))});return b}
 async function exportAll(){
   const f=[],stamp=new Date().toISOString().slice(0,10);
-  if(S.script.trim()){f.push({name:'scenariy.txt',data:S.script},{name:'scenariy.docx',data:makeDocx(scriptBlocks())})}
+  if(S.script.trim()){f.push({name:'scenariy.txt',data:S.script},{name:'scenariy.docx',data:makeDocx(scriptBlocks())});if(S.scenes.length)f.push({name:'scenariy-i-razbor.docx',data:makeDocx(scriptBdBlocks())})}
   if(S.scenes.length){f.push({name:'plan-syomok.xlsx',data:planXlsx()});ensurePlan();for(let d=1;d<=maxDay();d++)f.push({name:'vyzyvnoy-list-den-'+d+'.docx',data:makeDocx(callsheetBlocks(d))})}
   f.push({name:'smeta.xlsx',data:budgetXlsx()},{name:'smeta.csv',data:'\uFEFF'+budgetRows().map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n')});
   Object.keys(DOC_FIELDS).forEach(k=>f.push({name:'dokumenty/'+DOC_NAMES[k]+'.docx',data:makeDocx(textBlocks(docText(k)))}));
@@ -4736,6 +4774,7 @@ document.addEventListener('click',e=>{
   else if(c==='exportAll'){exportAll()}
   else if(c==='budXlsx'){saveFile('smeta.xlsx',budgetXlsx())}
   else if(c==='dlScriptDocx'){saveFile('scenariy.docx',makeDocx(scriptBlocks()))}
+  else if(c==='dlScriptBd'){if(!S.scenes.length){toast('Сначала добавьте сценарий со сценами');return}saveFile('scenariy-i-razbor.docx',makeDocx(scriptBdBlocks()))}
   else if(c==='switchProj'){switchProject(b.dataset.id)}
   else if(c==='openDay'){S.cs.day=+b.dataset.k||1;S.tab='callsheet';render();window.scrollTo(0,0)}
   else if(c==='teamInvite'){teamInvite(b,b.dataset.k)}
@@ -5130,8 +5169,8 @@ document.addEventListener('click',e=>{
 document.addEventListener('input',e=>{if(!ED)return;if(e.target.dataset&&e.target.dataset.sbsize){ED.size=parseInt(e.target.value,10)||4;sbRelast()}if(e.target.dataset&&e.target.dataset.sbscale){ED.scale=Math.min(4,Math.max(.5,parseFloat(e.target.value)||1));sbRelast()}if(e.target.dataset&&e.target.dataset.sbtext)ED.text=e.target.value.slice(0,80)});
 document.addEventListener('keydown',e=>{if(!ED)return;if(e.key==='Escape'){sbClose()}else if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'&&!/INPUT/.test(document.activeElement.tagName)){e.preventDefault();const b=$('#sbed [data-sbe=undo]');b&&b.click()}});
 
-if(window.__STUDENT_TEST__)window.__student={parseScript,calc,validateProject,exportEnvelope,sunTimes,applyBT,autoPlan,applyScript,evStatus,normalize,fresh,hasData,importFromInput,applyImport,exportProject,saveFile,backupBanner,render,save,
-  fdxText,csvParse,budgetFromRows,makeZip,makeDocx,makeXlsx,crc32,zipEntry,budgetXlsx,docText,getS:()=>S,setS:v=>{S=v;USER=USER||'test'},lt3:()=>LT3,BT,DEALS,EVENTS,GLOSS};
+if(window.__STUDENT_TEST__)window.__student={parseScript,calc,validateProject,exportEnvelope,sunTimes,applyBT,autoPlan,applyScript,normalize,fresh,hasData,importFromInput,applyImport,exportProject,saveFile,backupBanner,render,save,
+  fdxText,csvParse,budgetFromRows,makeZip,makeDocx,scriptBdBlocks,makeXlsx,crc32,zipEntry,budgetXlsx,docText,getS:()=>S,setS:v=>{S=v;USER=USER||'test'},lt3:()=>LT3,BT,DEALS};
 const CINE_BG='data:image/svg+xml;utf8,'+encodeURIComponent(['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs>',
 '<radialGradient id="bg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#22438a"/><stop offset=".55" stop-color="#0d1b3d"/><stop offset="1" stop-color="#04070f"/></radialGradient>',
 '<linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFEFB3" stop-opacity=".6"/><stop offset="1" stop-color="#FFEFB3" stop-opacity="0"/></linearGradient>',
