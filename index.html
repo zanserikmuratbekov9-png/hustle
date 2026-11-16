@@ -1456,7 +1456,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
     <div class="wm"><b>HUSTLE</b></div>
     <h1>Снимайте кино командой</h1>
     <p class="land-lead">Продюсер, режиссёр и оператор в одном проекте: все видят сценарий, план и задачи друг друга. Загрузите сценарий, остальное соберётся из него.</p>
-    <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button></div>
+    <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button><button class="btn big sec" type="button" data-c="landDemo">Посмотреть пример</button></div>
     <p class="land-note">Сейчас все инструменты бесплатны: сайт в открытом тестировании.</p>
     <p class="join-note" id="joinNote" hidden>Вас пригласили в проект команды. Войдите или создайте аккаунт, и проект откроется.</p>
    </div>
@@ -4745,6 +4745,7 @@ document.addEventListener('click',e=>{
   }
   if(c==='authTab'){authMode=b.dataset.k;renderAuth();return}
   if(c==='guest'){enter('guest');return}
+  if(c==='landDemo'){enter('guest');if(!hasData())loadDemo('2');return}
   if(c==='landReg'){const d=$('.auth-more');if(d){d.hidden=false;d.open=true}const tb=$('#tab-register');if(tb)tb.click();const cd=$('#authCard');if(cd)cd.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const f=$('#authForm input');if(f)f.focus({preventScroll:true})},350);return}
   if(!S)return;
   if(c==='logout'){doLogout();return}
