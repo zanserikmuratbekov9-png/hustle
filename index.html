@@ -1410,6 +1410,23 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 
 .phead .dd-pop .ghost{justify-content:flex-start!important;text-align:left!important;font-size:15px}
 .phead .dd-pop label.ghost{display:flex;align-items:center;gap:8px}
+.land-short{margin-top:clamp(36px,5vw,56px)}
+.land-team{display:flex;align-items:center;gap:12px;margin:18px 0 0;font-size:16px;color:rgba(255,255,255,.85)}
+.land-foot{gap:8px 20px;justify-content:flex-start}.land-foot span{margin-left:auto}
+.team-doing{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px;color:var(--ink)}
+.td-roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.td-role{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.td-role.me{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.td-role .tr-h{display:flex;align-items:center;gap:8px}.td-role .tr-h span{margin-left:auto;font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap}
+.td-role ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.td-role li{font-size:14px;line-height:1.35;padding-left:14px;position:relative;overflow-wrap:anywhere}
+.td-role li:before{content:"";position:absolute;left:0;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.td-role li.doing:before{background:var(--accent)}
+.td-role p{margin:0;font-size:14px}
+.td-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.promo8{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.promo8 b{font-family:'Unbounded','Onest',system-ui,sans-serif}.promo8 p{margin:4px 0 0}
+@media(max-width:720px){.td-roles{grid-template-columns:1fr}.rolec{grid-template-columns:1fr}.land-foot span{margin-left:0;width:100%}}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
@@ -1437,8 +1454,8 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   <section class="land-hero">
    <div class="land-copy">
     <div class="wm"><b>HUSTLE</b></div>
-    <h1>Рабочий стол для съёмок</h1>
-    <p class="land-lead">Кино, клипы и реклама: сценарий, план съёмок, смета, вызывной лист, светосхема и раскадровка в одном месте. Загрузите сценарий, и HUSTLE подготовит основу для всей производственной работы.</p>
+    <h1>Снимайте кино командой</h1>
+    <p class="land-lead">Продюсер, режиссёр и оператор в одном проекте: все видят сценарий, план и задачи друг друга. Загрузите сценарий, остальное соберётся из него.</p>
     <div class="land-cta"><button class="btn big" type="button" data-c="landReg">Создать аккаунт</button></div>
     <p class="land-note">Сейчас все инструменты бесплатны: сайт в открытом тестировании.</p>
     <p class="join-note" id="joinNote" hidden>Вас пригласили в проект команды. Войдите или создайте аккаунт, и проект откроется.</p>
@@ -1460,42 +1477,15 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
     <p class="auth-legal"><a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a></p>
   </div>
   </section>
-  <section class="land-sec">
-   <div class="ls-head"><span class="ls-kick">Инструменты</span><h2>Что умеет HUSTLE</h2><p>Один проект — все документы съёмки. Вы загружаете сценарий, остальное собирается из него.</p></div>
-   <div class="bento">
-    <article class="bx bx-script"><div class="bx-t"><span class="lf-ic" data-ic="script"></span><div><h3>Сценарий и помощник</h3><p>Загрузите .docx, PDF или Final Draft. HUSTLE найдёт сцены, персонажей и локации, а помощник покажет опечатки и несостыковки.</p></div></div>
-     <div class="mk mk-scr"><div class="mk-l h">4. ИНТ. КОФЕЙНЯ НА АБАЯ — <mark>ВЕЧР</mark></div><div class="mk-l">Тёплый свет, за окном пробки. Айгерим за ноутбуком.</div><div class="mk-l c"><mark>АЙГЕРМ</mark></div><div class="mk-l d">Четыре часа. И пустое поле «Режиссёрское видение».</div>
-      <div class="mk-tips"><span class="mk-chip w">Проверьте · Может быть, «ВЕЧЕР»?</span><span class="mk-chip w">Один ли это персонаж: АЙГЕРИМ и АЙГЕРМ?</span><span class="mk-chip y">Объединить</span></div></div></article>
-    <article class="bx bx-bud"><div class="bx-t"><span class="lf-ic" data-ic="budget"></span><div><h3>Смета</h3><p>Шаблон под тип проекта, итоги сами.</p></div></div>
-     <div class="mk mk-bud"><small>Бюджет проекта</small><b>803 000 ₸</b><div class="mk-bars"><i style="--w:72%"></i><i style="--w:48%"></i><i style="--w:30%"></i><i style="--w:18%"></i></div></div></article>
-    <article class="bx bx-light"><div class="bx-t"><span class="lf-ic" data-ic="bulb"></span><div><h3>Светосхема</h3><p>План света сверху и в 3D.</p></div></div>
-     <div class="mk mk-lt"><svg viewBox="0 0 200 110" aria-hidden="true"><defs><radialGradient id="lg1"><stop offset="0" stop-color="#FFD23F" stop-opacity=".55"/><stop offset="1" stop-color="#FFD23F" stop-opacity="0"/></radialGradient></defs><path d="M30 20 L95 55 L30 90Z" fill="url(#lg1)"/><path d="M170 18 L110 55 L170 92Z" fill="rgba(143,184,255,.28)"/><circle cx="26" cy="55" r="9" fill="#FFD23F"/><circle cx="174" cy="55" r="8" fill="#8FB8FF"/><circle cx="100" cy="55" r="7" fill="#fff"/><rect x="92" y="88" width="16" height="11" rx="2" fill="#fff"/><path d="M100 88 L80 62 M100 88 L120 62" stroke="rgba(255,255,255,.5)" stroke-dasharray="3 3"/></svg></div></article>
-    <article class="bx bx-plan"><div class="bx-t"><span class="lf-ic" data-ic="schedule"></span><div><h3>План съёмок и КПП</h3><p>Сцены раскладываются по сменам и объектам. КПП скачивается в Excel, PDF и Word.</p></div></div>
-     <div class="mk mk-plan"><div><b>Смена 1</b><i style="--w:62%;--c:#FFD23F"></i><span>Квартира · 3 сц.</span></div><div><b>Смена 2</b><i style="--w:44%;--c:#8FB8FF"></i><span>Двор школы · 2 сц.</span></div><div><b>Смена 3</b><i style="--w:80%;--c:#9BE3B5"></i><span>Остановка · ночь</span></div></div></article>
-    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="callsheet"></span><div><h3>Вызывной лист</h3><p>Сбор, сцены и актёры дня — и сразу команде.</p></div></div>
-     <div class="mk mk-cs"><small>День 2 из 4</small><b>Сбор 08:00</b><span>Двор школы · сц. 2, 3</span></div></article>
-    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="pencil"></span><div><h3>Раскадровка</h3><p>Рисуйте кадры пальцем или мышью.</p></div></div>
-     <div class="mk mk-sb"><svg viewBox="0 0 60 34" aria-hidden="true"><rect x="1" y="1" width="58" height="32" rx="3" fill="none" stroke="rgba(255,255,255,.5)"/><path d="M8 26 Q18 10 28 22 T52 14" fill="none" stroke="#FFD23F" stroke-width="2"/><circle cx="44" cy="10" r="4" fill="none" stroke="#fff"/></svg><svg viewBox="0 0 60 34" aria-hidden="true"><rect x="1" y="1" width="58" height="32" rx="3" fill="none" stroke="rgba(255,255,255,.5)"/><circle cx="30" cy="14" r="6" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M18 32 Q30 18 42 32" fill="none" stroke="#fff" stroke-width="1.6"/></svg><svg viewBox="0 0 60 34" aria-hidden="true"><rect x="1" y="1" width="58" height="32" rx="3" fill="none" stroke="rgba(255,255,255,.5)"/><path d="M6 28 H54 M14 28 V12 H30 V28 M36 28 V18 H48 V28" fill="none" stroke="#8FB8FF" stroke-width="1.6"/></svg></div></article>
-    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="users"></span><div><h3>Команда</h3><p>Пригласите по ссылке: правки видны всем почти сразу.</p></div></div>
-     <div class="mk mk-team"><span class="ph-avs"><i>А</i><i>Д</i><i>И</i><i>М</i></span><small>Редактор · Только просмотр</small></div></article>
-    <article class="bx"><div class="bx-t"><span class="lf-ic" data-ic="store"></span><div><h3>Рентал</h3><p>Цены на технику Алматы и список для сметы.</p></div></div>
-     <div class="mk mk-rent"><span>Sony FX3</span><b>28 000 ₸</b><small>за сутки</small></div></article>
-   </div>
-  </section>
-  <section class="land-sec" id="learn">
-   <div class="ls-head"><span class="ls-kick">Обучение за 2 минуты</span><h2>Как пользоваться HUSTLE</h2><p>Пять шагов от сценария до съёмочного дня. Нажимайте на шаги или листайте кнопками.</p></div>
-   <div class="tour-in" id="landTour"></div>
-  </section>
-  <section class="land-sec">
-   <div class="ls-head"><span class="ls-kick">Роли</span><h2>Для кого</h2><p>Роль меняет набор инструментов в меню. Сменить её можно в любой момент.</p></div>
+  <section class="land-sec land-short">
    <div class="rolec">
-    <article style="--rc:#FFD23F"><span class="lf-ic" data-ic="briefcase"></span><h3>Продюсер</h3><p>Деньги, сроки и документы.</p><div class="rc-tags"><span>Смета</span><span>План съёмок</span><span>Вызывной лист</span><span>КПП</span><span>Сценарий</span></div></article>
-    <article style="--rc:#8FB8FF"><span class="lf-ic" data-ic="megaphone"></span><h3>Режиссёр</h3><p>Видение, сцены и кадры.</p><div class="rc-tags"><span>Сценарий</span><span>КПП</span><span>Заметки по сценам</span><span>Экспликация</span><span>Шот-лист</span><span>Раскадровка</span></div></article>
-    <article style="--rc:#9BE3B5"><span class="lf-ic" data-ic="camera"></span><h3>Оператор</h3><p>Свет, кадр и техника.</p><div class="rc-tags"><span>Светосхема</span><span>Шот-лист</span><span>Раскадровка</span><span>Калькуляторы</span><span>Рентал</span></div></article>
+    <article style="--rc:#FFD23F"><span class="lf-ic" data-ic="briefcase"></span><h3>Продюсер</h3><p>Смета, план съёмок, вызывной лист.</p></article>
+    <article style="--rc:#8FB8FF"><span class="lf-ic" data-ic="megaphone"></span><h3>Режиссёр</h3><p>Экспликация, шот-лист, раскадровка.</p></article>
+    <article style="--rc:#9BE3B5"><span class="lf-ic" data-ic="camera"></span><h3>Оператор</h3><p>Светосхема, шот-лист, раскадровка.</p></article>
    </div>
+   <p class="land-team"><span class="lf-ic" data-ic="users"></span>Пригласите команду по ссылке: у всех один проект, задачи и правки видны сразу.</p>
   </section>
-  <section class="land-sec"><h2>Статьи</h2><div class="land-roles"><a class="land-art" href="stati/smeta-korotkogo-metra.html"><b>Как составить смету короткого метра</b><span>Пошаговая инструкция: из каких разделов состоит смета фильма, как считать смены, сколько заклады…</span></a><a class="land-art" href="stati/vyzyvnoy-list.html"><b>Вызывной лист: что это и как его составить</b><span>Что такое вызывной лист на съёмках, какие поля в нём нужны, когда его рассылать группе и как избежать путаницы…</span></a><a class="land-art" href="stati/plan-syomok.html"><b>Как составить план съёмок</b><span>Как разбить сценарий на сцены и распределить их по съёмочным дням: группировка по локациям, расчёт страниц, вр…</span></a></div></section>
-  <footer class="land-foot"><a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a><span>HUSTLE · Сделано в Алматы, 2026</span></footer>
+  <footer class="land-foot"><a href="stati/smeta-korotkogo-metra.html">Как составить смету</a><a href="stati/vyzyvnoy-list.html">Вызывной лист</a><a href="stati/plan-syomok.html">План съёмок</a><a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a><span>HUSTLE · Сделано в Алматы, 2026</span></footer>
  </div>
 </div>
 
@@ -1632,7 +1622,7 @@ const fresh=()=>({v:2,name:'Новый проект',cur:'₸',tab:'home',
   contPct:10,feePct:0,taxPct:0,script:'',scenes:[],perDay:4,assign:{},
   cs:{day:1,info:{},castCalls:{},director:'',producer:'',phone:''},
   pc:{},dockOpen:false,seen:{},lastExport:0,bnDismiss:0,heroImg:'',
-  role:'producer',shots:[],shotScene:'',notes:{},explic:{},kpp:{},kppMeta:{},tasks:[],tasksAll:false,
+  role:'producer',shots:[],shotScene:'',notes:{},explic:{},kpp:{},kppMeta:{},tasks:[],tasksAll:true,
   light:{},lightScene:0,lightSel:'',gear:[],disc:0,dealCat:'Все',rtab:'deals',posters:[],artCat:'Все',city:'Алматы',onboarded:false,ptype:'',hubAll:false,doc:{type:'actor',vals:{}},bd:{},locs:[],story:{},storyScene:0,pen:'pen',
   calc:{fps:24,angle:180,ndFrom:8,ndTo:2,mbps:400,mins:30,card:512,d1:2,d2:3},
   });
@@ -2460,15 +2450,15 @@ function gearTotalKzt(){return S.gear.reduce((a,g)=>a+num(g.kzt)*num(g.qty)*num(
 function homeSteps(){
   const R=S.role;
   if(R==='director')return [
-    ['script','Доработайте сценарий','Загрузите текст и доработайте сцены.','Открыть сценарий'],
-    ['notes','Отметьте, что доработать','По каждой сцене — заметка и статус: черновик, доработать, утверждена.','Открыть заметки'],
+    ['script','Загрузите сценарий','Сцены и персонажи найдутся сами, команда увидит их сразу.','Открыть сценарий'],
     ['explic','Напишите экспликацию','Логлайн, тема, тон и визуальный язык фильма.','Открыть экспликацию'],
-    ['shots','Составьте шот-лист','Размеры, ракурсы и движение камеры по сценам.','Открыть шот-лист']];
+    ['shots','Составьте шот-лист','Размеры, ракурсы и движение камеры по сценам.','Открыть шот-лист'],
+    ['story','Нарисуйте раскадровку','Ключевые кадры с подписями для оператора.','Открыть раскадровку']];
   if(R==='operator')return [
     ['lights','Нарисуйте светосхемы','Расставьте камеру, актёров и свет по сценам.','Открыть светосхему'],
     ['shots','Проверьте шот-лист','Общий список кадров с режиссёром — отмечайте снятое.','Открыть шот-лист'],
-    ['gear','Соберите список техники','Выберите оборудование и посчитайте стоимость.','Открыть список'],
-    ['deals','Сравните цены ренталов','Сравните прайсы ренталов Алматы.','Открыть скидки']];
+    ['story','Посмотрите раскадровку','Рисунки кадров от режиссёра.','Открыть раскадровку'],
+    ['tasks','Проверьте свои задачи','Что команда ждёт от оператора.','Открыть задачи']];
   return [
     ['script','Разберите сценарий','Вставьте или загрузите текст — сайт найдёт сцены, локации и персонажей.','Открыть разбор'],
     ['schedule','Проверьте план съёмок','Сцены уже сгруппированы по локациям и дням. Перенесите, если нужно.','Открыть план'],
@@ -2480,12 +2470,12 @@ function homeStats(){
   if(S.scenes.length){ensurePlan();md=maxDay();S.scenes.forEach(s=>{locs[locKey(s)]=1})}
   const st=(v,l)=>'<div><b>'+v+'</b><span>'+l+'</span></div>';
   if(R==='director'){
-    const ok=Object.keys(S.notes).filter(i=>S.notes[i]&&S.notes[i].status==='ok').length;
-    return st(S.scenes.length||'—','сцен')+st(S.scenes.length?ok+' из '+S.scenes.length:'—','сцен утверждено')+st(S.shots.length||'—','кадров в шот-листе')+st(S.tasks.filter(t=>t.role==='director'&&t.status!=='done').length||'—','задач открыто');
+    const fr=Object.keys(S.story||{}).reduce((a,k)=>a+(S.story[k]||[]).length,0);
+    return st(S.scenes.length||'—','сцен')+st(S.shots.length||'—','кадров в шот-листе')+st(fr||'—','кадров раскадровки')+st(S.tasks.filter(t=>t.role==='director'&&t.status!=='done').length||'—','задач открыто');
   }
   if(R==='operator'){
     const sch=Object.keys(S.light).filter(i=>S.light[i].items&&S.light[i].items.length).length;
-    return st(sch||'—','светосхем')+st(S.shots.length?S.shots.filter(x=>x.done).length+' из '+S.shots.length:'—','кадров снято')+st(S.gear.length||'—','позиций техники')+st(S.gear.length?money(gearTotalKzt()):'—','техника за съёмку');
+    return st(sch||'—','светосхем')+st(S.shots.length?S.shots.filter(x=>x.done).length+' из '+S.shots.length:'—','кадров снято')+st(Object.keys(S.story||{}).reduce((a,k)=>a+(S.story[k]||[]).length,0)||'—','кадров раскадровки')+st(S.tasks.filter(t=>t.role==='operator'&&t.status!=='done').length||'—','задач открыто');
   }
   const c=calc();
   return st(c.sub>0?money(c.total):'—','бюджет проекта')+st(md||'—','съёмочных дней')+st(S.scenes.length||'—','сцен')+st(Object.keys(locs).length||'—','локаций');
@@ -2629,8 +2619,8 @@ function vTasks(){
     '<label>Для кого<select id="tk-role">'+Object.keys(ROLES).map(k=>'<option value="'+k+'"'+(k===S.role?' selected':'')+'>'+ROLES[k].t+'</option>').join('')+'</select></label>'+
     '<label>Сцена<select id="tk-scene">'+sceneOpts('',true)+'</select></label>'+
     '<div class="wide row"><button class="btn" type="button" data-c="taskAdd">'+icon('plus')+'Добавить задачу</button><button class="btn sec" type="button" data-c="taskSeed">Добавить типовые задачи роли</button>'+
-    '<button class="chip" type="button" data-c="taskFilter" aria-pressed="'+!!S.tasksAll+'">Показать задачи всех ролей</button></div></div>';
-  return '<header class="head"><div class="slate"></div><h1>Задачи</h1><p>Доска задач по ролям: двигайте карточки стрелками от «Сделать» до «Готово». По умолчанию показаны задачи вашей роли.</p></header>'+
+    '<button class="chip" type="button" data-c="taskFilter" aria-pressed="'+!!S.tasksAll+'">Все роли</button></div></div>';
+  return '<header class="head"><div class="slate"></div><h1>Задачи</h1><p>Общая доска команды: двигайте карточки от «Сделать» до «Готово», все видят, кто чем занят.</p></header>'+
     '<div class="col">'+panel('tadd','plus','Добавить',add)+'<div class="board">'+col('todo')+col('doing')+col('done')+'</div></div>';
 }
 
@@ -3193,12 +3183,15 @@ const dealUrl=d=>DEAL_URL[d[0]]||(rentalById(d[3])||{url:'#'}).url;
 /* ---------- статьи ---------- */
 /* ---------- ренталы: одна страница с подразделами ---------- */
 const stripHead=h=>h.replace(/<header class="head">[\s\S]*?<\/header>/,'');
+function rental8Card(){
+  const r=RENTALS.find(x=>x.id==='r8');
+  const items=['r8-fx3','r8-a7c','r8-ls600','r8-amaran60'].map(dealById).filter(Boolean);
+  return '<article class="card"><h2>Rental8</h2><p>Аренда кино- и фототехники в Алматы: камеры Sony, свет Aputure, объективы, звук, дроны. Готовые комплекты под съёмку.</p>'+
+    (items.length?'<table class="mini"><tbody>'+items.map(d=>'<tr><td>'+esc(d[1])+'</td><td>'+money(d[4])+' / сутки</td></tr>').join('')+'</tbody></table>':'')+
+    '<p class="muted" style="font-size:14px">'+esc(r.area)+'</p><div class="row"><a class="btn" href="'+r.url+'" target="_blank" rel="noopener noreferrer">'+icon('ext')+'Открыть сайт Rental8</a></div></article>';
+}
 function vRentalsPage(){
-  const tabs=[['deals','Цены'],['places','Rental8'],['list','Мой список']];
-  const n=S.gear.length;
-  const bar='<div class="subtabs" role="tablist" aria-label="Разделы ренталов">'+tabs.map(t=>'<button type="button" role="tab" class="stab" data-c="rtab" data-k="'+t[0]+'" aria-selected="'+(S.rtab===t[0])+'">'+t[1]+(t[0]==='list'&&n?' <span class="pill">'+n+'</span>':'')+'</button>').join('')+'</div>';
-  const body=S.rtab==='places'?rentalsCards():(S.rtab==='list'?gearBody():dealsBody());
-  return '<header class="head"><div class="slate"></div><h1>Рентал</h1><p>Техника Rental8: цены за сутки, список нужного и отправка в смету.</p></header>'+bar+stripHead(body);
+  return '<header class="head"><div class="slate"></div><h1>Rental8</h1><p>Партнёр HUSTLE: техника для ваших съёмок.</p></header><div class="cards">'+rental8Card()+'</div>';
 }
 
 /* ---------- каркас ---------- */
@@ -3401,11 +3394,11 @@ const TOOLS=[
  {id:'explic',g:'Идея и текст',ic:'megaphone',n:'Экспликация',d:'Видение фильма на одной странице',r:['director']},
  {id:'breakdown',g:'Подготовка',ic:'grid',n:'Разбивка по элементам',d:'Реквизит, костюмы, грим, транспорт по сценам',r:['producer','director']},
  {id:'locations',g:'Подготовка',ic:'pin',n:'Локации',d:'Места съёмок, контакты и разрешения',r:['producer','operator']},
- {id:'schedule',g:'Подготовка',ic:'schedule',n:'План съёмок',d:'Сцены по дням и занятость актёров',r:['producer']},
+ {id:'schedule',g:'Подготовка',ic:'schedule',n:'План съёмок',d:'Сцены по дням и занятость актёров',r:['producer','director']},
  {id:'budget',g:'Подготовка',ic:'budget',n:'Смета',d:'План и факт, шаблоны, итоги',r:['producer']},
  {id:'docs',g:'Подготовка',ic:'file',n:'Документы',d:'Договоры, согласия, акт приёма техники',r:['producer']},
  {id:'shots',g:'Съёмки',ic:'frame',n:'Шот-лист',d:'Кадры по сценам для режиссёра и оператора',r:['director','operator']},
- {id:'story',g:'Съёмки',ic:'pencil',n:'Раскадровка',d:'Рисунки кадров с подписями',r:['producer','director','operator']},
+ {id:'story',g:'Съёмки',ic:'pencil',n:'Раскадровка',d:'Рисунки кадров с подписями',r:['director','operator']},
  {id:'lights',g:'Съёмки',ic:'bulb',n:'Светосхема',d:'План света, камеры и актёров',r:['operator']},
  {id:'calc',g:'Съёмки',ic:'calc',n:'Калькуляторы',d:'Выдержка, ND, память, свет',r:['operator']},
  {id:'today',g:'Съёмки',ic:'camera',n:'Съёмочный день',d:'Экран для площадки: сцены, кадры, вызовы',r:['producer','director','operator']},
@@ -3413,7 +3406,7 @@ const TOOLS=[
  {id:'tasks',g:'Команда',ic:'check',n:'Задачи',d:'Доска задач по ролям',r:['producer','director','operator']}
 ];
 const TOOL_IDS=TOOLS.map(x=>x.id);
-const CORE=['lights','story','script','schedule','budget','callsheet','shots','notes','explic','calc','kpp'];
+const CORE=['script','explic','story','schedule','budget','shots','lights','callsheet','today','tasks'];
 const HUB_FIRST=['lights','story'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals'].concat(TOOL_IDS);
@@ -3442,8 +3435,8 @@ function renderChrome(){
   $('#avBtn').innerHTML='<span class="av">'+esc(String(nm).charAt(0).toUpperCase())+'</span><span class="avn"><b>'+esc(nm)+'</b><small>'+(USER==='guest'?'демо без аккаунта':'профиль и настройки')+'</small></span>';
 }
 const FS_SVG='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
-const STAGES=[['Текст',['script','story','explic','notes']],['Подготовка',['schedule','kpp','budget','shots','lights','calc','rentals']],['Съёмочный день',['callsheet']]];
-const RENT_TOOL={id:'rentals',ic:'store',n:'Техника и рентал',d:'Цены Rental8, список техники и отправка в смету'};
+const STAGES=[['Текст',['script','explic','story']],['Подготовка',['schedule','budget','shots','lights']],['Съёмочный день',['callsheet','today']],['Команда',['tasks']],['Рентал',['rentals']]];
+const RENT_TOOL={id:'rentals',ic:'store',n:'Rental8',d:'Аренда техники в Алматы'};
 function navGroups(){
   const mine=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&x.r.indexOf(S.role)>-1);
   return STAGES.map(g=>[g[0],g[1].map(id=>id==='rentals'?RENT_TOOL:mine.find(x=>x.id===id)).filter(Boolean)]).filter(g=>g[1].length);
@@ -3569,9 +3562,9 @@ function statsOrHint(){
 }
 function quickActions(){
   const m={
-    producer:[['script','script','Загрузить сценарий'],['budget','budget','Открыть смету'],['schedule','schedule','Составить план']],
-    director:[['script','script','Загрузить сценарий'],['notes','note','Заметки по сценам'],['shots','frame','Шот-лист']],
-    operator:[['lights','bulb','Светосхема'],['shots','frame','Шот-лист'],['rentals','store','Подобрать технику']]
+    producer:[['script','script','Загрузить сценарий'],['budget','budget','Открыть смету'],['tasks','check','Задачи команды']],
+    director:[['script','script','Загрузить сценарий'],['shots','frame','Шот-лист'],['tasks','check','Задачи команды']],
+    operator:[['lights','bulb','Светосхема'],['shots','frame','Шот-лист'],['tasks','check','Задачи команды']]
   }[S.role];
   return m.map((x,i)=>'<button class="btn'+(i?' sec':'')+'" type="button" data-c="tab" data-k="'+x[0]+'">'+icon(x[1])+x[2]+'</button>').join('');
 }
@@ -3601,7 +3594,7 @@ function vHome(){
   const posters=posterList().map(posterHtml).join('');
   const addForm='<details class="addp noprint"><summary>Добавить акцию, о которой вам рассказал рентал</summary><div class="fields" style="margin-top:10px"><label>Рентал<input id="pk-rental" placeholder="Например, BQRental"></label><label>Что в акции<input id="pk-title" placeholder="Например, Aputure 300x на выходные"></label><label>Цена или скидка<input id="pk-price" placeholder="Например, −20% или 8 800 ₸"></label><label>Ссылка (необязательно)<input id="pk-url" placeholder="https://…"></label><div class="wide"><button class="btn" type="button" data-c="posterAdd">'+icon('plus')+'Добавить постер</button></div></div></details>';
   return todayBanner()+proj+backupBanner()+
-    '<details class="addp rent-fold"><summary>Цены на технику Rental8 (по открытому прайсу на 12.10.2026)</summary><p class="muted" style="margin:10px 0">Только Rental8 (пр. Гагарина, 124): цены за сутки. Полный список и расчёт сметы — во вкладке «Рентал».</p><div class="posters" role="list">'+posters+'</div>'+'</details>'+
+    '<section class="card promo8"><div><b>Нужна техника? Rental8</b><p class="muted">Камеры, свет, звук и комплекты для съёмок в Алматы.</p></div><button class="btn sec" type="button" data-c="tab" data-k="rentals">'+icon('store')+'Смотреть</button></section>'+
     (showHero()?heroHtml():'')+'<p class="site-foot">HUSTLE · Сделано в Алматы, 2026</p>';
 }
 
@@ -3767,8 +3760,9 @@ function toolStatus(id){
     case 'budget':{const c=calc();return c.sub>0?{ok:true,t:money(c.total)}:{ok:false,t:'ставки не введены'}}
     case 'shots':{const k=S.shots.length,dn=S.shots.filter(x=>x.done).length;return k?{ok:true,t:'снято '+dn+' из '+k}:{ok:false,t:'кадров нет'}}
     case 'lights':{const k=Object.keys(S.light).filter(i=>S.light[i].items&&S.light[i].items.length).length;return k?{ok:true,t:k+' '+plural(k,'схема','схемы','схем')}:{ok:false,t:'схем нет'}}
-    case 'calc':return {ok:null,t:'выдержка, ND, глубина резкости'};
-    case 'rentals':return S.gear.length?{ok:true,t:S.gear.length+' '+plural(S.gear.length,'позиция','позиции','позиций')}:{ok:null,t:'список пуст'};
+    case 'tasks':{const o=S.tasks.filter(x=>x.status!=='done').length;return S.tasks.length?{ok:null,t:o?'открыто '+o:'всё сделано'}:{ok:null,t:'задач пока нет'}}
+    case 'today':{const ti=todayIndex();return {ok:null,t:ti?'сегодня день '+ti:'экран для площадки'}}
+    case 'rentals':return {ok:null,t:'техника для съёмок'};
     case 'callsheet':{if(!n)return {ok:false,t:'нет сцен'};const d=Object.keys(S.cs.info).filter(k=>S.cs.info[k]&&S.cs.info[k].addr).length;return {ok:d>=md,t:'адрес указан: '+Math.min(d,md)+' из '+md}}
   }
   return {ok:null,t:''};
@@ -3794,7 +3788,17 @@ function vProj(){
     return '<section class="pult-st"><div class="pst-h"><b>'+g[0]+'</b><span>'+(cnt.length?done+' из '+cnt.length:'')+'</span></div>'+(cnt.length?'<div class="pst-bar"><i style="width:'+Math.round(done/cnt.length*100)+'%"></i></div>':'')+
       st.map(y=>'<button class="pst-i" type="button" data-c="tab" data-k="'+y[0].id+'"><span class="pst-ic">'+icon(y[0].ic)+'</span><span class="pst-t"><b>'+t(y[0].n)+'</b><small>'+esc(y[1].t)+'</small></span><i class="pst-s '+(y[1].ok===true?'ok':y[1].ok===false?'no':'na')+'" aria-label="'+(y[1].ok===true?'готово':y[1].ok===false?'не готово':'')+'"></i></button>').join('')+'</section>'}).join('')+'</div>';
   const team=teamHtml();
-  return head+nx+shift+backupBanner()+stages+(team?'<div class="hub-team">'+team+'</div>':'');
+  return head+teamDoing()+nx+shift+backupBanner()+stages+(team?'<div class="hub-team">'+team+'</div>':'');
+}
+/* кто что делает: открытые задачи по ролям, видны всей команде */
+function teamDoing(){
+  const open=S.tasks.filter(x=>x.status!=='done'),all=S.tasks.length;
+  const cards=Object.keys(ROLES).map(r=>{
+    const mine=open.filter(x=>x.role===r),act=mine.filter(x=>x.status==='doing'),show=(act.length?act:mine).slice(0,3);
+    return '<article class="td-role'+(r===S.role?' me':'')+'"><div class="tr-h">'+icon(ROLES[r].i)+'<b>'+t(ROLES[r].t)+(r===S.role?' (вы)':'')+'</b><span>'+mine.length+' '+plural(mine.length,'задача','задачи','задач')+'</span></div>'+
+      (show.length?'<ul>'+show.map(x=>'<li class="'+esc(x.status)+'">'+esc(x.text)+'</li>').join('')+'</ul>':'<p class="muted">Пока нет задач</p>')+'</article>'}).join('');
+  return '<section class="team-doing"><div class="pst-h"><b>Кто что делает</b><span>'+(all?(all-open.length)+' из '+all+' задач готово':'')+'</span></div><div class="td-roles">'+cards+'</div>'+
+    '<div class="td-foot"><button class="btn" type="button" data-c="tab" data-k="tasks">'+icon('check')+'Задачи команды</button>'+(all?'':'<button class="btn sec" type="button" data-c="taskSeed">Добавить типовые задачи моей роли</button>')+'</div></section>';
 }
 
 /* ---------- фестивали и гранты ---------- */
@@ -3982,8 +3986,8 @@ const TOUR=[
   mk:'<div class="tm-h"><b>Сценарий</b><span class="tm-y">Загрузить файл</span><span class="tm-o">Скачать ▾</span></div><div class="tm-paper"><i class="w9"></i><i class="w6"></i><i class="w3 c"></i><i class="w7 d"></i><i class="w8"></i></div>'},
  {t:'Исправьте ошибки с помощником',d:'Под текстом помощник покажет ошибки, места «проверьте» и советы: опечатки в именах и времени суток, пустые сцены, незакрытые скобки. Кнопка «Объединить» исправит опечатку сама.',w:'Сценарий → блок «Помощник: ошибки и несостыковки»',
   mk:'<div class="tm-card"><span class="tm-tag r">Ошибка</span><b>Пустая сцена</b></div><div class="tm-card"><span class="tm-tag y">Проверьте</span><b>«АЙГЕРИМ» и «АЙГЕРМ»?</b><span class="tm-y sm">Объединить</span></div><div class="tm-card"><span class="tm-tag b">Совет</span><b>Ночных съёмок на улице: 2</b></div>'},
- {t:'Соберите план, КПП и смету',d:'План съёмок разложит сцены по сменам, КПП соберётся сам, смета посчитает итоги. Главная кнопка каждого экрана — жёлтая, файлы — в «Скачать ▾» справа от заголовка.',w:'Проект → План съёмок · КПП · Смета → «Скачать ▾»',
-  mk:'<div class="tm-h"><b>КПП</b><span class="tm-y">Скачать КПП ▾</span></div><div class="tm-menu col"><span>Excel (.xlsx)</span><span>PDF (альбомный лист)</span><span>Word (.docx)</span></div>'},
+ {t:'Соберите план и смету',d:'План съёмок разложит сцены по сменам, смета посчитает итоги. Главная кнопка каждого экрана — жёлтая, файлы — в «Скачать ▾» справа от заголовка.',w:'Проект → План съёмок · Смета → «Скачать ▾»',
+  mk:'<div class="tm-h"><b>План съёмок</b><span class="tm-y">Скачать ▾</span></div><div class="tm-menu col"><span>Excel (.xlsx)</span><span>PDF (альбомный лист)</span><span>Word (.docx)</span></div>'},
  {t:'Отправьте команде',d:'Пригласите людей в проект по ссылке: редактор меняет, «только просмотр» смотрит. Вызывной лист на день отправляется кнопкой «Отправить команде».',w:'Шапка проекта → «Пригласить ▾» · Вызывной лист → «Отправить команде»',
   mk:'<div class="tm-bar"><span class="ph-avs"><i>А</i><i>Д</i><i>И</i></span><span class="tm-pill on">+ Пригласить ▾</span></div><div class="tm-menu col"><span><b>Редактор</b> — может менять проект</span><span><b>Только просмотр</b> — смотрит без правок</span></div><div class="tm-h" style="margin-top:10px"><span class="tm-y">Отправить команде</span></div>'}
 ];
