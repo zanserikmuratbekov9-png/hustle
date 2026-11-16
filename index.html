@@ -355,6 +355,7 @@ textarea.script{width:100%;min-height:280px;resize:vertical;background:var(--sof
   .step{grid-template-columns:36px 1fr}
   .step .btn{grid-column:1/-1;justify-content:center}
 }
+
 @media print{
   .side,.noprint,#toast,.dock,.auth{display:none!important}
   .app{display:block}
@@ -1454,6 +1455,44 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 .promo8 b{font-family:'Unbounded','Onest',system-ui,sans-serif}.promo8 p{margin:4px 0 0}
 @media(max-width:720px){.td-roles{grid-template-columns:1fr}.rolec{grid-template-columns:1fr}.land-foot span{margin-left:0;width:100%}}
 @media (max-width:640px){.head p{font-size:15px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}#pname{font-size:20px}}
+/* ===== телефон: та же боковая панель, что на компьютере, выезжает слева ===== */
+.menubtn,.scrim{display:none}
+@media (max-width:860px){
+  .toolmenu{display:none!important}
+  .bottom{display:none!important}
+  .railbtn{display:none}
+  .menubtn{display:grid;place-items:center;position:fixed;left:calc(10px + env(safe-area-inset-left,0px));top:calc(10px + env(safe-area-inset-top,0px));z-index:40;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--side-bg,#0b1238);color:var(--side-ink,#fff);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .menubtn .ic{width:24px;height:24px}
+  body.navopen .menubtn{display:none}
+  .scrim{display:block;position:fixed;inset:0;z-index:44;background:rgba(5,8,24,.55);opacity:0;pointer-events:none;transition:opacity .2s}
+  body.navopen .scrim{opacity:1;pointer-events:auto}
+  .top{position:fixed;left:0;top:0;bottom:0;width:min(300px,86vw);height:auto;z-index:45;transform:translateX(-105%);transition:transform .22s ease;border-right:1px solid var(--line);background:var(--surface);overflow:auto;-webkit-overflow-scrolling:touch;padding-top:env(safe-area-inset-top,0px)}
+  body.navopen .top{transform:none;box-shadow:0 0 40px rgba(0,0,0,.5)}
+  .top-in{height:100%;min-height:100%;max-width:none;margin:0;flex-direction:column;align-items:stretch;gap:6px;padding:20px 14px 16px}
+  .brand{order:0;padding:4px 8px 14px;margin-bottom:4px}
+  .brand .logo{width:42px;height:42px}
+  .topnav{display:flex;order:1;flex:none;flex-direction:column;overflow:visible;gap:4px}
+  .tn{width:100%;border-radius:14px;padding:12px 14px;font-size:15.5px}
+  .tn .ic{width:21px;height:21px}
+  .top-r{display:contents}
+  .savestat{order:3;margin-top:auto;align-self:flex-start}
+  .savestat.ok{font-size:12px;width:auto;height:auto;padding:5px 12px;border-radius:999px;background:var(--soft)}
+  #roleMenu{order:4;margin-top:8px}
+  #opts{order:5}
+  .chipbtn{width:100%;justify-content:flex-start;border-radius:14px;padding:11px 14px}
+  .chipbtn span{display:inline}
+  .chipbtn .caret{margin-left:auto}
+  .avbtn{display:flex;align-items:center;gap:10px;width:100%;border-radius:14px;padding:8px;border:1px solid var(--line)}
+  .avbtn .avn{display:flex;flex-direction:column;min-width:0;line-height:1.25;text-align:left}
+  .avbtn .avn small{color:var(--muted);font-size:12px}
+  .avbtn .av{width:38px;height:38px}
+  .menu-pop,.menu-pop.wide{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;z-index:60;max-height:80vh;overflow:auto}
+  main{padding:68px 14px 40px}
+  .dock{bottom:12px}
+  #toast{bottom:20px}
+}
+.tntog{display:none}
+@media (max-width:860px){.tnsub{display:flex!important;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:1px solid var(--line)}.tnsub[hidden]{display:none!important}.tntog{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin:2px 14px 4px 28px;padding:6px 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-radius:8px}.tns{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:11px;font-size:15px;font-weight:600;color:color-mix(in srgb,var(--brand-light) 80%,transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tns .ic{width:18px;height:18px;flex:none}.tns[aria-current="page"]{background:var(--btn-y);color:var(--btn-y-ink)}.tng{display:block;margin:10px 0 2px 6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:color-mix(in srgb,var(--brand-light) 60%,transparent)}.topnav{overflow-y:auto;min-height:0}.tnsub{border-left-color:color-mix(in srgb,var(--brand-light) 22%,transparent)!important}.tntog .caret{transition:transform .2s}.tntog[aria-expanded=false] .caret{transform:rotate(-90deg)}}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
@@ -1517,6 +1556,8 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 </div>
 
 <div class="app" id="app" hidden>
+  <button class="menubtn noprint" id="menuBtn" type="button" data-c="menu" aria-label="Меню и инструменты"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <div class="scrim noprint" id="scrim" data-c="menu"></div>
   <header class="top">
     <div class="top-in">
       <button class="brand" type="button" data-c="tab" data-k="home" aria-label="HUSTLE — на главную">
@@ -3454,7 +3495,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('details.menu'))close
 function renderChrome(){
   const sec=secOf(S.tab);
   $('#topnav').innerHTML=TOP.map(x=>'<button class="tn" type="button" title="'+t(x[2])+'" data-c="tab" data-k="'+x[0]+'"'+((x[0]==='proj'?S.tab==='proj':sec===x[0])?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[2])+'</span></button>'+
-    (x[0]==='proj'?'<div class="tnsub" role="group" aria-label="Инструменты проекта">'+navGroups().map(g=>'<small class="tng">'+g[0]+'</small>'+g[1].map(y=>'<button class="tns" type="button" title="'+t(y.n)+'" data-c="tab" data-k="'+y.id+'"'+(S.tab===y.id?' aria-current="page"':'')+'>'+icon(y.ic)+'<span>'+t(y.n)+'</span></button>').join('')).join('')+'</div>':'')).join('');
+    (x[0]==='proj'?'<button class="tntog" type="button" data-c="toolsTog" aria-expanded="'+!S.toolsOff+'"><span>Инструменты</span><i class="caret">▾</i></button><div class="tnsub"'+(S.toolsOff?' hidden':'')+' role="group" aria-label="Инструменты проекта">'+navGroups().map(g=>'<small class="tng">'+g[0]+'</small>'+g[1].map(y=>'<button class="tns" type="button" title="'+t(y.n)+'" data-c="tab" data-k="'+y.id+'"'+(S.tab===y.id?' aria-current="page"':'')+'>'+icon(y.ic)+'<span>'+t(y.n)+'</span></button>').join('')).join('')+'</div>':'')).join('');
   $('#botnav').innerHTML=TOP.map(x=>'<button class="bt" type="button" data-c="tab" data-k="'+x[0]+'"'+(sec===x[0]?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[3])+'</span></button>').join('');
   
   ['#topnav','#botnav'].forEach(q=>{const el=$(q);if(PREF.lang==='kk')el.setAttribute('lang','kk');else el.removeAttribute('lang')});
@@ -4782,7 +4823,7 @@ document.addEventListener('click',e=>{
   if(c==='landReg'){const d=$('.auth-more');if(d){d.hidden=false;d.open=true}const tb=$('#tab-register');if(tb)tb.click();const cd=$('#authCard');if(cd)cd.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const f=$('#authForm input');if(f)f.focus({preventScroll:true})},350);return}
   if(!S)return;
   if(c==='logout'){doLogout();return}
-  if(c==='tab'){let k=b.dataset.k;if(k==='deals'||k==='gear'){S.rtab=k==='gear'?'list':'deals';k='rentals'}if(b.dataset.sub)S.rtab=b.dataset.sub;S.tab=k;render();window.scrollTo(0,0)}
+  if(c==='tab'){document.body.classList.remove('navopen');let k=b.dataset.k;if(k==='deals'||k==='gear'){S.rtab=k==='gear'?'list':'deals';k='rentals'}if(b.dataset.sub)S.rtab=b.dataset.sub;S.tab=k;render();window.scrollTo(0,0)}
   else if(c==='lang'){PREF.lang=PREF.lang==='kk'?'ru':'kk';savePref();render()}
   else if(c==='fs'){setFS(!document.body.classList.contains('fs'))}
   else if(c==='hubfilter'){S.hubAll=b.dataset.k==='all';render()}
@@ -4920,6 +4961,8 @@ document.addEventListener('click',e=>{
   else if(c==='ltTop'){const L=curLight(),sel=selItem(),a=(sel&&sel.type==='actor')?sel:L.items.find(i=>i.type==='actor'),x=a?a.x:400,y=a?a.y:260,cnt=L.items.filter(i=>i.boom).length;
     const it=ltMake('light',x,y,{label:'Топлайт'+(cnt?' '+(cnt+1):''),w:200,k:5600,mod:'Софтбокс',h:3.6,tilt:-90,boom:true,rot:0});L.items.push(it);S.lightSel=it.id;paintLight();paintInspector();save()}
   else if(c==='ltNudge'){ltNudge(b.dataset.k,10)}
+  else if(c==='toolsTog'){S.toolsOff=!S.toolsOff;renderChrome()}
+  else if(c==='menu'){document.body.classList.toggle('navopen')}
   else if(c==='ltView'){PREF.lt3d=b.dataset.k==='3d';savePref();render()}
   else if(c==='ltPreset'){ltPreset(b.dataset.k);paintLight();paintInspector();save()}
   else if(c==='ltDup'){const it=selItem();if(it){const cp=Object.assign({},it,{id:uid(),x:Math.min(780,it.x+34),y:Math.min(500,it.y+34)});curLight().items.push(cp);S.lightSel=cp.id;paintLight();paintInspector();save()}}
