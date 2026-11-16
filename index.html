@@ -1493,6 +1493,17 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 }
 .tntog{display:none}
 @media (max-width:860px){.tnsub{display:flex!important;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:1px solid var(--line)}.tnsub[hidden]{display:none!important}.tntog{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin:2px 14px 4px 28px;padding:6px 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-radius:8px}.tns{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:11px;font-size:15px;font-weight:600;color:color-mix(in srgb,var(--brand-light) 80%,transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tns .ic{width:18px;height:18px;flex:none}.tns[aria-current="page"]{background:var(--btn-y);color:var(--btn-y-ink)}.tng{display:block;margin:10px 0 2px 6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:color-mix(in srgb,var(--brand-light) 60%,transparent)}.topnav{overflow-y:auto;min-height:0}.tnsub{border-left-color:color-mix(in srgb,var(--brand-light) 22%,transparent)!important}.tntog .caret{transition:transform .2s}.tntog[aria-expanded=false] .caret{transform:rotate(-90deg)}}
+.roleseg{order:2;margin-top:auto;padding:10px 4px 0;border-top:1px solid color-mix(in srgb,var(--brand-light) 20%,transparent)}
+.roleseg small{display:block;margin:0 6px 6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:color-mix(in srgb,var(--brand-light) 60%,transparent)}
+.rs-row{display:flex;flex-direction:column;gap:3px}
+.rs{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:11px;font-size:14.5px;font-weight:600;color:color-mix(in srgb,var(--brand-light) 80%,transparent)}
+.rs .ic{width:18px;height:18px;flex:none}
+.rs:hover{background:color-mix(in srgb,var(--brand-light) 12%,transparent)}
+.rs:focus-visible{outline:3px solid var(--brand-light)}
+.rs[aria-pressed="true"]{background:var(--btn-y);color:var(--btn-y-ink)}
+.savestat{margin-top:8px!important}
+.app.rail .roleseg small,.app.rail .rs span{display:none}
+.app.rail .rs{justify-content:center;padding:9px 0}
 </style>
 <script>
 /* старые Safari (iOS до 16.2) не понимают color-mix — тогда цвета пропадают. Подменяем на ближайший цвет. */
@@ -1566,6 +1577,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
       </button>
       <button class="railbtn" id="railBtn" type="button" data-c="rail" aria-label="Свернуть панель" title="Свернуть панель"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
       <nav id="topnav" class="topnav" aria-label="Разделы"></nav>
+      <div class="roleseg" id="roleSeg" role="group" aria-label="Роль"></div>
       <div class="top-r">
         <button class="savestat ok" id="saveStat" type="button" data-c="saveInfo" title="Данные сохраняются в этом браузере">Сохранено</button>
         
@@ -3499,6 +3511,7 @@ function renderChrome(){
   $('#botnav').innerHTML=TOP.map(x=>'<button class="bt" type="button" data-c="tab" data-k="'+x[0]+'"'+(sec===x[0]?' aria-current="page"':'')+'>'+icon(x[1])+'<span>'+t(x[3])+'</span></button>').join('');
   
   ['#topnav','#botnav'].forEach(q=>{const el=$(q);if(PREF.lang==='kk')el.setAttribute('lang','kk');else el.removeAttribute('lang')});
+  $('#roleSeg').innerHTML='<small>Я работаю как</small><div class="rs-row">'+Object.keys(ROLES).map(k=>'<button class="rs" type="button" data-c="role" data-k="'+k+'" title="'+t(ROLES[k].t)+'"'+(S.role===k?' aria-pressed="true"':' aria-pressed="false"')+'>'+icon(ROLES[k].i)+'<span>'+t(ROLES[k].t)+'</span></button>').join('')+'</div>';
   $('#roleBtn').innerHTML=icon(ROLES[S.role].i)+'<span>'+t(ROLES[S.role].t)+'</span><i class="caret">▾</i>';
   $('#roleList').innerHTML='<p class="mt">'+t('Я работаю как')+'</p>'+Object.keys(ROLES).map(k=>'<button class="opt'+(S.role===k?' on':'')+'" type="button" data-c="role" data-k="'+k+'">'+icon(ROLES[k].i)+'<span>'+t(ROLES[k].t)+'</span></button>').join('');
   const nm=userName();
