@@ -1479,7 +1479,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   </section>
   <section class="land-sec land-short">
    <div class="rolec">
-    <article style="--rc:#FFD23F"><span class="lf-ic" data-ic="briefcase"></span><h3>Продюсер</h3><p>Смета, план съёмок, вызывной лист.</p></article>
+    <article style="--rc:#FFD23F"><span class="lf-ic" data-ic="briefcase"></span><h3>Продюсер</h3><p>Смета, КПП, вызывной лист.</p></article>
     <article style="--rc:#8FB8FF"><span class="lf-ic" data-ic="megaphone"></span><h3>Режиссёр</h3><p>Экспликация, шот-лист, раскадровка.</p></article>
     <article style="--rc:#9BE3B5"><span class="lf-ic" data-ic="camera"></span><h3>Оператор</h3><p>Светосхема, шот-лист, раскадровка.</p></article>
    </div>
@@ -2429,6 +2429,7 @@ function vCall(){
 function stepDone(k){
   switch(k){
     case 'script':return S.scenes.length>0;
+    case 'kpp':return S.scenes.length>0&&Object.keys(S.cs.info).some(d=>S.cs.info[d]&&S.cs.info[d].date);
     case 'schedule':return S.scenes.length>0&&!!S.seen.schedule;
     case 'budget':return calc().sub>0;
     case 'callsheet':{const i=S.cs.info;let any=false;Object.keys(i).forEach(d=>{if(i[d].addr||i[d].date)any=true});return !!(S.cs.director||S.cs.producer||any)}
@@ -2461,7 +2462,7 @@ function homeSteps(){
     ['tasks','Проверьте свои задачи','Что команда ждёт от оператора.','Открыть задачи']];
   return [
     ['script','Разберите сценарий','Вставьте или загрузите текст — сайт найдёт сцены, локации и персонажей.','Открыть разбор'],
-    ['schedule','Проверьте план съёмок','Сцены уже сгруппированы по локациям и дням. Перенесите, если нужно.','Открыть план'],
+    ['kpp','Проверьте КПП','Сцены сгруппированы по локациям и дням. Укажите даты съёмок.','Открыть КПП'],
     ['budget','Заполните смету','Введите ставки — итоги, налог и валюта посчитаются сами.','Открыть смету'],
     ['callsheet','Подготовьте вызывной лист','Выберите съёмочный день, укажите адрес и время вызова.','Открыть лист']];
 }
@@ -3406,7 +3407,7 @@ const TOOLS=[
  {id:'tasks',g:'Команда',ic:'check',n:'Задачи',d:'Доска задач по ролям',r:['producer','director','operator']}
 ];
 const TOOL_IDS=TOOLS.map(x=>x.id);
-const CORE=['script','explic','story','schedule','budget','shots','lights','callsheet','today','tasks'];
+const CORE=['script','explic','story','kpp','budget','shots','lights','callsheet','today','tasks'];
 const HUB_FIRST=['lights','story'];
 const TOOL_GROUPS=['Идея и текст','Подготовка','Съёмки','Команда'];
 const PAGE_IDS=['home','proj','rentals'].concat(TOOL_IDS);
@@ -3435,7 +3436,7 @@ function renderChrome(){
   $('#avBtn').innerHTML='<span class="av">'+esc(String(nm).charAt(0).toUpperCase())+'</span><span class="avn"><b>'+esc(nm)+'</b><small>'+(USER==='guest'?'демо без аккаунта':'профиль и настройки')+'</small></span>';
 }
 const FS_SVG='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
-const STAGES=[['Текст',['script','explic','story']],['Подготовка',['schedule','budget','shots','lights']],['Съёмочный день',['callsheet','today']],['Команда',['tasks']],['Рентал',['rentals']]];
+const STAGES=[['Текст',['script','explic','story']],['Подготовка',['kpp','budget','shots','lights']],['Съёмочный день',['callsheet','today']],['Команда',['tasks']],['Рентал',['rentals']]];
 const RENT_TOOL={id:'rentals',ic:'store',n:'Rental8',d:'Аренда техники в Алматы'};
 function navGroups(){
   const mine=TOOLS.filter(x=>CORE.indexOf(x.id)>-1&&x.r.indexOf(S.role)>-1);
@@ -3986,8 +3987,8 @@ const TOUR=[
   mk:'<div class="tm-h"><b>Сценарий</b><span class="tm-y">Загрузить файл</span><span class="tm-o">Скачать ▾</span></div><div class="tm-paper"><i class="w9"></i><i class="w6"></i><i class="w3 c"></i><i class="w7 d"></i><i class="w8"></i></div>'},
  {t:'Исправьте ошибки с помощником',d:'Под текстом помощник покажет ошибки, места «проверьте» и советы: опечатки в именах и времени суток, пустые сцены, незакрытые скобки. Кнопка «Объединить» исправит опечатку сама.',w:'Сценарий → блок «Помощник: ошибки и несостыковки»',
   mk:'<div class="tm-card"><span class="tm-tag r">Ошибка</span><b>Пустая сцена</b></div><div class="tm-card"><span class="tm-tag y">Проверьте</span><b>«АЙГЕРИМ» и «АЙГЕРМ»?</b><span class="tm-y sm">Объединить</span></div><div class="tm-card"><span class="tm-tag b">Совет</span><b>Ночных съёмок на улице: 2</b></div>'},
- {t:'Соберите план и смету',d:'План съёмок разложит сцены по сменам, смета посчитает итоги. Главная кнопка каждого экрана — жёлтая, файлы — в «Скачать ▾» справа от заголовка.',w:'Проект → План съёмок · Смета → «Скачать ▾»',
-  mk:'<div class="tm-h"><b>План съёмок</b><span class="tm-y">Скачать ▾</span></div><div class="tm-menu col"><span>Excel (.xlsx)</span><span>PDF (альбомный лист)</span><span>Word (.docx)</span></div>'},
+ {t:'Соберите КПП и смету',d:'КПП разложит сцены по сменам, смета посчитает итоги. Главная кнопка каждого экрана — жёлтая, файлы — в «Скачать ▾» справа от заголовка.',w:'Проект → КПП · Смета → «Скачать ▾»',
+  mk:'<div class="tm-h"><b>КПП</b><span class="tm-y">Скачать ▾</span></div><div class="tm-menu col"><span>Excel (.xlsx)</span><span>PDF (альбомный лист)</span><span>Word (.docx)</span></div>'},
  {t:'Отправьте команде',d:'Пригласите людей в проект по ссылке: редактор меняет, «только просмотр» смотрит. Вызывной лист на день отправляется кнопкой «Отправить команде».',w:'Шапка проекта → «Пригласить ▾» · Вызывной лист → «Отправить команде»',
   mk:'<div class="tm-bar"><span class="ph-avs"><i>А</i><i>Д</i><i>И</i></span><span class="tm-pill on">+ Пригласить ▾</span></div><div class="tm-menu col"><span><b>Редактор</b> — может менять проект</span><span><b>Только просмотр</b> — смотрит без правок</span></div><div class="tm-h" style="margin-top:10px"><span class="tm-y">Отправить команде</span></div>'}
 ];
