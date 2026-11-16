@@ -1,0 +1,47 @@
+name: Резервная копия базы
+# Каждый день делает копию данных сайта (проекты пользователей) из Supabase,
+# шифрует её паролем и сохраняет на 30 дней во вкладке Actions -> этот запуск -> Artifacts.
+# Репозиторий публичный, поэтому копия ВСЕГДА шифруется: без пароля её открыть нельзя.
+# Нужны два секрета (Settings -> Secrets and variables -> Actions -> New repository secret):
+#   SUPABASE_DB_URL     адрес подключения к базе (Supabase -> Connect -> Session pooler, с вашим паролем базы)
+#   BACKUP_PASSPHRASE   длинный пароль для шифрования (сохраните его отдельно, без него копию не открыть)
+on:
+  schedule:
+    - cron: '17 21 * * *'   # каждый день в 02:17 по Алматы
+  workflow_dispatch:
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+    steps:
+      - name: Проверка настроек
+        id: cfg
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ] || [ -z "$BACKUP_PASSPHRASE" ]; then
+            echo "::warning::Секреты SUPABASE_DB_URL и BACKUP_PASSPHRASE не заданы, копия не делается. Инструкция: ЗАПУСК.md"
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Выгрузка базы (схема public)
+        if: steps.cfg.outputs.ready == 'yes'
+        run: |
+          docker run --rm postgres:17 pg_dump "$SUPABASE_DB_URL" --schema=public --no-owner --no-privileges | gzip -9 > hustle.sql.gz
+          test -s hustle.sql.gz
+      - name: Шифрование
+        if: steps.cfg.outputs.ready == 'yes'
+        run: |
+          gpg --batch --yes --pinentry-mode loopback --symmetric --cipher-algo AES256 --passphrase "$BACKUP_PASSPHRASE" -o "hustle-$(date -u +%Y-%m-%d).sql.gz.gpg" hustle.sql.gz
+          rm -f hustle.sql.gz
+          ls -l hustle-*.gpg
+      - name: Сохранение на 30 дней
+        if: steps.cfg.outputs.ready == 'yes'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hustle-backup
+          path: hustle-*.sql.gz.gpg
+          retention-days: 30
+          if-no-files-found: error

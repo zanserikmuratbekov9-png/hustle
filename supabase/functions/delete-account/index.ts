@@ -1,7 +1,7 @@
 // Удаление аккаунта и всех данных пользователя (проект, тариф, счётчики удаляются каскадом).
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "*";
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "https://hustle-ckx.pages.dev"; // при смене адреса сайта задайте секрет ALLOWED_ORIGIN
 const cors = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",

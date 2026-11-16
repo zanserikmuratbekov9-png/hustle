@@ -5,7 +5,7 @@ const MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-5-5";
 const LIMIT_FREE = Number(Deno.env.get("AI_LIMIT_FREE") ?? "5");   // запросов в день на бесплатном тарифе
 const LIMIT_PRO = Number(Deno.env.get("AI_LIMIT_PRO") ?? "50");    // запросов в день на платном
 const MAX_PROMPT = 40000;                                           // символов
-const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "*";       // после покупки домена впишите https://ваш-домен
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "https://hustle-ckx.pages.dev"; // при смене адреса сайта задайте секрет ALLOWED_ORIGIN
 
 const cors = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
