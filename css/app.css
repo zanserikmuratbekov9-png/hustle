@@ -1487,7 +1487,7 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 .app.rail .roleseg small,.app.rail .rs span{display:none}
 .app.rail .rs{justify-content:center;padding:9px 0}
 
-@media(max-width:640px){.seg.lt-mode{display:none}}
+@media(max-width:640px){.seg.lt-mode{display:flex;width:100%}.seg.lt-mode .chip{flex:1;justify-content:center}}
 
 /* ================= v7: правки интерфейса по аудиту ================= */
 .hub-head{grid-template-columns:minmax(0,1fr)!important;gap:12px;align-items:start}
@@ -1519,3 +1519,11 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 .newproj summary{cursor:pointer;font-weight:700;padding:12px 0;display:flex;align-items:center;gap:8px;list-style:none}
 .newproj summary::-webkit-details-marker{display:none}
 .newproj .fields{padding-bottom:14px}
+
+@media (max-width:860px){
+  .crumbs{top:0!important;padding-left:calc(68px + env(safe-area-inset-left,0px));padding-top:calc(8px + env(safe-area-inset-top,0px));min-height:64px;margin-top:-12px}
+  main{padding-top:0}
+}
+@media (max-width:860px){
+  .tstrip{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);padding-left:10px;padding-right:10px}
+}
