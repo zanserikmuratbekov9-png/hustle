@@ -1513,3 +1513,9 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   .projcard .stats b{font-size:18px;white-space:normal;overflow-wrap:anywhere}
   .projcard .stats span,.projcard .stats small{font-size:12px;overflow-wrap:anywhere}
 }
+.ptype-row label{display:inline-flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.ptype-row select{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--ink);max-width:100%}
+.newproj{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:6px 18px;margin:0 0 14px}
+.newproj summary{cursor:pointer;font-weight:700;padding:12px 0;display:flex;align-items:center;gap:8px;list-style:none}
+.newproj summary::-webkit-details-marker{display:none}
+.newproj .fields{padding-bottom:14px}
