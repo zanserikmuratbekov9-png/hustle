@@ -268,7 +268,7 @@ function loadDemo(k){
   S=fresh();S.rates=kr;S.ratesDate=kd;S.cur=kc;S.name=P.name;S.onboarded=true;
   /* смета в примере всегда пустая: ставки и технику пользователь вводит сам */
   S.perDay=P.perDay;S.script=P.script;S.scenes=parseScript(S.script);autoPlan();
-  S.cs.director=P.director;S.cs.producer='Ваше имя';
+  S.cs.director='';S.cs.producer='';
   S.role=kr0;S.tab='home';render();toast('Пример проекта загружен');
 }
 
