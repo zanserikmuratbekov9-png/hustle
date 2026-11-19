@@ -143,6 +143,13 @@ async function saveFile(name,data,mime){
     try{await DL.save({filename:name,data:data});return true}
     catch(e){if(!(e&&e.code==='declined'))toast('Не удалось сохранить файл');return false}
   }
+  /* SVG на телефоне: iOS не принимает его как файл — отдаём картинку PNG */
+  if(/\.svg$/i.test(name)&&typeof data==='string'&&matchMedia('(pointer:coarse)').matches){
+    try{
+      const png=await new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.naturalWidth||1600;c.height=im.naturalHeight||1040;c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):no(),'image/png')};im.onerror=no;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(data)});
+      return await saveFile(name.replace(/\.svg$/i,'.png'),png,'image/png');
+    }catch(e){}
+  }
   /* телефон: окно «Поделиться» с пунктом «Сохранить в Файлы» — надёжнее, чем скачивание по ссылке */
   try{
     if(matchMedia('(pointer:coarse)').matches&&navigator.canShare&&navigator.share){
