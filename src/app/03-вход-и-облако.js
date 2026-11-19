@@ -280,6 +280,7 @@ function userName(){
 function userSub(){return USER==='guest'?'данные только в этом браузере':(CLOUD?CLOUD.email:USER)}
 function renderAcct(){
   const name=userName();
+  {const db=$('#delAccBtn');if(db)db.hidden=!(CLOUD&&USER!=='guest')}
   $('#acct').innerHTML='<div class="av" aria-hidden="true">'+esc(name.charAt(0).toUpperCase())+'</div><div class="who"><b>'+esc(name)+'</b><span>'+esc(userSub())+'</span></div><button class="icon-btn" type="button" data-c="logout" aria-label="'+(USER==='guest'?'Войти или создать аккаунт':'Выйти')+'" title="'+(USER==='guest'?'Войти или создать аккаунт':'Выйти')+'">'+icon('logout')+'</button>';
 }
 
