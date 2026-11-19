@@ -1522,7 +1522,6 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
 
 @media (max-width:860px){
   .crumbs{top:0!important;padding-left:calc(68px + env(safe-area-inset-left,0px));padding-top:calc(8px + env(safe-area-inset-top,0px));min-height:64px;margin-top:-12px}
-  main{padding-top:0}
 }
 @media (max-width:860px){
   .tstrip{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);padding-left:10px;padding-right:10px}
@@ -1532,3 +1531,10 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   .crumbs{padding-left:calc(66px + env(safe-area-inset-left,0px))!important}
 }
 @media (max-width:860px){.tstrip{padding-right:22px}}
+/* телефон: инструменты — обычные кнопки в несколько строк, без липкой полосы и прокрутки */
+@media (max-width:860px){
+  body:not(.fs) .crumbs{position:static!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;padding:0!important;min-height:0!important;margin:0 0 14px!important}
+  body:not(.fs) .tstrip{flex-wrap:wrap;overflow:visible;padding:0;-webkit-mask-image:none;mask-image:none;gap:8px}
+  body:not(.fs) .tstrip .chip{padding:8px 14px}
+}
+@media (max-width:860px){body:not(.fs) .tstrip .chip{background:var(--surface);border:1px solid var(--line)}body:not(.fs) .tstrip .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}}
