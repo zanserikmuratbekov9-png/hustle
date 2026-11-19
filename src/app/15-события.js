@@ -141,8 +141,8 @@ function setFS(on){
 }
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&document.body.classList.contains('fs')){document.body.classList.remove('fs');updateFSBtn()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('fs'))setFS(false)});
-function copyText(text,okMsg){
-  const fallback=()=>{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);toast(ok?okMsg:'Не удалось скопировать — выделите текст вручную')};
+function copyText(text,okMsg,failMsg){
+  const fallback=()=>{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);toast(ok?okMsg:(failMsg||'Не удалось скопировать — выделите текст вручную'))};
   try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>toast(okMsg),fallback);return}}catch(e){}
   fallback();
 }
@@ -210,6 +210,7 @@ document.addEventListener('click',e=>{
   else if(c==='dlScriptBd'){if(!S.scenes.length){toast('Сначала добавьте сценарий со сценами');return}saveFile('scenariy-i-razbor.docx',makeDocx(scriptBdBlocks()))}
   else if(c==='switchProj'){switchProject(b.dataset.id)}
   else if(c==='openDay'){S.cs.day=+b.dataset.k||1;S.tab='callsheet';render();window.scrollTo(0,0)}
+  else if(c==='copyInvite'){copyText(TEAM.invite,'Ссылка скопирована','Нажмите на ссылку и скопируйте её вручную (Ctrl+C)')}
   else if(c==='teamInvite'){teamInvite(b,b.dataset.k)}
   else if(c==='teamRole'){teamRole(b.dataset.id,b.dataset.k)}
   else if(c==='teamKick'){showDialog({title:'Убрать участника?',text:'Он больше не сможет открыть этот проект.',actions:[{label:'Убрать',run:()=>teamKick(b.dataset.id)},{label:'Отмена',sec:true}]})}

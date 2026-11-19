@@ -2123,7 +2123,7 @@ async function teamInvite(btn,role){
     if(r.error&&/role/.test(String(r.error.message||''))){toast('Чтобы выбрать права, выполните supabase/team_roles.sql в Supabase');return}
     if(r.error)throw r.error;
     TEAM.invite=location.origin+location.pathname+'#join='+tok;TEAM.invRole=role;render();
-    copyText(TEAM.invite,role==='viewer'?'Ссылка для просмотра скопирована':'Ссылка для редактора скопирована');
+    copyText(TEAM.invite,role==='viewer'?'Ссылка для просмотра скопирована':'Ссылка для редактора скопирована','Ссылка создана — нажмите «Копировать» под ней');
   }catch(e){toast(/relation|schema|does not exist/i.test(String(e&&(e.message||e.code)||''))?'Командная работа ещё не включена на сервере.':'Не удалось создать приглашение')}
   finally{if(btn)btn.disabled=false}
 }
@@ -2200,7 +2200,7 @@ function teamHtml(){
     const mem=TEAM.members.length?'<ul class="tmem">'+TEAM.members.map(m=>'<li><span class="av" aria-hidden="true">'+esc(((m.member_name||m.member_email||'?')[0]||'?').toUpperCase())+'</span><span><b>'+esc(m.member_name||m.member_email||'Участник')+'</b>'+(m.member_name&&m.member_email?'<small>'+esc(m.member_email)+'</small>':'')+'</span><span class="trole" role="group" aria-label="Права"><button type="button" data-c="teamRole" data-k="viewer" data-id="'+esc(m.member_id)+'" aria-pressed="'+(m.role==='viewer')+'">Просмотр</button><button type="button" data-c="teamRole" data-k="editor" data-id="'+esc(m.member_id)+'" aria-pressed="'+(m.role!=='viewer')+'">Редактор</button></span><button class="link" type="button" data-c="teamKick" data-id="'+esc(m.member_id)+'">Убрать</button></li>').join('')+'</ul>':'<p class="muted" style="margin:6px 0 0">Пока в команде только вы.</p>';
     body+='<span class="lbl" style="margin-top:16px;display:block">Команда этого проекта</span>'+mem+
       '<span class="lbl" style="margin-top:16px;display:block">Пригласить по ссылке</span><div class="row" style="margin-top:8px"><button class="btn" type="button" data-c="teamInvite" data-k="editor">'+icon('plus')+'Редактор</button><button class="btn sec" type="button" data-c="teamInvite" data-k="viewer">'+icon('plus')+'Только просмотр</button></div>'+
-      (TEAM.invite?'<label style="margin-top:10px;display:flex;flex-direction:column;gap:6px">Ссылка '+(TEAM.invRole==='viewer'?'для просмотра':'для редактора')+' (действует 14 дней)<input class="tinv" readonly value="'+esc(TEAM.invite)+'" onclick="this.select()"></label>':'')+
+      (TEAM.invite?'<label style="margin-top:10px;display:flex;flex-direction:column;gap:6px">Ссылка '+(TEAM.invRole==='viewer'?'для просмотра':'для редактора')+' (действует 14 дней)<input class="tinv" readonly value="'+esc(TEAM.invite)+'" onclick="this.select()"></label><button class="btn sec" type="button" data-c="copyInvite" style="margin-top:8px">'+icon('copy')+'Копировать ссылку</button>':'')+
       '<p class="muted" style="margin:10px 0 0;font-size:13px">Редактор может менять проект, участник с правом просмотра только смотрит. Права можно поменять в списке команды. Изменения появляются у всех почти сразу; если двое правят одно и то же одновременно, сохранится последнее изменение.</p>';
   }else{
     const ow=TEAM.teams.find(x=>x.owner_id===CLOUD.pid);
@@ -3192,8 +3192,8 @@ function setFS(on){
 }
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&document.body.classList.contains('fs')){document.body.classList.remove('fs');updateFSBtn()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('fs'))setFS(false)});
-function copyText(text,okMsg){
-  const fallback=()=>{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);toast(ok?okMsg:'Не удалось скопировать — выделите текст вручную')};
+function copyText(text,okMsg,failMsg){
+  const fallback=()=>{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);toast(ok?okMsg:(failMsg||'Не удалось скопировать — выделите текст вручную'))};
   try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>toast(okMsg),fallback);return}}catch(e){}
   fallback();
 }
@@ -3261,6 +3261,7 @@ document.addEventListener('click',e=>{
   else if(c==='dlScriptBd'){if(!S.scenes.length){toast('Сначала добавьте сценарий со сценами');return}saveFile('scenariy-i-razbor.docx',makeDocx(scriptBdBlocks()))}
   else if(c==='switchProj'){switchProject(b.dataset.id)}
   else if(c==='openDay'){S.cs.day=+b.dataset.k||1;S.tab='callsheet';render();window.scrollTo(0,0)}
+  else if(c==='copyInvite'){copyText(TEAM.invite,'Ссылка скопирована','Нажмите на ссылку и скопируйте её вручную (Ctrl+C)')}
   else if(c==='teamInvite'){teamInvite(b,b.dataset.k)}
   else if(c==='teamRole'){teamRole(b.dataset.id,b.dataset.k)}
   else if(c==='teamKick'){showDialog({title:'Убрать участника?',text:'Он больше не сможет открыть этот проект.',actions:[{label:'Убрать',run:()=>teamKick(b.dataset.id)},{label:'Отмена',sec:true}]})}
