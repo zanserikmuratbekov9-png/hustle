@@ -94,11 +94,14 @@ function paintLight(){
   g.innerHTML=L.items.map(it=>ltItem(it,it.id===S.lightSel)).join('');
   const lg=$('#lt-legend');if(lg)lg.innerHTML=legendHtml(L);
 }
+function ltRotNorm(r){let v=Math.round(num(r)||0)%360;if(v>180)v-=360;if(v<-180)v+=360;return v}
+function ltRotShow(r){const v=ltRotNorm(r);return (v>0?'+':'')+v}
 function inspector(){
   const it=selItem();
   if(!it)return '<p class="muted" style="margin:0">Выберите предмет на схеме или добавьте новый кнопками выше. Двигайте мышью или пальцем.</p>';
   let h='<div class="fields" style="grid-template-columns:1fr"><label>Название<input data-a="lt" data-f="label" value="'+esc(it.label)+'"></label>'+
-    '<label>Поворот: <b id="rotv">'+Math.round(it.rot||0)+'°</b><input type="range" min="0" max="359" data-a="lt" data-f="rot" value="'+Math.round(it.rot||0)+'"></label>';
+    '<label>Поворот: <b id="rotv">'+ltRotShow(it.rot)+'°</b><input type="range" min="-180" max="180" step="1" data-a="lt" data-f="rot" value="'+ltRotNorm(it.rot)+'"></label>'+
+    '<div class="lt-nudge"><span class="muted" style="font-size:13px">Повернуть на шаг</span><div><button class="btn sec" type="button" data-c="ltRot" data-k="-90" aria-label="Влево на 90 градусов">⟲ 90°</button><button class="btn sec" type="button" data-c="ltRot" data-k="-15" aria-label="Влево на 15 градусов">↺ 15°</button><button class="btn sec" type="button" data-c="ltRot" data-k="15" aria-label="Вправо на 15 градусов">15° ↻</button><button class="btn sec" type="button" data-c="ltRot" data-k="90" aria-label="Вправо на 90 градусов">90° ⟳</button></div></div>';
   if(it.type==='light'){
     h+='<label>Мощность, Вт<input type="number" min="0" step="10" data-a="lt" data-f="w" value="'+esc(it.w)+'"></label>'+
       '<label>Цветовая температура<select data-a="lt" data-f="k">'+[2700,3200,4300,5600,6500].map(k=>'<option value="'+k+'"'+(num(it.k)===k?' selected':'')+'>'+k+' K'+({2700:' (лампа накаливания)',3200:' (тёплый)',4300:' (нейтральный)',5600:' (дневной)',6500:' (холодный)'}[k])+'</option>').join('')+'</select></label>'+
@@ -141,7 +144,7 @@ let LT3=null,LT3_LOADING=null;
 const M3=v=>v/40;
 const LT_BEAM={'Софтбокс':48,'Фреснель':22,'Голый прибор':60,'LED-панель':42,'Отражатель':38};
 async function lt3Lib(){
-  if(!LT3_LOADING)LT3_LOADING=Promise.all([import('./vendor/three.module.min.js'),import('./vendor/OrbitControls.js')]).catch(e=>{LT3_LOADING=null;throw e});
+  if(!LT3_LOADING)LT3_LOADING=Promise.all([import('../vendor/three.module.min.js'),import('../vendor/OrbitControls.js')]).catch(e=>{LT3_LOADING=null;throw e});
   return LT3_LOADING;
 }
 async function lt3Mount(sel){

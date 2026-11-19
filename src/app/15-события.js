@@ -83,7 +83,7 @@ const A={
     if(['rot','w','k','mm','len','h','tilt'].indexOf(f)>-1)it[f]=num(t.value);else it[f]=t.value;
     if(f==='h')setText('#hv',(it.type==='light'?num(t.value).toFixed(1):num(t.value).toFixed(2))+' м');
     if(f==='tilt')setText('#tiltv',Math.round(it.tilt)+'°');
-    if(f==='rot')setText('#rotv',Math.round(it.rot)+'°');
+    if(f==='rot')setText('#rotv',ltRotShow(it.rot)+'°');
     if(f==='len')setText('#lenv',it.type==='prop'?(it.len/40).toFixed(1)+' м':Math.round(it.len));
     if(f==='kind'){const P=PROP_K[propKind(it)],old=Object.keys(PROP_K).some(k=>(it.label||'').indexOf(PROP_K[k].n)===0)||/^Тумба|^Стол$/.test(it.label||'');it.len=P.len;if(old||!it.label)it.label=P.n;paintLight();paintInspector();save();return}
     paintLight();save()},
@@ -308,6 +308,7 @@ document.addEventListener('click',e=>{
   else if(c==='ltTop'){const L=curLight(),sel=selItem(),a=(sel&&sel.type==='actor')?sel:L.items.find(i=>i.type==='actor'),x=a?a.x:400,y=a?a.y:260,cnt=L.items.filter(i=>i.boom).length;
     const it=ltMake('light',x,y,{label:'Топлайт'+(cnt?' '+(cnt+1):''),w:200,k:5600,mod:'Софтбокс',h:3.6,tilt:-90,boom:true,rot:0});L.items.push(it);S.lightSel=it.id;paintLight();paintInspector();save()}
   else if(c==='ltNudge'){ltNudge(b.dataset.k,10)}
+  else if(c==='ltRot'){const it=selItem();if(it){it.rot=ltRotNorm((num(it.rot)||0)+num(b.dataset.k));paintLight();paintInspector();save()}}
   else if(c==='toolsTog'){S.toolsOff=!S.toolsOff;renderChrome()}
   else if(c==='menu'){document.body.classList.toggle('navopen')}
   else if(c==='ltView'){PREF.lt3d=b.dataset.k==='3d';savePref();render()}
