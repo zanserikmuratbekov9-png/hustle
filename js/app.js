@@ -210,6 +210,16 @@ async function saveFile(name,data,mime){
     try{await DL.save({filename:name,data:data});return true}
     catch(e){if(!(e&&e.code==='declined'))toast('Не удалось сохранить файл');return false}
   }
+  /* телефон: окно «Поделиться» с пунктом «Сохранить в Файлы» — надёжнее, чем скачивание по ссылке */
+  try{
+    if(matchMedia('(pointer:coarse)').matches&&navigator.canShare&&navigator.share){
+      const f=new File([data],name,{type:mime.split(';')[0]});
+      if(navigator.canShare({files:[f]})){
+        try{await navigator.share({files:[f],title:name});toast('Файл отправлен: '+name+'. Выберите «Сохранить в Файлы»');return true}
+        catch(e){if(e&&e.name==='AbortError')return false}
+      }
+    }
+  }catch(e){}
   try{
     const blob=new Blob([data],{type:mime}),a=document.createElement('a');
     a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
