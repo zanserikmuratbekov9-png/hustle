@@ -2525,7 +2525,7 @@ function render(){
   let page;try{page=(views[S.tab]||views.home)()}catch(err){console.error(err);page='<div class="empty"><b>Раздел не открылся</b>Произошла ошибка: '+esc(String((err&&err.message)||err))+'. Обновите страницу. Если повторится, пришлите этот текст.</div>'}
   const ph=(secOf(S.tab)==='proj'||(S.tab==='home'&&!showHero()))?projHead():'';
   $('#main').innerHTML=ph+toolBar()+page+sloganHtml();
-  {const pc=$('.tstrip [aria-pressed="true"]');if(pc)pc.parentNode.scrollLeft=pc.offsetLeft-48}
+  {const pc=$('.tstrip [aria-pressed="true"]');if(pc){const st=pc.parentNode,r=pc.getBoundingClientRect(),sr=st.getBoundingClientRect();st.scrollLeft+=r.left-sr.left-(sr.width-r.width)/2}}
   {const tp=$('.top');if(tp)document.documentElement.style.setProperty('--toph','0px')}$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
   if(S.tab==='budget')updateTotals();
