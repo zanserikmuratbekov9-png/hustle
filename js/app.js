@@ -2522,7 +2522,7 @@ function render(){
   const ph=(secOf(S.tab)==='proj'||(S.tab==='home'&&!showHero()))?projHead():'';
   $('#main').innerHTML=ph+toolBar()+page+sloganHtml();
   {const pc=$('.tstrip [aria-pressed="true"]');if(pc)pc.parentNode.scrollLeft=pc.offsetLeft-48}
-  {const tp=$('.top');if(tp)document.documentElement.style.setProperty('--toph',(innerWidth<=860?tp.offsetHeight:0)+'px')}$('#main').dataset.title=S.name;
+  {const tp=$('.top');if(tp)document.documentElement.style.setProperty('--toph','0px')}$('#main').dataset.title=S.name;
   const sl=$('#main .slate');if(sl)sl.insertAdjacentHTML('afterend','<span class="sticker">'+ROLES[S.role].t+'</span>');
   if(S.tab==='budget')updateTotals();
   if(S.tab==='lights'){paintLight();paintInspector();if(PREF.lt3d)lt3Mount()}

@@ -66,7 +66,7 @@ const openTab = (page, k) => page.evaluate(k => { const b = document.createEleme
         ok(await page.isVisible('.top .tns[data-k="lights"]'), 'смена роли на «Оператор» открывает Светосхему в меню');
         await page.click('.top .tns[data-k="lights"]'); await page.waitForTimeout(400);
         ok(!(await page.evaluate(() => document.body.classList.contains('navopen'))), 'меню закрывается после выбора инструмента');
-        ok(!(await page.isVisible('.lt-mode')), 'на телефоне нет переключателя «3D»');
+        ok(await page.isVisible('.lt-mode'), 'на телефоне есть переключатель «План / 3D»');
       } else {
         await page.evaluate(() => { const b = document.createElement('button'); b.dataset.c = 'role'; b.dataset.k = 'director'; document.body.appendChild(b); b.click(); });
         await page.waitForTimeout(300);
