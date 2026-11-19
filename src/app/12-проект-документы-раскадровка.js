@@ -29,8 +29,12 @@ function nextShift(){
   const d=best?best.d:1,i=S.cs.info[d]||{},sc=S.scenes.filter(s=>S.assign[s.id]===d),locs=[];sc.forEach(s=>{const k=s.loc||'—';if(locs.indexOf(k)<0)locs.push(k)});
   return {d,md,date:i.date||'',call:i.call||'',addr:i.addr||'',sc,locs};
 }
+function newProjPanel(){
+  return '<details class="newproj noprint"'+(S.scenes.length?'':' open')+'><summary>'+icon('plus')+'Новый проект</summary><div class="fields"><label class="wide">Название<input id="np-name" placeholder="Например, «Яблоко»" autocomplete="off"></label><label>Тип<select id="np-type">'+Object.keys(BT).map(k=>'<option value="'+k+'">'+BT[k].n+'</option>').join('')+'</select></label>'+
+    '<div class="wide row"><button class="btn" type="button" data-c="newProj">Создать проект</button><span class="muted" style="font-size:14px">Текущий проект будет очищен — сначала сохраните его в файл (меню проекта вверху).</span></div></div></details>';
+}
 function vProj(){
-  const head='<section class="hub-head"><div><span class="lbl">'+t('Название проекта')+'</span><input id="pname" data-a="pname" value="'+esc(S.name)+'" autocomplete="off" aria-label="Название проекта"></div>'+statsOrHint()+'</section>';
+  const head='<section class="hub-head"><div><span class="lbl">'+t('Название проекта')+'</span><input id="pname" data-a="pname" value="'+esc(S.name)+'" autocomplete="off" aria-label="Название проекта"></div>'+'<div class="ptype-row"><label>Тип проекта<select data-a="ptype" aria-label="Тип проекта"><option value="">Не выбран</option>'+Object.keys(BT).map(k=>'<option value="'+k+'"'+(S.ptype===k?' selected':'')+'>'+BT[k].n+'</option>').join('')+'</select></label></div>'+statsOrHint()+'</section>'+newProjPanel();
   const groups=navGroups();
   let next=null;groups.forEach(g=>g[1].forEach(x=>{if(!next&&toolStatus(x.id).ok===false)next=x}));
   const nx=next?'<div class="cont"><div><b>Следующий шаг: '+t(next.n)+'</b><span>'+esc(toolStatus(next.id).t)+'. '+esc(next.d||'')+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+next.id+'">'+icon(next.ic)+'Открыть</button></div>':
@@ -172,6 +176,11 @@ const BT={
    ['x',C_ACT,'Актёры, гонорары','смена',30000,'d',3],['x',C_CREW,'Гримёр','смена',15000,'d',1],['x',C_FOOD,'Питание группы (12 чел.)','смена',42000,'d',1],['x',C_LOC,'Транспорт','смена',20000,'d',1],['x',C_LOC,'Локации','смена',40000,'d',1],
    ['x',C_PROP,'Реквизит и костюмы','проект',80000,'p',1],['x',C_POST,'Монтаж','проект',150000,'p',1],['x',C_POST,'Саунд-дизайн и музыка','проект',120000,'p',1],['x',C_POST,'Цветокоррекция','проект',80000,'p',1],
    ['x',C_LEG,'Страхование съёмок','проект',30000,'p',1],['x',C_MKT,'Фестивальные взносы','заявка',8000,'p',5]]},
+ film:{n:'Кино (полный метр)',days:30,lines:[['x',C_CREW,'Режиссёр-постановщик','смена',150000,'d',1,'оценка'],['x',C_CREW,'Оператор-постановщик','смена',150000,'d',1],['x',C_CREW,'Гаффер','смена',100000,'d',1],['x',C_CREW,'Звукорежиссёр','смена',80000,'d',1],['x',C_CREW,'Художник-постановщик','смена',90000,'d',1],['x',C_CREW,'Гримёр и костюмер','смена',40000,'d',2],
+   ['x',C_ACT,'Главные роли, гонорары','смена',120000,'d',2],['x',C_ACT,'Второстепенные роли и массовка','смена',30000,'d',5],
+   ['x',C_LOC,'Локации, аренда','смена',80000,'d',1],['x',C_FOOD,'Питание группы (30 чел.)','смена',100000,'d',1],['x',C_PROP,'Реквизит, декорации, костюмы','проект',1500000,'p',1],
+   ['x',C_POST,'Монтаж','проект',800000,'p',1],['x',C_POST,'Цветокоррекция и звук','проект',1200000,'p',1],['x',C_POST,'Музыка и лицензии','проект',500000,'p',1],
+   ['x',C_LEG,'Страхование и юристы','проект',400000,'p',1],['x',C_MKT,'Фестивали и продвижение','проект',600000,'p',1]]},
  clip:{n:'Клип',days:2,lines:[['deal','bq-fx3','d',1],['deal','bq-h600','d',1],['deal','bq-tl60','d',1],['deal','bq-300c','d',1],['deal','bq-pocket4p','d',1],
    ['x',C_ACT,'Исполнители и танцоры','смена',20000,'d',3],['x',C_PROP,'Грим и стилист','смена',15000,'d',1],['x',C_LOC,'Локация','смена',30000,'d',1],['x',C_FOOD,'Питание группы (10 чел.)','смена',35000,'d',1],
    ['x',C_POST,'Монтаж','проект',100000,'p',1],['x',C_POST,'Цветокоррекция','проект',60000,'p',1]]}
@@ -190,7 +199,7 @@ function applyBT(type,days){
   return rows.length;
 }
 function budgetTplPanel(){
-  const body='<div class="fields"><label>Тип проекта<select id="bt-type">'+Object.keys(BT).map(k=>'<option value="'+k+'">'+BT[k].n+'</option>').join('')+'</select></label><label>Съёмочных дней<input id="bt-days" type="number" min="1" step="1" value="'+(S.scenes.length?Math.max(1,maxDay()):2)+'"></label>'+
+  const body='<div class="fields"><label>Тип проекта<select id="bt-type">'+Object.keys(BT).map(k=>'<option value="'+k+'"'+(S.ptype===k?' selected':'')+'>'+BT[k].n+'</option>').join('')+'</select></label><label>Съёмочных дней<input id="bt-days" type="number" min="1" step="1" value="'+(S.scenes.length?Math.max(1,maxDay()):2)+'"></label>'+
     '<div class="wide row"><button class="btn sec" type="button" data-c="btApply">'+icon('plus')+'Добавить строки шаблона</button><span class="muted" style="font-size:14px">Строки добавятся к смете. Ставки с пометкой «прайс» взяты у ренталов, «оценка» — ориентир.</span></div></div>';
   return panel('btpl','budget','Шаблон сметы под тип проекта',body);
 }

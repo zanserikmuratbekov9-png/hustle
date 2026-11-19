@@ -1,6 +1,7 @@
 /* ---------- события ---------- */
 const A={
   pname:t=>{S.name=t.value;save()},
+  ptype:t=>{S.ptype=t.value;save()},
   cur:t=>{S.cur=t.value},
   rate:t=>{const k=t.dataset.k,v=num(t.value);if(v>0){S.rates[k]=v;S.ratesDate=null;if(S.tab==='budget')render();else save()}},
   bud:t=>{const r=S.budget.find(x=>x.id===t.dataset.id);if(!r)return;
@@ -152,7 +153,7 @@ function budgetRows(){
   rows.push([],['','Прямые расходы','','','',Math.round(t.sub/per())],['','Непредвиденные','','',S.contPct+'%',Math.round(t.cont/per())],['','Гонорар продюсера','','',S.feePct+'%',Math.round(t.fee/per())],['','Налог','','',S.taxPct+'%',Math.round(t.tax/per())],['','ИТОГО','','','',Math.round(t.total/per())]);
   return rows;
 }
-let resetArmed=false;
+let newProjArmed=false;let resetArmed=false;
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-c]');if(!b)return;
   const c=b.dataset.c;
@@ -174,6 +175,12 @@ document.addEventListener('click',e=>{
   else if(c==='lang'){PREF.lang=PREF.lang==='kk'?'ru':'kk';savePref();render()}
   else if(c==='fs'){setFS(!document.body.classList.contains('fs'))}
   else if(c==='hubfilter'){S.hubAll=b.dataset.k==='all';render()}
+  else if(c==='newProj'){
+    const nm=($('#np-name').value||'').trim(),ty=$('#np-type').value;
+    if(!nm){toast('Впишите название проекта');$('#np-name').focus();return}
+    const has=S.scenes.length||S.budget.some(r=>String(r.name||'').trim()||num(r.kzt))||S.shots.length;
+    if(has&&!newProjArmed){newProjArmed=true;b.textContent='Текущие данные удалятся — нажмите ещё раз';setTimeout(()=>{newProjArmed=false;b.textContent='Создать проект'},4000);return}
+    newProjArmed=false;const kr=S.rates,kd=S.ratesDate,kc=S.cur,kr0=S.role;S=fresh();S.rates=kr;S.ratesDate=kd;S.cur=kc;S.role=kr0;S.onboarded=true;S.name=nm;S.ptype=ty;S.tab='proj';render();toast('Проект «'+nm+'» создан')}
   else if(c==='btApply'){const n=applyBT($('#bt-type').value,$('#bt-days').value);toast('Добавлено строк: '+n);render()}
   else if(c==='docType'){S.doc.type=b.dataset.k;render()}
   else if(c==='docCopy'){copyText(docText(),'Текст скопирован')}
