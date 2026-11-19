@@ -18,8 +18,8 @@ function vShots(){
     '<td style="width:60px;text-align:center"><input type="checkbox" data-a="sh" data-r="1" data-id="'+x.id+'" data-f="done"'+(x.done?' checked':'')+' style="width:22px;height:22px" aria-label="Снято"></td>'+
     '<td style="width:44px"><button class="x" type="button" data-c="shotDel" data-id="'+x.id+'" aria-label="Удалить кадр">×</button></td></tr>').join('');
   const body='<div class="row" style="margin-bottom:10px"><label class="fltlab">Показать сцену <select data-a="shotflt" data-r="1" style="margin-left:8px;max-width:100%;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"><option value="">Все сцены</option>'+sceneOpts(flt,false)+'</select></label><span class="muted">Снято '+done+' из '+S.shots.length+'</span></div>'+
-    (list.length?'<div class="tw"><table class="grid" style="min-width:980px"><thead><tr><th>Сцена</th><th>№</th><th>Размер</th><th>Ракурс</th><th>Движение</th><th>мм</th><th>Описание</th><th>Снято</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty"><b>Кадров пока нет</b>Добавьте первый кадр кнопкой ниже.</div>')+
-    '<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="shotAdd">'+icon('plus')+'Ещё кадр</button></div>';
+    (list.length?'<div class="tw"><table class="grid" style="min-width:980px"><thead><tr><th>Сцена</th><th>№</th><th>Размер</th><th>Ракурс</th><th>Движение</th><th>мм</th><th>Описание</th><th>Снято</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty"><b>Кадров пока нет</b>Нажмите «Добавить кадр» вверху страницы.</div>')+
+    (list.length?'<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="shotAdd">'+icon('plus')+'Ещё кадр</button></div>':'');
   return head+'<div class="col">'+panel('shl','frame','Кадры',body)+'</div>';
 }
 

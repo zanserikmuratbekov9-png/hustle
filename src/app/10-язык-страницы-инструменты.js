@@ -76,6 +76,7 @@ function toolMenu(){
   const g=navGroups();if(!g.length)return '';
   return '<details class="toolmenu noprint"'+(S.tmOpen?' open':'')+'><summary>'+icon('briefcase')+'<span>Инструменты</span></summary><div class="tm-pan">'+g.map(x=>'<div class="tm-g"><small>'+esc(x[0])+'</small><div class="tm-row">'+x[1].map(t0=>'<button class="chip" type="button" data-c="tab" data-k="'+t0.id+'">'+icon(t0.ic)+esc(t0.n)+'</button>').join('')+'</div></div>').join('')+'</div></details>';
 }
+function canOpen(id){return navGroups().some(g=>g[1].some(x=>x.id===id))}
 function roleTools(){return [].concat.apply([],navGroups().map(g=>g[1]))}
 function toolBar(){
   if(TOOL_IDS.indexOf(S.tab)<0&&S.tab!=='rentals')return '';

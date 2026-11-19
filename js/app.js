@@ -560,8 +560,7 @@ function vBudget(){
   return hd('Смета','Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.',
     dd(icon('upload')+'Загрузить',ddi('data-c="tab" data-k="rentals"',icon('store')+'Технику из рентала')+'<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+'<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport">'+
     dd(icon('download')+'Скачать',ddi('data-c="budXlsx"','Excel (.xlsx)')+ddi('data-c="budgetPdf"','PDF')+ddi('data-c="csvBudget"','CSV')+ddi('data-c="copyBudget"','Скопировать для таблицы')+ddi('data-c="print" data-dock="1"','Распечатать'),{right:true,primary:true}))+
-  '<div class="tbar noprint" style="margin-bottom:10px">'+(cats.some(budOpen)?'<button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button>':'<button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все разделы</button>')+'</div>'+
-  backupBanner()+'<div class="col">'+budgetTplPanel()+groups+'</div>'+vDock();
+  '<div class="col">'+budgetTplPanel()+(cats.some(budOpen)?'<div class="tbar noprint"><button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button></div>':'<p class="muted noprint" style="margin:4px 2px 0">Выберите шаблон выше или откройте нужный раздел ниже и добавьте строку.</p>')+groups+'</div>'+backupBanner()+vDock();
 }
 
 /* ---------- разбор сценария ---------- */
@@ -1232,8 +1231,8 @@ function vShots(){
     '<td style="width:60px;text-align:center"><input type="checkbox" data-a="sh" data-r="1" data-id="'+x.id+'" data-f="done"'+(x.done?' checked':'')+' style="width:22px;height:22px" aria-label="Снято"></td>'+
     '<td style="width:44px"><button class="x" type="button" data-c="shotDel" data-id="'+x.id+'" aria-label="Удалить кадр">×</button></td></tr>').join('');
   const body='<div class="row" style="margin-bottom:10px"><label class="fltlab">Показать сцену <select data-a="shotflt" data-r="1" style="margin-left:8px;max-width:100%;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:9px 10px"><option value="">Все сцены</option>'+sceneOpts(flt,false)+'</select></label><span class="muted">Снято '+done+' из '+S.shots.length+'</span></div>'+
-    (list.length?'<div class="tw"><table class="grid" style="min-width:980px"><thead><tr><th>Сцена</th><th>№</th><th>Размер</th><th>Ракурс</th><th>Движение</th><th>мм</th><th>Описание</th><th>Снято</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty"><b>Кадров пока нет</b>Добавьте первый кадр кнопкой ниже.</div>')+
-    '<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="shotAdd">'+icon('plus')+'Ещё кадр</button></div>';
+    (list.length?'<div class="tw"><table class="grid" style="min-width:980px"><thead><tr><th>Сцена</th><th>№</th><th>Размер</th><th>Ракурс</th><th>Движение</th><th>мм</th><th>Описание</th><th>Снято</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty"><b>Кадров пока нет</b>Нажмите «Добавить кадр» вверху страницы.</div>')+
+    (list.length?'<div class="row" style="margin-top:12px"><button class="btn sec" type="button" data-c="shotAdd">'+icon('plus')+'Ещё кадр</button></div>':'');
   return head+'<div class="col">'+panel('shl','frame','Кадры',body)+'</div>';
 }
 
@@ -1908,6 +1907,7 @@ function toolMenu(){
   const g=navGroups();if(!g.length)return '';
   return '<details class="toolmenu noprint"'+(S.tmOpen?' open':'')+'><summary>'+icon('briefcase')+'<span>Инструменты</span></summary><div class="tm-pan">'+g.map(x=>'<div class="tm-g"><small>'+esc(x[0])+'</small><div class="tm-row">'+x[1].map(t0=>'<button class="chip" type="button" data-c="tab" data-k="'+t0.id+'">'+icon(t0.ic)+esc(t0.n)+'</button>').join('')+'</div></div>').join('')+'</div></details>';
 }
+function canOpen(id){return navGroups().some(g=>g[1].some(x=>x.id===id))}
 function roleTools(){return [].concat.apply([],navGroups().map(g=>g[1]))}
 function toolBar(){
   if(TOOL_IDS.indexOf(S.tab)<0&&S.tab!=='rentals')return '';
@@ -2249,7 +2249,7 @@ function vProj(){
   const sh=nextShift();
   const shift=sh?'<section class="pult-shift"><div class="ps-l"><small>Ближайшая смена</small><b>Смена '+sh.d+' из '+sh.md+'</b><span>'+(sh.date?esc(kppDate(sh.date)):'дата не указана')+(sh.call?' · сбор '+esc(sh.call):'')+'</span></div>'+
     '<div class="ps-m"><span>'+sh.sc.length+' '+plural(sh.sc.length,'сцена','сцены','сцен')+'</span>'+sh.locs.map(l=>'<span class="tag">'+esc(l)+'</span>').join('')+(sh.addr?'<span class="muted">'+esc(sh.addr)+'</span>':'')+'</div>'+
-    '<button class="btn sec" type="button" data-c="openDay" data-k="'+sh.d+'">'+icon('callsheet')+'Вызывной лист дня</button></section>':'';
+    (canOpen('callsheet')?'<button class="btn sec" type="button" data-c="openDay" data-k="'+sh.d+'">'+icon('callsheet')+'Вызывной лист дня</button>':'')+'</section>':'';
   const stages='<div class="pult">'+groups.map(g=>{
     const st=g[1].map(x=>[x,toolStatus(x.id)]),cnt=st.filter(y=>y[1].ok!==null),done=cnt.filter(y=>y[1].ok).length;
     return '<section class="pult-st"><div class="pst-h"><b>'+g[0]+'</b><span>'+(cnt.length?done+' из '+cnt.length:'')+'</span></div>'+(cnt.length?'<div class="pst-bar"><i style="width:'+Math.round(done/cnt.length*100)+'%"></i></div>':'')+
@@ -2676,7 +2676,7 @@ function loadDemo(k){
   S=fresh();S.rates=kr;S.ratesDate=kd;S.cur=kc;S.name=P.name;S.onboarded=true;
   /* смета в примере всегда пустая: ставки и технику пользователь вводит сам */
   S.perDay=P.perDay;S.script=P.script;S.scenes=parseScript(S.script);autoPlan();
-  S.cs.director=P.director;S.cs.producer='Ваше имя';
+  S.cs.director='';S.cs.producer='';
   S.role=kr0;S.tab='home';render();toast('Пример проекта загружен');
 }
 

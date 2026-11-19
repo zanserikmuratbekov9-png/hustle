@@ -38,7 +38,7 @@ function vProj(){
   const sh=nextShift();
   const shift=sh?'<section class="pult-shift"><div class="ps-l"><small>Ближайшая смена</small><b>Смена '+sh.d+' из '+sh.md+'</b><span>'+(sh.date?esc(kppDate(sh.date)):'дата не указана')+(sh.call?' · сбор '+esc(sh.call):'')+'</span></div>'+
     '<div class="ps-m"><span>'+sh.sc.length+' '+plural(sh.sc.length,'сцена','сцены','сцен')+'</span>'+sh.locs.map(l=>'<span class="tag">'+esc(l)+'</span>').join('')+(sh.addr?'<span class="muted">'+esc(sh.addr)+'</span>':'')+'</div>'+
-    '<button class="btn sec" type="button" data-c="openDay" data-k="'+sh.d+'">'+icon('callsheet')+'Вызывной лист дня</button></section>':'';
+    (canOpen('callsheet')?'<button class="btn sec" type="button" data-c="openDay" data-k="'+sh.d+'">'+icon('callsheet')+'Вызывной лист дня</button>':'')+'</section>':'';
   const stages='<div class="pult">'+groups.map(g=>{
     const st=g[1].map(x=>[x,toolStatus(x.id)]),cnt=st.filter(y=>y[1].ok!==null),done=cnt.filter(y=>y[1].ok).length;
     return '<section class="pult-st"><div class="pst-h"><b>'+g[0]+'</b><span>'+(cnt.length?done+' из '+cnt.length:'')+'</span></div>'+(cnt.length?'<div class="pst-bar"><i style="width:'+Math.round(done/cnt.length*100)+'%"></i></div>':'')+

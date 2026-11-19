@@ -55,8 +55,7 @@ function vBudget(){
   return hd('Смета','Введите количество и ставку — подитоги, непредвиденные расходы, гонорар и налог считаются сами. Ставки с пометкой «прайс» взяты из открытых прайс-листов Алматы (октябрь 2026), «оценка» — ориентир, уточните у поставщика. Итоги — внизу экрана.',
     dd(icon('upload')+'Загрузить',ddi('data-c="tab" data-k="rentals"',icon('store')+'Технику из рентала')+'<label class="ghost" for="budIn" style="cursor:pointer">'+icon('upload')+'Выбрать файл .xlsx или .csv</label><small>Столбцы: Раздел, Статья, Кол-во, Ед., Ставка, как в нашей выгрузке. Ставки читаются в выбранной валюте.</small>',{right:true})+'<input class="sr" id="budIn" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv" data-a="budimport">'+
     dd(icon('download')+'Скачать',ddi('data-c="budXlsx"','Excel (.xlsx)')+ddi('data-c="budgetPdf"','PDF')+ddi('data-c="csvBudget"','CSV')+ddi('data-c="copyBudget"','Скопировать для таблицы')+ddi('data-c="print" data-dock="1"','Распечатать'),{right:true,primary:true}))+
-  '<div class="tbar noprint" style="margin-bottom:10px">'+(cats.some(budOpen)?'<button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button>':'<button class="link" type="button" data-c="expandAll" data-pre="cat:">Развернуть все разделы</button>')+'</div>'+
-  backupBanner()+'<div class="col">'+budgetTplPanel()+groups+'</div>'+vDock();
+  '<div class="col">'+budgetTplPanel()+(cats.some(budOpen)?'<div class="tbar noprint"><button class="link" type="button" data-c="collapseAll" data-pre="cat:">Свернуть все разделы</button></div>':'<p class="muted noprint" style="margin:4px 2px 0">Выберите шаблон выше или откройте нужный раздел ниже и добавьте строку.</p>')+groups+'</div>'+backupBanner()+vDock();
 }
 
 /* ---------- разбор сценария ---------- */
