@@ -96,7 +96,7 @@ function projHead(){
     projs=ddh('Проект')+'<button class="ghost ph-pi on" type="button" data-c="tab" data-k="proj"><b>'+esc(S.name)+'</b><small>хранится в этом браузере</small></button><hr>';
   }
   projs+=ddi('data-c="tab" data-k="proj"',icon('briefcase')+'Пульт проекта')+'<hr>'+ddh('Файлы')+ddi('data-c="exportProj"',icon('download')+'Сохранить проект в файл')+ddi('data-c="exportAll"',icon('download')+'Все документы одним архивом (.zip)')+'<label class="ghost" for="projIn" style="cursor:pointer">'+icon('upload')+'Открыть проект из файла</label>'+
-    '<hr>'+ddi('data-c="demo" data-k="1"',icon('script')+'Открыть пример «Последний звонок»')+'<button class="ghost" type="button" data-c="reset" id="resetBtn" data-keep="1">'+(resetArmed?'Нажмите ещё раз — данные удалятся':'Начать с чистого листа')+'</button>';
+    '<hr>'+'<button class="ghost" type="button" data-c="reset" id="resetBtn" data-keep="1">'+(resetArmed?'Нажмите ещё раз — данные удалятся':'Начать с чистого листа')+'</button>';
   const name=dd('<span class="ph-n"><small>'+(isShared()?'Проект команды':'Проект')+'</small><b>'+esc(S.name)+'</b></span>',projs,{cls:'ph-proj',wide:true});
   const role=dd('<span class="ph-you">Вы:</span> '+icon(ROLES[S.role].i)+t(ROLES[S.role].t),ddh(t('Я работаю как'))+Object.keys(ROLES).map(k=>'<button class="ghost opt'+(S.role===k?' on':'')+'" type="button" data-c="role" data-k="'+k+'">'+icon(ROLES[k].i)+'<span>'+t(ROLES[k].t)+'</span></button>').join(''),{right:true});
   const ppl=[userName()];if(CLOUD&&own)TEAM.members.forEach(m=>ppl.push(m.member_name||m.member_email||'?'));

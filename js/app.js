@@ -1927,7 +1927,7 @@ function projHead(){
     projs=ddh('Проект')+'<button class="ghost ph-pi on" type="button" data-c="tab" data-k="proj"><b>'+esc(S.name)+'</b><small>хранится в этом браузере</small></button><hr>';
   }
   projs+=ddi('data-c="tab" data-k="proj"',icon('briefcase')+'Пульт проекта')+'<hr>'+ddh('Файлы')+ddi('data-c="exportProj"',icon('download')+'Сохранить проект в файл')+ddi('data-c="exportAll"',icon('download')+'Все документы одним архивом (.zip)')+'<label class="ghost" for="projIn" style="cursor:pointer">'+icon('upload')+'Открыть проект из файла</label>'+
-    '<hr>'+ddi('data-c="demo" data-k="1"',icon('script')+'Открыть пример «Последний звонок»')+'<button class="ghost" type="button" data-c="reset" id="resetBtn" data-keep="1">'+(resetArmed?'Нажмите ещё раз — данные удалятся':'Начать с чистого листа')+'</button>';
+    '<hr>'+'<button class="ghost" type="button" data-c="reset" id="resetBtn" data-keep="1">'+(resetArmed?'Нажмите ещё раз — данные удалятся':'Начать с чистого листа')+'</button>';
   const name=dd('<span class="ph-n"><small>'+(isShared()?'Проект команды':'Проект')+'</small><b>'+esc(S.name)+'</b></span>',projs,{cls:'ph-proj',wide:true});
   const role=dd('<span class="ph-you">Вы:</span> '+icon(ROLES[S.role].i)+t(ROLES[S.role].t),ddh(t('Я работаю как'))+Object.keys(ROLES).map(k=>'<button class="ghost opt'+(S.role===k?' on':'')+'" type="button" data-c="role" data-k="'+k+'">'+icon(ROLES[k].i)+'<span>'+t(ROLES[k].t)+'</span></button>').join(''),{right:true});
   const ppl=[userName()];if(CLOUD&&own)TEAM.members.forEach(m=>ppl.push(m.member_name||m.member_email||'?'));
@@ -2055,7 +2055,7 @@ function vHome(){
   const nextBlock=next>-1?
     '<div class="pc-next"><div><b>'+t('Следующий шаг')+': '+steps[next][1]+'</b><span>'+steps[next][2]+'</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[next][0]+'">'+icon(TAB_DEF[steps[next][0]][2])+steps[next][3]+'</button></div>':
     '<div class="pc-next"><div><b>Все шаги выполнены</b><span>Всё главное заполнено.</span></div><button class="btn" type="button" data-c="tab" data-k="'+steps[steps.length-1][0]+'">'+icon(TAB_DEF[steps[steps.length-1][0]][2])+steps[steps.length-1][3]+'</button></div>';
-  const demo=S.scenes.length?'':'<div class="row" style="margin-top:10px"><span class="muted">Начать с готового примера:</span>'+[['1','Короткий метр'],['3','Клип'],['4','Реклама'],['2','Короткий метр «Ночной эфир»']].map(x=>'<button class="btn sec" type="button" data-c="demo" data-k="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
+  const demo='';
   const proj='<section class="hero projcard"><div class="pc-top"><div><span class="lbl">'+(isShared()?'Проект команды':t('Мой проект'))+' — '+t(ROLES[S.role].t)+'</span><h2>'+esc(S.name)+'</h2><p>'+intro+'</p></div>'+statsOrHint()+'</div>'+
     '<div class="row" style="margin-top:14px">'+quickActions()+'</div>'+demo+'</section>';
   const posters=posterList().map(posterHtml).join('');
