@@ -129,7 +129,7 @@ async function teamKick(id){
   if(!CLOUD)return;
   const r=await SB.from('project_members').delete().eq('owner_id',CLOUD.uid).eq('member_id',id);
   if(r.error){toast('Не удалось убрать участника');return}
-  toast('Участник убран из команды');loadTeam(true);
+  TEAM.members=TEAM.members.filter(m=>m.member_id!==id);toast('Участник убран из команды');if(S&&S.tab==='proj')render();loadTeam(true);
 }
 async function teamLeave(){
   if(!isShared())return;
@@ -137,14 +137,18 @@ async function teamLeave(){
   const r=await SB.from('project_members').delete().eq('owner_id',pid).eq('member_id',uid);
   if(r.error){toast('Не удалось выйти из проекта');return}
   CLOUD.noPush=true;try{localStorage.removeItem(dataKey());localStorage.removeItem('zp.lastpid.'+uid)}catch(e){}
-  toast('Вы вышли из проекта команды');switchProject(uid);
+  TEAM.at=0;TEAM.teams=TEAM.teams.filter(x=>x.owner_id!==pid);toast('Вы вышли из проекта команды');switchProject(uid);
 }
 const KEEP_LOCAL=['tab','role','pc','dockOpen','hubAll','seen','onboarded','rtab','dealCat','artCat','lightSel'];
 let PULL_WAIT=false,PULL_BUSY=false,ROLE_AT=0;
 async function roleCheck(){
   const c=CLOUD;if(!c||!SB||!isShared())return;const w=2500-(Date.now()-ROLE_AT);if(w>0){if(!roleCheck.t)roleCheck.t=setTimeout(()=>{roleCheck.t=0;roleCheck()},w);return}ROLE_AT=Date.now();
   try{const m=await SB.from('project_members').select('role').eq('owner_id',c.pid).eq('member_id',c.uid).maybeSingle();
-    if(CLOUD!==c||m.error||!m.data)return;const ro=m.data.role==='viewer';
+    if(CLOUD!==c||m.error)return;
+    if(!m.data){/* владелец убрал нас из команды */
+      c.noPush=true;try{localStorage.removeItem(dataKey());localStorage.removeItem('zp.lastpid.'+c.uid)}catch(e){}
+      TEAM.at=0;TEAM.teams=TEAM.teams.filter(x=>x.owner_id!==c.pid);toast('Владелец убрал вас из этого проекта');switchProject(c.uid);return}
+    const ro=m.data.role==='viewer';
     if(ro!==!!c.ro){c.ro=ro;document.body.classList.toggle('ro',ro);if(!ro)c.dirty=false;toast(ro?'Владелец изменил ваши права: теперь только просмотр':'Владелец изменил ваши права: теперь вы редактор');if(S&&S.tab==='proj')render()}
   }catch(e){}
 }
