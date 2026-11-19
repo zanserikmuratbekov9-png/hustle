@@ -266,11 +266,7 @@ function loadDemo(k){
   const P={'2':DEMO2,'3':DEMO3,'4':DEMO4}[k]||DEMO1;
   const kr=S.rates,kd=S.ratesDate,kc=S.cur,kr0=S.role;
   S=fresh();S.rates=kr;S.ratesDate=kd;S.cur=kc;S.name=P.name;S.onboarded=true;
-  S.budget=CATS.map(c=>{
-    const items=P.budget.filter(r=>r[0]===c);
-    if(!items.length)return [{id:uid(),cat:c,name:'',qty:1,unit:'смена',kzt:0,src:''}];
-    return items.map(r=>({id:uid(),cat:c,name:r[1],qty:r[2],unit:r[3],kzt:r[4],src:r[5]||''}));
-  }).reduce((a,b)=>a.concat(b),[]);
+  /* смета в примере всегда пустая: ставки и технику пользователь вводит сам */
   S.perDay=P.perDay;S.script=P.script;S.scenes=parseScript(S.script);autoPlan();
   S.cs.director=P.director;S.cs.producer='Ваше имя';
   S.role=kr0;S.tab='home';render();toast('Пример проекта загружен');

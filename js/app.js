@@ -921,7 +921,6 @@ function homeSteps(){
     ['tasks','Проверьте свои задачи','Что команда ждёт от оператора.','Открыть задачи']];
   return [
     ['script','Разберите сценарий','Вставьте или загрузите текст — сайт найдёт сцены, локации и персонажей.','Открыть разбор'],
-    ['kpp','Проверьте КПП','Сцены сгруппированы по локациям и дням. Укажите даты съёмок.','Открыть КПП'],
     ['budget','Заполните смету','Введите ставки — итоги, налог и валюта посчитаются сами.','Открыть смету'],
     ['callsheet','Подготовьте вызывной лист','Выберите съёмочный день, укажите адрес и время вызова.','Открыть лист']];
 }
@@ -1851,7 +1850,7 @@ const t=s=>s;
 /* ---------- страницы и инструменты ---------- */
 const C_RIGHTS='Права и сценарий',C_DIR='Режиссура и творческая группа',C_ACT='Актёры',C_CREW='Съёмочная группа',C_TECH='Техника: камера, свет, звук',C_LOC='Локации и транспорт',C_PROP='Реквизит, костюмы, грим',C_FOOD='Питание и быт',C_POST='Постпродакшн',C_LEG='Юридические расходы и страховка',C_MKT='Маркетинг и фестивали';
 const TOOLS=[
- {id:'kpp',g:'Подготовка',ic:'schedule',n:'КПП',d:'Календарно-постановочный план: что снимаем в каждый день',r:['director','producer']},
+ {id:'kpp',g:'Подготовка',ic:'schedule',n:'КПП',d:'Календарно-постановочный план: что снимаем в каждый день',r:['director']},
  {id:'script',g:'Идея и текст',ic:'script',n:'Сценарий',d:'Текст, загрузка файла, разбор на сцены',r:['producer','director','operator']},
  {id:'notes',g:'Идея и текст',ic:'note',n:'Заметки по сценам',d:'Что доработать и статус каждой сцены',r:['director']},
  {id:'explic',g:'Идея и текст',ic:'megaphone',n:'Экспликация',d:'Видение фильма на одной странице',r:['director']},
@@ -2675,11 +2674,7 @@ function loadDemo(k){
   const P={'2':DEMO2,'3':DEMO3,'4':DEMO4}[k]||DEMO1;
   const kr=S.rates,kd=S.ratesDate,kc=S.cur,kr0=S.role;
   S=fresh();S.rates=kr;S.ratesDate=kd;S.cur=kc;S.name=P.name;S.onboarded=true;
-  S.budget=CATS.map(c=>{
-    const items=P.budget.filter(r=>r[0]===c);
-    if(!items.length)return [{id:uid(),cat:c,name:'',qty:1,unit:'смена',kzt:0,src:''}];
-    return items.map(r=>({id:uid(),cat:c,name:r[1],qty:r[2],unit:r[3],kzt:r[4],src:r[5]||''}));
-  }).reduce((a,b)=>a.concat(b),[]);
+  /* смета в примере всегда пустая: ставки и технику пользователь вводит сам */
   S.perDay=P.perDay;S.script=P.script;S.scenes=parseScript(S.script);autoPlan();
   S.cs.director=P.director;S.cs.producer='Ваше имя';
   S.role=kr0;S.tab='home';render();toast('Пример проекта загружен');
