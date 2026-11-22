@@ -1538,3 +1538,6 @@ table.kpp-t tr.kpp-tot td{font-weight:700;background:var(--soft)}
   body:not(.fs) .tstrip .chip{padding:8px 14px}
 }
 @media (max-width:860px){body:not(.fs) .tstrip .chip{background:var(--surface);border:1px solid var(--line)}body:not(.fs) .tstrip .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}}
+
+/* на компьютере список инструментов всегда виден (свёрнутость — только для телефона) */
+@media (min-width:861px){.tnsub[hidden]{display:flex!important}}
